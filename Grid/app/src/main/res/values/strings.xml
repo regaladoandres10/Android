@@ -14,4 +14,7 @@
     <string name="painting">Painting</string>
     <string name="photography">Photography</string>
     <string name="tech">Tech</string>
+    <string name="automotive"> Automotive </string>
+    <string name="biology"> Biology </string>
+    <string name="ecology"> Ecology </string>
 </resources>
