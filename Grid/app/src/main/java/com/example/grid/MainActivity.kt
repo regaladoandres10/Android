@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.grid.model.Topic
 import com.example.grid.ui.theme.GridTheme
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.platform.LocalLayoutDirection
+import com.example.grid.data.DataSource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,9 +48,36 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    TopicApp()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun TopicApp() {
+    val layoutDirection = LocalLayoutDirection.current
+    TopicListGrid(
+        topicsList = DataSource.topics
+    )
+}
+
+//Composable para mostrar la lista como columnas
+@Composable
+fun TopicListGrid(topicsList: List<Topic>, modifier: Modifier = Modifier) {
+    //Creado una lista desplzablable de forma horizontal
+    LazyVerticalGrid(
+        modifier = Modifier,
+        columns = GridCells.Fixed(2), //Le indicamos que solo queremos 2 celdas
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(topicsList) { topic ->
+            TopicCard(
+                topic = topic,
+                modifier = modifier.padding(8.dp)
+            )
         }
     }
 }
