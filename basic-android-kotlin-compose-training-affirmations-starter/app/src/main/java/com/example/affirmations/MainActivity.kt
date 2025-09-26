@@ -44,10 +44,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.affirmations.data.Datasource
 import com.example.affirmations.model.Affirmation
 import com.example.affirmations.ui.theme.AffirmationsTheme
 import androidx.compose.foundation.lazy.items
+import com.example.affirmations.data.Datasource
 
 class MainActivity : ComponentActivity() {
 
