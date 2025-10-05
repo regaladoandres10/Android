@@ -32,3 +32,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Preview
+@Composable
+fun PreviewWellnessScreen(modifier: Modifier = Modifier) {
+    WellnessScreen()
+}
