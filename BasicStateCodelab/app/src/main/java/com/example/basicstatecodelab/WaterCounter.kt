@@ -20,7 +20,7 @@ fun StatelessCounter( count:Int, onIncrement: () -> Unit, modifier: Modifier = M
         if (count > 0) {
             Text("You've had $count glasses.")
         }
-        Button(onClick = { onIncrement }, Modifier.padding(top = 8.dp), enabled = count < 10) {
+        Button(onClick = onIncrement , Modifier.padding(top = 8.dp), enabled = count < 10) {
             Text("Add one")
         }
     }
@@ -28,7 +28,7 @@ fun StatelessCounter( count:Int, onIncrement: () -> Unit, modifier: Modifier = M
 
 @Composable
 fun StatefulCounter(modifier: Modifier = Modifier) {
-    var count by rememberSaveable { mutableStateOf(0) }
+    var count by remember { mutableStateOf(0) }
     //Mandamos llamara el composable para modificar sus valores.
-    StatelessCounter(count, {count++}, modifier)
+    StatelessCounter(count, {count++})
 }
