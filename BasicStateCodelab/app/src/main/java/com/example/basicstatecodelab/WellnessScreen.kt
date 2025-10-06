@@ -13,15 +13,12 @@ fun WellnessScreen(modifier: Modifier = Modifier) {
         StatefulCounter(modifier)
         val list = remember { getWellnessTasks().toMutableStateList() }
         //Lista de tareas
-        WellnessTasksList(
-            list = list,
-            onCloseTask = { task -> list.remove(task) }
-        )
+        WellnessTasksList(list = list, onCloseTask = { task -> list.remove(task) })
     }
 }
 
 /**
- * Se generarn 32 tareas
+ * Se generarn 30 tareas
  */
 fun getWellnessTasks() = List(30) {
         i -> WellnessTask(i, "Task # $i")
