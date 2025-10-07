@@ -10,18 +10,24 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun WellnessTasksList(
-    modifier: Modifier = Modifier,
-    onCloseTask: (WellnessTask) -> Unit,
     //Creando un estado de tipo lista que contenga los 32 items de la lista
-    list: List<WellnessTask> = remember { getWellnessTasks() }
+    list: List<WellnessTask> = remember { getWellnessTasks() },
+    onCheckedTask: (WellnessTask, Boolean) -> Unit,
+    onCloseTask: (WellnessTask) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn (modifier = Modifier) {
         //Obtenemos la lista
         items(
             items = list,
             key = {task -> task.id}
-        ) {
-            task -> WellnessTaskItem(taskName = task.label, onClose = { onCloseTask(task) })
+        ) { task ->
+            WellnessTaskItem(
+                taskName = task.label,
+                checked = task.checked,
+                onCheckedChange = { checked -> onCheckedTask(task, checked) },
+                onClose = { onCloseTask(task) }
+            )
         }
     }
 }
