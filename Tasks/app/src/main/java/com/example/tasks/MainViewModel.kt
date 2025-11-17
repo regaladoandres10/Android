@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.update
 @OptIn(FlowPreview::class)
 class MainViewModel: ViewModel() {
 
+    private val _selectedItemIndex = MutableStateFlow(0)
+    val selectedItemIndex = _selectedItemIndex.asStateFlow()
+
     //Texto a buscar
     private var _searchText = MutableStateFlow("")
     var searchText = _searchText.asStateFlow()
@@ -61,6 +64,10 @@ class MainViewModel: ViewModel() {
         }
         //Actualizamos la lista
         _tasks.value = updateList
+    }
+
+    fun selectedItem(index: Int) {
+        _selectedItemIndex.value = index
     }
 }
 
