@@ -49,5 +49,18 @@ class MainViewModel: ViewModel() {
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
+
+    fun onTaskSelected(selectedTask: Task) {
+        //Recorremos la lista
+        val updateList = _tasks.value.map { currentTask ->
+
+            //Cambiar valor
+            currentTask.copy(
+                isCompleted = currentTask.title == selectedTask.title
+            )
+        }
+        //Actualizamos la lista
+        _tasks.value = updateList
+    }
 }
 

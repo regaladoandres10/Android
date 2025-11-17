@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tasks.ui.theme.TasksTheme
-import com.example.tasks.ui.theme.components.SearchBar
+import com.example.tasks.ui.theme.components.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TasksTheme {
-                SearchBar()
+                HomeScreen()
             }
         }
     }

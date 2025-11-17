@@ -6,7 +6,7 @@ data class Task(
 //    val description: String? = null,
 //    val type: TaskType? = null,
 //    val dueDate: Long? = null,
-//    val isCompleted: Boolean = false,
+    val isCompleted: Boolean,
     val createdAt: Long = System.currentTimeMillis()
 ) {
     fun doesMatchSearchQuery(query: String): Boolean {
