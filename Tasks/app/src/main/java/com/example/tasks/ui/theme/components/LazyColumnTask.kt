@@ -43,6 +43,8 @@ fun LazyColumnTask(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = task.title)
+                //TODO: Investigar como poner currentTimeMillis en texto
+                //Text(text = task.createdAt.toDouble().toString())
             }
         }
     }
