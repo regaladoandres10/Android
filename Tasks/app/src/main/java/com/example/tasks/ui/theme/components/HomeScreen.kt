@@ -16,7 +16,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.MainViewModel
 
@@ -30,6 +32,12 @@ fun HomeScreen() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        Spacer( modifier = Modifier.height(35.dp) )
+        Text(
+            text = "Tareas/Notas",
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp
+        )
         Spacer( modifier = Modifier.height(16.dp) )
         SearchBar()
         Spacer( modifier = Modifier.height(16.dp) )
@@ -39,8 +47,8 @@ fun HomeScreen() {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         } else {
-            //LazyColumnTask()
-            RadioButtons()
+            LazyColumnTask()
+            //RadioButtons()
         }
     }
 

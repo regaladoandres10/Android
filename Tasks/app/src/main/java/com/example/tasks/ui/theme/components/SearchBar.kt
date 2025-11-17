@@ -1,12 +1,22 @@
 package com.example.tasks.ui.theme.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.MainViewModel
 
@@ -15,10 +25,23 @@ fun SearchBar(modifier: Modifier = Modifier) {
     val viewModel = viewModel<MainViewModel>()
     val searchText by viewModel.searchText.collectAsState()
     //Buscador
-    TextField(
+    OutlinedTextField(
         value = searchText,
         onValueChange = viewModel::onSearchTextChange,
-        modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Search") }
+        //Agregar icono de busqueda
+        leadingIcon = {
+            Icon(Icons.Default.Search, contentDescription = "Icono de busqueda")
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+        placeholder = { Text(text = "Buscar...") },
+        //Una sola linea
+        singleLine = true,
+        shape = RoundedCornerShape(percent = 50), //redondear
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+        )
     )
 }
