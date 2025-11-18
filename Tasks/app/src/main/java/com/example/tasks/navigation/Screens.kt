@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.Task
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.Task
-import com.example.tasks.static.BottomNavigationItem
+import com.example.tasks.models.BottomNavigationItem
 
 val navItems = listOf(
     BottomNavigationItem(
