@@ -47,7 +47,7 @@ fun HomeScreen() {
         ) {
             Spacer( modifier = Modifier.height(35.dp) )
             Text(
-                text = "Tareas/Notas",
+                text = "Tareas",
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp
             )
