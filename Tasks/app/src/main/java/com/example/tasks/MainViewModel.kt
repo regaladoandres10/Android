@@ -17,8 +17,13 @@ import kotlinx.coroutines.flow.update
 @OptIn(FlowPreview::class)
 class MainViewModel: ViewModel() {
 
+    //Estado para navBar
     private val _selectedItemIndex = MutableStateFlow(0)
     val selectedItemIndex = _selectedItemIndex.asStateFlow()
+
+    //Estado para segmentedButtons
+    private val _selectedIndexButton = MutableStateFlow(0)
+    val selectedIndexButton = _selectedIndexButton.asStateFlow()
 
     //Texto a buscar
     private var _searchText = MutableStateFlow("")
@@ -68,6 +73,10 @@ class MainViewModel: ViewModel() {
 
     fun selectedItem(index: Int) {
         _selectedItemIndex.value = index
+    }
+
+    fun selectedSegmentedButton(index: Int) {
+        _selectedIndexButton.value  = index
     }
 }
 
