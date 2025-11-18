@@ -1,4 +1,4 @@
-package com.example.tasks.ui.theme.components
+package com.example.tasks.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
