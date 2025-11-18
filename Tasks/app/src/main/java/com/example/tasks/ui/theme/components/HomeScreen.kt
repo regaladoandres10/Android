@@ -54,6 +54,8 @@ fun HomeScreen() {
             Spacer( modifier = Modifier.height(16.dp) )
             SearchBar()
             Spacer( modifier = Modifier.height(16.dp) )
+            SegmentedButtons()
+            Spacer( modifier = Modifier.height(16.dp) )
             //Mandar llamar el composable de LazyColumnTask
             if(isSearching) {
                 Box(modifier = Modifier.fillMaxSize()) {
