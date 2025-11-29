@@ -7,26 +7,29 @@ import androidx.compose.material.icons.filled.Task
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.Task
-import com.example.tasks.static.BottomNavigationItem
+import com.example.tasks.models.BottomNavigationItem
 
 val navItems = listOf(
     BottomNavigationItem(
-        title = "Tareas",
-        selectedIcon = Icons.Filled.Task,
-        unSelectedIcon = Icons.Outlined.Task,
-        hasNews = false,
+        title = BottomBarScreen.Task.title,
+        route = BottomBarScreen.Task.route,
+        selectedIcon = BottomBarScreen.Task.selectedIcon,
+        unSelectedIcon = BottomBarScreen.Task.unSelectedIcon,
+        hasNews = BottomBarScreen.Task.hasNews,
     ),
     BottomNavigationItem(
-        title = "Notas",
-        selectedIcon = Icons.Filled.StickyNote2,
-        unSelectedIcon = Icons.Outlined.StickyNote2,
-        hasNews = false,
-        badgeCount = 45
+        title = BottomBarScreen.Note.title,
+        route = BottomBarScreen.Note.route,
+        selectedIcon = BottomBarScreen.Note.selectedIcon,
+        unSelectedIcon = BottomBarScreen.Note.unSelectedIcon,
+        hasNews = BottomBarScreen.Note.hasNews,
+        badgeCount = BottomBarScreen.Note.badgeCount
     ),
     BottomNavigationItem(
-        title = "Configuraciones",
-        selectedIcon = Icons.Filled.Settings,
-        unSelectedIcon = Icons.Outlined.Settings,
-        hasNews = true,
+        title = BottomBarScreen.Configuration.title,
+        route = BottomBarScreen.Configuration.route,
+        selectedIcon = BottomBarScreen.Note.selectedIcon,
+        unSelectedIcon = BottomBarScreen.Note.unSelectedIcon,
+        hasNews = BottomBarScreen.Note.hasNews,
     )
 )
