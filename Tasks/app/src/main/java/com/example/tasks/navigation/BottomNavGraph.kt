@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.tasks.navigation.screen.NoteScreen
 import com.example.tasks.navigation.screen.SettingScreen
+import com.example.tasks.navigation.screen.TaskScreen
 import com.example.tasks.ui.home.HomeScreen
 
 @Composable
@@ -19,7 +20,7 @@ fun BottomNavGraph(navController: NavHostController) {
     ) {
         //Agregando las pantallas
         composable(route = BottomBarScreen.Task.route) {
-            HomeScreen()
+            TaskScreen()
         }
         composable(route = BottomBarScreen.Note.route) {
             NoteScreen()

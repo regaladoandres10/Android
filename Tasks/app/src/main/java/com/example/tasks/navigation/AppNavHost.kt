@@ -13,25 +13,41 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tasks.MainViewModel
 import com.example.tasks.models.BottomNavigationItem
 
 @Composable
 fun Navigation(
-    viewModel: MainViewModel = viewModel(),
+    //viewModel: MainViewModel = viewModel(),
+    navController: NavController,
     navItems: List<BottomNavigationItem>,
-    navController: NavController
 ) {
-    val selectedItemIndex by viewModel.selectedItemIndex.collectAsState()
+    //val selectedItemIndex by viewModel.selectedItemIndex.collectAsState()
+    //Observar la ruta actual automaticamente
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar {
-        navItems.forEachIndexed { index, item ->
+        navItems.forEach { item ->
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                //Comparamos la ruta del item con la ruta actual
+                selected = currentRoute == item.route,
                 onClick = {
-                    viewModel.selectedItem(index)
+                    //Logica de navegación
+                    navController.navigate(item.route) {
+                        //Limpiar la pila para no acomular pantallas
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        //Evita copias multiples de la misma pantalla si se pulsa mucho el botón
+                        launchSingleTop = true
+                        //Restaurar el estado al volver
+                        restoreState = true
+                    }
                 },
                 //Mostrar el nombre de la Screen
                 label = {
@@ -51,7 +67,7 @@ fun Navigation(
                         }
                     ) {
                         Icon(
-                            imageVector = if(index == selectedItemIndex ) {
+                            imageVector = if(currentRoute == item.route ) {
                                 item.selectedIcon
                             } else item.unSelectedIcon,
                             contentDescription = item.title,
@@ -61,13 +77,4 @@ fun Navigation(
             )
         }
     }
-}
-
-@Composable
-fun RowScope.AddItem(
-    screen: BottomBarScreen,
-    currentDestination: NavDestination,
-    navController: NavHostController
-) {
-
 }

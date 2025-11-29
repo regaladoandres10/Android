@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.tasks.MainViewModel
+import com.example.tasks.navigation.BottomNavGraph
 import com.example.tasks.navigation.Navigation
 import com.example.tasks.navigation.navItems
 import com.example.tasks.ui.components.FloatingAddTaskButton
@@ -31,8 +32,6 @@ import com.example.tasks.ui.components.SegmentedButtons
 
 @Composable
 fun HomeScreen() {
-    val viewModel = viewModel<MainViewModel>()
-    val isSearching by viewModel.isSearching.collectAsState()
     val context = LocalContext.current
     val navController = rememberNavController()
     //Funcion temporal
@@ -45,9 +44,8 @@ fun HomeScreen() {
         //Navegacion
         bottomBar = {
             Navigation(
-                viewModel = viewModel,
+                navController = navController,
                 navItems = navItems,
-                navController = navController
             )
         },
         //Botón flotante para agregar tareas
@@ -55,33 +53,8 @@ fun HomeScreen() {
             FloatingAddTaskButton(onFabClick)
         }
     ) { paddingValues ->
-        //Contenido de la pantalla
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues) //Evita que el contenido quede bajo el BottomBar
-                .padding(16.dp)
-        ) {
-            Spacer( modifier = Modifier.height(35.dp) )
-            Text(
-                text = "Tareas",
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
-            )
-            Spacer( modifier = Modifier.height(16.dp) )
-            SearchBar()
-            Spacer( modifier = Modifier.height(16.dp) )
-            SegmentedButtons()
-            Spacer( modifier = Modifier.height(16.dp) )
-            //Mandar llamar el composable de LazyColumnTask
-            if(isSearching) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-            } else {
-                LazyColumnTask()
-            }
-
+        Box(modifier = Modifier.padding(paddingValues)) {
+            BottomNavGraph(navController)
         }
     }
 

@@ -12,12 +12,14 @@ import com.example.tasks.models.BottomNavigationItem
 val navItems = listOf(
     BottomNavigationItem(
         title = BottomBarScreen.Task.title,
+        route = BottomBarScreen.Task.route,
         selectedIcon = BottomBarScreen.Task.selectedIcon,
         unSelectedIcon = BottomBarScreen.Task.unSelectedIcon,
         hasNews = BottomBarScreen.Task.hasNews,
     ),
     BottomNavigationItem(
         title = BottomBarScreen.Note.title,
+        route = BottomBarScreen.Note.route,
         selectedIcon = BottomBarScreen.Note.selectedIcon,
         unSelectedIcon = BottomBarScreen.Note.unSelectedIcon,
         hasNews = BottomBarScreen.Note.hasNews,
@@ -25,6 +27,7 @@ val navItems = listOf(
     ),
     BottomNavigationItem(
         title = BottomBarScreen.Configuration.title,
+        route = BottomBarScreen.Configuration.route,
         selectedIcon = BottomBarScreen.Note.selectedIcon,
         unSelectedIcon = BottomBarScreen.Note.unSelectedIcon,
         hasNews = BottomBarScreen.Note.hasNews,
