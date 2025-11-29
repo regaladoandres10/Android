@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.tasks.MainViewModel
 import com.example.tasks.navigation.Navigation
 import com.example.tasks.navigation.navItems
@@ -33,6 +34,7 @@ fun HomeScreen() {
     val viewModel = viewModel<MainViewModel>()
     val isSearching by viewModel.isSearching.collectAsState()
     val context = LocalContext.current
+    val navController = rememberNavController()
     //Funcion temporal
     val onFabClick = {
         Toast.makeText(context, "Boton presionado", Toast.LENGTH_SHORT).show()
@@ -44,7 +46,8 @@ fun HomeScreen() {
         bottomBar = {
             Navigation(
                 viewModel = viewModel,
-                navItems = navItems
+                navItems = navItems,
+                navController = navController
             )
         },
         //Botón flotante para agregar tareas

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tasks"
+    namespace = "com.example.navigation"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.tasks"
+        applicationId = "com.example.navigation"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -49,9 +49,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation(libs.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

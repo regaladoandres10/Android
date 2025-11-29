@@ -1,5 +1,6 @@
 package com.example.tasks.navigation
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -10,15 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.tasks.MainViewModel
 import com.example.tasks.models.BottomNavigationItem
 
 @Composable
 fun Navigation(
     viewModel: MainViewModel = viewModel(),
-    navItems: List<BottomNavigationItem>
+    navItems: List<BottomNavigationItem>,
+    navController: NavController
 ) {
     val selectedItemIndex by viewModel.selectedItemIndex.collectAsState()
+
     NavigationBar {
         navItems.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -54,4 +61,13 @@ fun Navigation(
             )
         }
     }
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination,
+    navController: NavHostController
+) {
+
 }
