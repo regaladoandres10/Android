@@ -1,4 +1,4 @@
-package com.example.tasks.ui.components
+package com.example.tasks.ui.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.SegmentedButton
