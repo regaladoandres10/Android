@@ -16,12 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.MainViewModel
-import com.example.tasks.ui.components.LazyColumnTask
-import com.example.tasks.ui.components.SearchBar
-import com.example.tasks.ui.components.SegmentedButtons
+import com.example.tasks.ui.common.LazyColumnTask
+import com.example.tasks.ui.common.SearchBar
+import com.example.tasks.ui.common.SegmentedButtons
 
 @Composable
 fun TaskScreen(
