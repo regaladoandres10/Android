@@ -47,9 +47,3 @@ fun CreateTask() {
 
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCreateTask() {
-    CreateTask()
-}
