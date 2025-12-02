@@ -33,13 +33,13 @@ fun TaskScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Spacer( modifier = Modifier.height(35.dp) )
+        Spacer( modifier = Modifier.height(20.dp) )
         Text(
             text = "Tareas",
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp
         )
-        Spacer( modifier = Modifier.height(16.dp) )
+        Spacer( modifier = Modifier.height(5.dp) )
         SearchBar()
         Spacer( modifier = Modifier.height(16.dp) )
         SegmentedButtons()
