@@ -20,3 +20,17 @@ fun FloatingAddTaskButton(
         text = { Text("Nueva tarea") }
     )
 }
+
+@Composable
+fun FloatingAddNoteButton(
+    onClick: () -> Unit
+) {
+    ExtendedFloatingActionButton(
+        onClick = { onClick() },
+        icon = { Icon(
+            Icons.Filled.Add,
+            "Agregar notas"
+        ) },
+        text = { Text("Nueva nota") }
+    )
+}

@@ -31,8 +31,7 @@ fun HomeScreen() {
     }
 
     val showFAB = when (currentRoute) {
-        BottomBarScreen.Task.route,
-        BottomBarScreen.Note.route -> true
+        BottomBarScreen.Task.route -> true
 
         //Ocultar el FAB
         AppScreen.CREATE_TASK -> false
