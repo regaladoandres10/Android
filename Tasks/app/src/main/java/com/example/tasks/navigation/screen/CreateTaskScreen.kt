@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -45,7 +46,10 @@ fun CreateTask(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Crear Nueva Tarea") },
+                title = { Text(
+                    text = "Crear Nueva Tarea",
+                    fontWeight = FontWeight.Bold
+                ) },
                 navigationIcon = {
                     IconButton( onClick = {
                         navController.popBackStack()
@@ -72,7 +76,8 @@ fun CreateTask(navController: NavController) {
                 text = "Título de la Tarea",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
+                //fontWeight = FontWeight.Medium
             )
             //Campo de la tarea
             OutlinedTextField(
