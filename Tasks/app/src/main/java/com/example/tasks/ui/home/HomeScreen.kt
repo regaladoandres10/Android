@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
+import com.example.tasks.navigation.AppScreen
 import com.example.tasks.navigation.BottomNavGraph
 import com.example.tasks.navigation.Navigation
 import com.example.tasks.navigation.navItems
@@ -17,9 +18,9 @@ import com.example.tasks.ui.common.FloatingAddTaskButton
 fun HomeScreen() {
     val context = LocalContext.current
     val navController = rememberNavController()
-    //Funcion temporal
-    val onFabClick = {
-        Toast.makeText(context, "Boton presionado", Toast.LENGTH_SHORT).show()
+
+    val navigateToCreateTask = {
+        navController.navigate(AppScreen.CREATE_TASK)
     }
 
     //Contenido de navegación
@@ -33,7 +34,7 @@ fun HomeScreen() {
         },
         //Botón flotante para agregar tareas
         floatingActionButton = {
-            FloatingAddTaskButton(onFabClick)
+            FloatingAddTaskButton(navigateToCreateTask)
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
