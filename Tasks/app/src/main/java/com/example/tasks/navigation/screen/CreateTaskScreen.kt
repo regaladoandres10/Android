@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -42,6 +44,7 @@ import com.example.tasks.ui.common.TimesPicker
 fun CreateTask(navController: NavController) {
     var textState by remember { mutableStateOf("") }
     var descriptionState by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
     //Top bar
     Scaffold(
         topBar = {
@@ -66,6 +69,7 @@ fun CreateTask(navController: NavController) {
         //Contenido principal
         Column(
             modifier = Modifier
+                .verticalScroll(scrollState)
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
