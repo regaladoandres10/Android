@@ -27,6 +27,7 @@ fun TaskScreen(
     viewModel: MainViewModel = viewModel()
 ) {
     val isSearching by viewModel.isSearching.collectAsState()
+
     //Contenido de la pantalla
     Column(
         modifier = Modifier

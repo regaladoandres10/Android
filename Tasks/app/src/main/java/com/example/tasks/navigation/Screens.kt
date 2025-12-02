@@ -29,4 +29,5 @@ val navItems = listOf(
 //Rutas de pantallas
 object AppScreen {
     const val CREATE_TASK = "create_task_route"
+    const val CREATE_NOTE = "create_note_route"
 }
