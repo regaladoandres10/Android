@@ -7,6 +7,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.tasks.navigation.screen.CreateTask
 import com.example.tasks.navigation.screen.NoteScreen
 import com.example.tasks.navigation.screen.SettingScreen
 import com.example.tasks.navigation.screen.TaskScreen
@@ -27,6 +28,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable( route = BottomBarScreen.Configuration.route ) {
             SettingScreen()
+        }
+        composable(route = AppScreen.CREATE_TASK) {
+            CreateTask(navController = navController)
         }
     }
 }
