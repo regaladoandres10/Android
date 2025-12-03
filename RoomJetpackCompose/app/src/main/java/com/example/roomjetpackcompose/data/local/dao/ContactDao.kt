@@ -7,6 +7,7 @@ import androidx.room.Upsert
 import com.example.roomjetpackcompose.data.local.entities.Contact
 import kotlinx.coroutines.flow.Flow
 
+//Data access object
 @Dao
 interface ContactDao {
 

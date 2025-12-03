@@ -20,8 +20,9 @@ import kotlinx.coroutines.launch
 class ContactViewModel(
     private val dao: ContactDao
 ): ViewModel() {
+
     private val _sortType = MutableStateFlow(SortType.FIRST_NAME)
-    //Tipo de clasificacion
+    //Guardar el tipo de ordenamiento actual
     private val _contacts = _sortType
         .flatMapLatest { sortType ->
             when (sortType) {
@@ -31,7 +32,10 @@ class ContactViewModel(
             }
         }
         //Crear un flujo de estado
+        //viewModelScope = Asegura que el flow esta activo mientras el viewModel vive.
+        //SharingStarted.WhileSubscribed() = Optimiza el consumo
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    //Estado general del estado
     private val _state = MutableStateFlow(ContactState())
     val state = combine(_state, _sortType, _contacts) { state, sortType, contacts ->
         //Combinar tres flujos en un solo flujo
@@ -40,6 +44,7 @@ class ContactViewModel(
             sortType = sortType
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ContactState())
+
     fun onEvent(event: ContactEvent) {
         when(event) {
             is ContactEvent.DeleteContact -> {
@@ -47,6 +52,7 @@ class ContactViewModel(
                     dao.deleteContact(event.contact)
                 }
             }
+            //Insertar contacto
             ContactEvent.SaveContact -> {
                 val firstName = state.value.firstName
                 val lastName = state.value.lastName
@@ -67,7 +73,7 @@ class ContactViewModel(
                     //Pasamos el dato que queramos insertar en la base de datos
                     dao.upsertContact(contact)
                 }
-                //Actualizamos
+                //Actualizamos o reiniciamos el formulario
                 _state.update { it.copy(
                     isAddingContact = false,
                     firstName = "",
@@ -90,14 +96,17 @@ class ContactViewModel(
                     phoneNumber = event.phoneNumber
                 ) }
             }
+            //Orenar los contactos
             is ContactEvent.SortContacts -> {
                 _sortType.value = event.sortType
             }
+            //Ocultar el formulario
             ContactEvent.hideDialog -> {
                 _state.update { it.copy(
                     isAddingContact = false
                 ) }
             }
+            //Muestra el formulario
             ContactEvent.showDialog -> {
                 _state.update { it.copy(
                     isAddingContact = true

@@ -4,7 +4,6 @@ data class Task(
     val id: Int = 0,
     val title: String,
 //    val description: String? = null,
-//    val type: TaskType? = null,
 //    val dueDate: Long? = null,
     val isCompleted: Boolean,
     val createdAt: Long = System.currentTimeMillis()
