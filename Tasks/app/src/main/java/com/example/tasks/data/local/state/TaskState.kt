@@ -21,5 +21,6 @@ data class TaskState(
     val createdAt: Long = System.currentTimeMillis(),
     val isCompleted: Boolean = false,
     val isAddingTask: Boolean = false,
+    val taskToEditId: Int? = null,
     val sortType: SortTypeTask = SortTypeTask.TODAS
 )

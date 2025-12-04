@@ -14,6 +14,7 @@ sealed interface TaskEvent {
     object hideModal: TaskEvent
     data class SortTasks(val sortType: SortTypeTask): TaskEvent
     data class DeleteTask(val task: Task): TaskEvent
+    data class SetTaskToEditId(val id: Int?): TaskEvent
     //Evento de recordatorio
     data class SetReminderTime(val time: Long?): TaskEvent
     //Evento de multimedia

@@ -1,5 +1,8 @@
 package com.example.tasks.ui.common
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +22,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.tasks.static.FileType
+import com.example.tasks.static.determineFileType
+import com.example.tasks.static.persistUriPermission
 
 @Composable
 fun AttachFileField(
@@ -29,10 +35,26 @@ fun AttachFileField(
     fileType: FileType,
     onFileAttached: (String?, FileType?) -> Unit
 ) {
-    // ⚠️ NOTA: El File Launcher (ActivityResultLauncher) se omite por simplicidad aquí
-    // pero iría dentro de esta función para seleccionar el archivo del sistema.
-
+    val context = LocalContext.current
+    //Muestra el nombre del archivo si existe, sino "Ningún archivo adjunto"
     val fileName = currentFile?.substringAfterLast('/') ?: "Ningún archivo adjunto"
+
+    //Seleccionar el archivo
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri: Uri? ->
+            if (uri != null) {
+                //Determinar el tipo de archivo (PHOTO, VIDEO, etc.)
+                val determinedType = determineFileType(context, uri)
+
+                //Obtener la URI persistente como String para guardar en Room
+                val persistentUri = persistUriPermission(context, uri)
+
+                //Enviar el evento al ViewModel
+                onFileAttached(persistentUri, determinedType)
+            }
+        }
+    )
 
     Row(
         modifier = Modifier
@@ -67,8 +89,8 @@ fun AttachFileField(
         if (currentFile == null) {
             Button(onClick = {
                 // TODO: Aquí invocar el ActivityResultLauncher para seleccionar archivo
-                // Ejemplo simulado:
-                onFileAttached("/data/app/file_001.jpg", FileType.PHOTO)
+                // La URI se almacena como String y se maneja el FileType en el launcher.
+                filePickerLauncher.launch(arrayOf("*/*")) //Seleccionar cualquier archivo
             }) {
                 Text("Adjuntar")
             }

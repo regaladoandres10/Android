@@ -17,9 +17,10 @@ import com.example.tasks.navigation.Navigation
 import com.example.tasks.navigation.navItems
 import com.example.tasks.ui.common.FloatingAddNoteButton
 import com.example.tasks.ui.common.FloatingAddTaskButton
+import com.example.tasks.viewmodel.TaskViewModelFactory
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(taskViewModelFactory: TaskViewModelFactory) {
     val navController = rememberNavController()
     //Observar la ruta actual
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -68,7 +69,10 @@ fun HomeScreen() {
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            BottomNavGraph(navController)
+            BottomNavGraph(
+                navController = navController,
+                taskViewModelFactory = taskViewModelFactory
+            )
         }
     }
 }

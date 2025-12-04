@@ -44,6 +44,27 @@ class TaskViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskState())
 
+
+    //Cargar datos de la tarea o editarlos
+    fun loadTaskForEdit(taskId: Int) {
+        viewModelScope.launch {
+            val task = dao.getTaskById(taskId)
+            if (task != null) {
+                _state.value = _state.value.copy(
+                    taskToEditId = task.id,
+                    title = task.title ?: "",
+                    description = task.description ?: "",
+                    dueDate = task.dueDate,
+                    reminderTime = task.reminderTime,
+                    filePath = task.filePath,
+                    fileType = task.fileType ?: FileType.NONE,
+                    isCompleted = task.isCompleted,
+                    isAddingTask = true //Mostrar el modal o pantalla
+                )
+            }
+        }
+    }
+
     fun onEvent( event: TaskEvent ){
         when(event) {
             is TaskEvent.DeleteTask -> {
@@ -62,6 +83,7 @@ class TaskViewModel(
                 val reminderTime = state.value.reminderTime
                 val filePath = state.value.filePath
                 val fileType = state.value.fileType
+                val taskId = state.value.taskToEditId ?: 0
 
                 //Validar los campos
                 if (title.isBlank()) {
@@ -69,6 +91,7 @@ class TaskViewModel(
                 }
                 //Crear el objeto Task
                 val task = Task(
+                    id = taskId,
                     title = title,
                     description = description,
                     dueDate = dueDate,
@@ -78,20 +101,22 @@ class TaskViewModel(
                     filePath = filePath,
                     fileType = fileType
                 )
+                //Insertar y actualizar el estado
                 viewModelScope.launch {
                     dao.upsertTask(task)
-                }
-                //Limpiar el estado despues de guardar, utilizar una nueva tarea
-                _state.update { it.copy(
-                    title = "",
-                    description = "",
-                    dueDate = null,
-                    reminderTime = null,
-                    filePath = null,
-                    fileType = FileType.NONE,
-                    isAddingTask = false
-                ) }
 
+                    //Limpiar el estado despues de guardar, utilizar una nueva tarea
+                    _state.update { it.copy(
+                        title = "",
+                        description = "",
+                        dueDate = null,
+                        reminderTime = null,
+                        filePath = null,
+                        fileType = FileType.NONE,
+                        isAddingTask = false,
+                        taskToEditId = null
+                    ) }
+                }
             }
             //Setters
             is TaskEvent.SetContent -> {
@@ -140,6 +165,13 @@ class TaskViewModel(
             TaskEvent.showModal -> {
                 _state.update { it.copy(
                     isAddingTask = true
+                ) }
+            }
+            is TaskEvent.SetTaskToEditId -> {
+                //Acceder al id
+                val eventId = (event as TaskEvent.SetTaskToEditId).id
+                _state.update { it.copy(
+                  taskToEditId = eventId
                 ) }
             }
         }

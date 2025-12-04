@@ -2,8 +2,6 @@ package com.example.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tasks.models.Task
-import com.example.tasks.static.allTasks
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,42 +31,8 @@ class MainViewModel: ViewModel() {
     private var _isSearching = MutableStateFlow(false)
     var isSearching = _isSearching.asStateFlow()
 
-    //Lista de tareas
-    private val _tasks = MutableStateFlow(allTasks)
-    val tasks = searchText
-        .debounce(1000L)
-        .onEach { _isSearching.update { true } }
-        //Buscar la tarea
-        .combine(_tasks) { text, tasks ->
-            if(text.isBlank()) {
-                tasks
-            } else {
-                tasks.filter {
-                    it.doesMatchSearchQuery(text)
-                }
-            }
-        }
-        .onEach { _isSearching.update { false } }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            _tasks.value
-        )
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-    }
-
-    fun onTaskSelected(selectedTask: Task) {
-        //Recorremos la lista
-        val updateList = _tasks.value.map { currentTask ->
-
-            //Cambiar valor
-            currentTask.copy(
-                isCompleted = currentTask.title == selectedTask.title
-            )
-        }
-        //Actualizamos la lista
-        _tasks.value = updateList
     }
 
     fun selectedItem(index: Int) {

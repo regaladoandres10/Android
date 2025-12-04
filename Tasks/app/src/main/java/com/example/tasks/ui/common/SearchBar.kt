@@ -21,8 +21,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.MainViewModel
 
 @Composable
-fun SearchBar(modifier: Modifier = Modifier) {
-    val viewModel = viewModel<MainViewModel>()
+fun SearchBar(
+    viewModel: MainViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     val searchText by viewModel.searchText.collectAsState()
     //Buscador
     OutlinedTextField(

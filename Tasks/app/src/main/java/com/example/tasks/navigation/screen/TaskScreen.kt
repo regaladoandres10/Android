@@ -17,16 +17,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.tasks.MainViewModel
 import com.example.tasks.ui.common.LazyColumnTask
 import com.example.tasks.ui.common.SearchBar
 import com.example.tasks.ui.common.SegmentedButtons
+import com.example.tasks.viewmodel.TaskViewModel
 
 @Composable
 fun TaskScreen(
-    viewModel: MainViewModel = viewModel()
+    navController: NavController,
+    taskViewModel: TaskViewModel = viewModel(),
+    mainViewModel: MainViewModel = viewModel()
 ) {
-    val isSearching by viewModel.isSearching.collectAsState()
+    val isSearching by mainViewModel.isSearching.collectAsState()
+
+    //Función que contiene la lógica de navegación
+    val handleEditNavigation: (Int) -> Unit = { taskId ->
+        //Cargar la tarea en el estado de edición del ViewModel
+        taskViewModel.loadTaskForEdit(taskId)
+        //Navegar usando el NavController
+        navController.navigate("create_task_route")
+    }
 
     //Contenido de la pantalla
     Column(
@@ -41,9 +53,10 @@ fun TaskScreen(
             fontSize = 30.sp
         )
         Spacer( modifier = Modifier.height(5.dp) )
-        SearchBar()
+        SearchBar( viewModel = mainViewModel )
         Spacer( modifier = Modifier.height(16.dp) )
-        SegmentedButtons()
+        //Navegación
+        SegmentedButtons( viewModel = taskViewModel )
         Spacer( modifier = Modifier.height(16.dp) )
         //Mandar llamar el composable de LazyColumnTask
         if(isSearching) {
@@ -51,7 +64,10 @@ fun TaskScreen(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         } else {
-            LazyColumnTask()
+            LazyColumnTask(
+                onEditTask = handleEditNavigation,
+                viewModel = taskViewModel
+            )
         }
 
     }
