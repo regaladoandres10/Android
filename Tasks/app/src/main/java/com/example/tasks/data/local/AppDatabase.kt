@@ -3,7 +3,7 @@ package com.example.tasks.data.local
 import androidx.room.Database
 import com.example.tasks.data.local.dao.TaskDao
 import com.example.tasks.data.local.entities.Note
-import com.example.tasks.models.Task
+import com.example.tasks.data.local.entities.Task
 
 @Database(
     entities =[Task::class, Note::class ],
