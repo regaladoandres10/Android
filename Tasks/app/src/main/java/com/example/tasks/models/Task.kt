@@ -1,6 +1,6 @@
 package com.example.tasks.models
 
-data class Task(
+data class Tarea(
     val id: Int = 0,
     val title: String,
 //    val description: String? = null,

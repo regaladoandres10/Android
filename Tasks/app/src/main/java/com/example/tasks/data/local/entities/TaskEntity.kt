@@ -2,6 +2,7 @@ package com.example.tasks.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.tasks.static.FileType
 
 @Entity
 data class Task(
@@ -10,6 +11,11 @@ data class Task(
     val dueDate: Long?,
     val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
+    //Recordatorio
+    val reminderTime: Long?,
+    //Multimedia
+    val filePath: String?,
+    val fileType: FileType,
     //Id
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0

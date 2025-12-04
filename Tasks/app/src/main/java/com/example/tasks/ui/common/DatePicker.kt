@@ -16,6 +16,9 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.viewmodel.DateViewModel
@@ -24,31 +27,35 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun DatePickerFieldToModal( modifier: Modifier = Modifier ) {
-    val viewModel = viewModel<DateViewModel>()
-    val selectedDate by viewModel.selectedDate.collectAsState()
-    val showModal by viewModel.showModal.collectAsState()
+fun DatePickerFieldToModal(
+    selectedDateMillis: Long?,
+    onDateSelected: (Long?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    //val viewModel = viewModel<DateViewModel>()
+    //val selectedDate by viewModel.selectedDate.collectAsState()
+    var showModal by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = selectedDate?.let { convertMillisToDate(it) } ?: " ",
+        value = selectedDateMillis?.let { convertMillisToDate(it) } ?: " ",
         onValueChange = { },
-        label = { Text("Fecha") },
+        label = { Text("Fecha de vencimiento") },
         readOnly = true,
         placeholder = { Text("DD/MM/AAAA") },
         trailingIcon = {
-            IconButton( onClick = { viewModel.selectShowModal(true) } ) {
+            IconButton( onClick = { showModal = true } ) {
                 Icon(Icons.Default.CalendarMonth, contentDescription = "Seleccionar fecha")
             }
         },
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { viewModel.selectShowModal(true) }
+            .clickable { showModal = true }
     )
 
     if(showModal) {
         DatePickerModal(
-            onDateSelected = {  viewModel.selectDate(it) },
-            onDismiss = { viewModel.selectShowModal(false) }
+            onDateSelected = {  onDateSelected },
+            onDismiss = { showModal = false }
         )
     }
 

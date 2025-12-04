@@ -23,25 +23,33 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.ui.common.DatePickerFieldToModal
 import com.example.tasks.ui.common.TimesPicker
+import com.example.tasks.viewmodel.TaskViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTask(navController: NavController) {
+fun CreateTask(
+    navController: NavController,
+    viewModel: TaskViewModel = viewModel()
+) {
+
+    val state by viewModel.state.collectAsState()
+    val onEvent = viewModel::onEvent
+
     var textState by remember { mutableStateOf("") }
     var descriptionState by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
@@ -55,6 +63,8 @@ fun CreateTask(navController: NavController) {
                 ) },
                 navigationIcon = {
                     IconButton( onClick = {
+                        //Ocultar el modal de activo
+                        onEvent(TaskEvent.hideModal)
                         navController.popBackStack()
                     } ) {
                         Icon(
@@ -85,8 +95,8 @@ fun CreateTask(navController: NavController) {
             )
             //Campo de la tarea
             OutlinedTextField(
-                value = textState,
-                onValueChange = { textState = it },
+                value = state.title,
+                onValueChange = { onEvent(TaskEvent.SetTitle(it)) },
                 label = { Text("Nombre") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -94,38 +104,24 @@ fun CreateTask(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             //Selector de fecha
             Text(
-                text = "Fecha",
+                text = "Fecha de vencimiento",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-            DatePickerFieldToModal()
+            DatePickerFieldToModal(
+                selectedDateMillis = state.dueDate,
+                onDateSelected = { onEvent(TaskEvent.SetDueDate(it)) }
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            //Selector de horario
+            //Recordatorio
             Text(
-                text = "Horario",
+                text = "Recordatorio",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    //Hora de inicio
-                    TimesPicker("Hora de inicio")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    //Hora de finalización
-                    TimesPicker("Hora de finalización")
-                }
 
-
-
-            }
             Spacer(modifier = Modifier.height(16.dp))
             //Descripcion
             Text(
@@ -135,17 +131,41 @@ fun CreateTask(navController: NavController) {
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             OutlinedTextField(
-                value = descriptionState,
-                onValueChange = { descriptionState = it },
+                value = state.description,
+                onValueChange = { onEvent(TaskEvent.SetContent(it)) },
                 label = { Text("Detalles de la tarea") },
                 minLines = 3, // Permite múltiples líneas
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            //Adjuntar archivos
+            Text(
+                text = "Adjuntar Archivo",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+            )
+
+            AttachFileField(
+                currentFile = state.filePath,
+                fileType = state.fileType,
+                onFileAttached = { path, type ->
+                    onEvent(TaskEvent.SetFile(path, type))
+                }
+            )
             Spacer(modifier = Modifier.height(24.dp))
+
             //Boton de crear tarea
             Button(
-                onClick = { /*Acción para guardar la tarea*/ },
-                modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    onEvent(TaskEvent.SaveTask)
+                    //Una vez guardada volver a la lista de tareas
+                    navController.popBackStack()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                //Desabilitar si el titulo esta vacio
+                enabled = state.title.isNotBlank()
             ) {
                 Text("Crear tarea")
             }
