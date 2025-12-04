@@ -41,7 +41,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +49,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import com.example.tasks.MainViewModel
 import com.example.tasks.data.local.entities.Task
 import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.viewmodel.TaskViewModel
@@ -61,13 +58,13 @@ import java.util.Locale
 
 @Composable
 fun LazyColumnTask(
+    tasks: List<Task>,
     onEditTask: (Int) -> Unit,
     viewModel: TaskViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
     val state by viewModel.state.collectAsState()
-    val tasks = state.tasks
     val onEvent = viewModel::onEvent
 
     //Formatear el timestamp a una cadena de fecha/hora simple

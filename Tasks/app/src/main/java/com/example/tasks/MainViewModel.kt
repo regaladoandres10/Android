@@ -31,10 +31,6 @@ class MainViewModel: ViewModel() {
     private var _isSearching = MutableStateFlow(false)
     var isSearching = _isSearching.asStateFlow()
 
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
-    }
-
     fun selectedItem(index: Int) {
         _selectedItemIndex.value = index
     }
