@@ -11,6 +11,7 @@ import com.example.tasks.static.FileType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -21,8 +22,28 @@ import kotlinx.coroutines.launch
 class TaskViewModel(
     private val dao: TaskDao
 ): ViewModel() {
+
+    //Estado de busquedas
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    //Función para actualizar el texto
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+        //Mostramos la carga si hay texto y el filtrado va a ocurrir
+        if (text.isBlank()) {
+            _isSearching.value = true
+        } else {
+            _isSearching.value = false
+        }
+    }
+
     private val _sortType = MutableStateFlow(SortTypeTask.TODAS)
     //Guardar el tipo de ordenamiento actual
+    //Crear el flow de tareas filtradas y ordenadas
     private val _tasks = _sortType
         .flatMapLatest { sortType ->
             when (sortType) {
@@ -34,10 +55,27 @@ class TaskViewModel(
         //Crear un flujo de estado
         //viewModelScope = Asegura que el flow esta activo mientras el viewModel vive.
         //SharingStarted.WhileSubscribed() = Optimiza el consumo
-        .stateIn( viewModelScope, SharingStarted.WhileSubscribed(), emptyList<Task>() )
+        .stateIn( viewModelScope, SharingStarted.WhileSubscribed(), emptyList() )
+
+    //Crear el flow de tareas mostradas filtrado por texto
+    val tasksDisplay = combine(_tasks, _searchText) { tasks, text ->
+        //Logica de filtrado/no filtrado
+        val filteredList = if (text.isBlank()) {
+            tasks
+        } else {
+            //Realiza la busqueda
+            tasks.filter { task ->
+                (task.title ?: "").contains(text, ignoreCase = true) ||
+                        (task.description ?: "").contains(text, ignoreCase = true)
+            }
+        }
+        //Desactivar la bandera de carga
+        _isSearching.value = false
+        return@combine filteredList
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _state = MutableStateFlow(TaskState())
-    val state = combine(_state, _sortType, _tasks ) { state, sortType, tasks ->
+    val state = combine(_state, _sortType, tasksDisplay ) { state, sortType, tasks ->
         state.copy(
             tasks = tasks,
             sortType = sortType
@@ -104,7 +142,6 @@ class TaskViewModel(
                 //Insertar y actualizar el estado
                 viewModelScope.launch {
                     dao.upsertTask(task)
-
                     //Limpiar el estado despues de guardar, utilizar una nueva tarea
                     _state.update { it.copy(
                         title = "",

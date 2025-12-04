@@ -19,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.MainViewModel
+import com.example.tasks.viewmodel.TaskViewModel
 
 @Composable
 fun SearchBar(
-    viewModel: MainViewModel = viewModel(),
+    viewModel: TaskViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    //NOs traemos searchText desde el viewModel
     val searchText by viewModel.searchText.collectAsState()
     //Buscador
     OutlinedTextField(

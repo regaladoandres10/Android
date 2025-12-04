@@ -28,9 +28,11 @@ import com.example.tasks.viewmodel.TaskViewModel
 fun TaskScreen(
     navController: NavController,
     taskViewModel: TaskViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel()
 ) {
-    val isSearching by mainViewModel.isSearching.collectAsState()
+    //Estado completo que contiene la lista de tareas filtrada
+    val state by taskViewModel.state.collectAsState()
+
+    val isSearching by taskViewModel.isSearching.collectAsState()
 
     //Función que contiene la lógica de navegación
     val handleEditNavigation: (Int) -> Unit = { taskId ->
@@ -53,7 +55,7 @@ fun TaskScreen(
             fontSize = 30.sp
         )
         Spacer( modifier = Modifier.height(5.dp) )
-        SearchBar( viewModel = mainViewModel )
+        SearchBar( viewModel = taskViewModel )
         Spacer( modifier = Modifier.height(16.dp) )
         //Navegación
         SegmentedButtons( viewModel = taskViewModel )
@@ -65,6 +67,7 @@ fun TaskScreen(
             }
         } else {
             LazyColumnTask(
+                tasks = state.tasks,
                 onEditTask = handleEditNavigation,
                 viewModel = taskViewModel
             )

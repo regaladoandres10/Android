@@ -1,11 +1,8 @@
 package com.example.tasks.navigation
 
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,7 +13,6 @@ import com.example.tasks.navigation.screen.CreateTask
 import com.example.tasks.navigation.screen.NoteScreen
 import com.example.tasks.navigation.screen.SettingScreen
 import com.example.tasks.navigation.screen.TaskScreen
-import com.example.tasks.ui.home.HomeScreen
 import com.example.tasks.viewmodel.TaskViewModel
 import com.example.tasks.viewmodel.TaskViewModelFactory
 
