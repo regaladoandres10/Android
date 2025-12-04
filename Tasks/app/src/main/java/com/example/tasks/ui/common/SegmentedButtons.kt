@@ -11,12 +11,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.MainViewModel
+import com.example.tasks.data.local.events.TaskEvent
+import com.example.tasks.data.local.sortTypeMap
 import com.example.tasks.static.options
+import com.example.tasks.viewmodel.TaskViewModel
 
 @Composable
-fun SegmentedButtons() {
-    val viewModel = viewModel<MainViewModel>()
-    val selectedIndex by viewModel.selectedIndexButton.collectAsState()
+fun SegmentedButtons(
+    viewModel: TaskViewModel = viewModel()
+) {
+    //Obtener el estado
+    val state by viewModel.state.collectAsState()
+    //Acceder a la propiedad de sortType
+    val currentSortType = state.sortType
 
     SingleChoiceSegmentedButtonRow(
         modifier = Modifier
@@ -28,8 +35,13 @@ fun SegmentedButtons() {
                     index = index,
                     count = options.size
                 ),
-                onClick = { viewModel.selectedSegmentedButton(index) },
-                selected = index == selectedIndex
+                onClick = {
+                    val newSortType = sortTypeMap[index]
+                    if (newSortType != null) {
+                        viewModel.onEvent(TaskEvent.SortTasks(newSortType))
+                    }
+                },
+                selected = currentSortType == sortTypeMap[index]
             ) {
                 Text(text = option)
             }

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tasks.data.local.events.TaskEvent
+import com.example.tasks.ui.common.AttachFileField
 import com.example.tasks.ui.common.DatePickerFieldToModal
 import com.example.tasks.ui.common.TimesPicker
 import com.example.tasks.viewmodel.TaskViewModel
@@ -50,6 +51,13 @@ fun CreateTask(
     val state by viewModel.state.collectAsState()
     val onEvent = viewModel::onEvent
 
+    //Determinar si estamos editando o creando
+    val isEditing = state.taskToEditId != null
+    val titleText =
+        if (isEditing)
+            "Editar Tarea"
+        else "Crear Nueva Tarea"
+
     var textState by remember { mutableStateOf("") }
     var descriptionState by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
@@ -58,7 +66,7 @@ fun CreateTask(
         topBar = {
             TopAppBar(
                 title = { Text(
-                    text = "Crear Nueva Tarea",
+                    text = titleText,
                     fontWeight = FontWeight.Bold
                 ) },
                 navigationIcon = {
@@ -156,7 +164,7 @@ fun CreateTask(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            //Boton de crear tarea
+            //Boton de crear tarea/guardar tarea
             Button(
                 onClick = {
                     onEvent(TaskEvent.SaveTask)
@@ -167,7 +175,7 @@ fun CreateTask(
                 //Desabilitar si el titulo esta vacio
                 enabled = state.title.isNotBlank()
             ) {
-                Text("Crear tarea")
+                Text(if (isEditing) "Guardar cambios" else "Crear tarea")
             }
         }
     }

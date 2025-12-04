@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import com.example.tasks.models.Task
+import com.example.tasks.data.local.entities.Task
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -29,4 +29,7 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE isCompleted = 1 ORDER BY title")
     fun getCompletedTask(): Flow<List<Task>>
 
+    //Regresa una sola tarea
+    @Query("SELECT * FROM task WHERE id = :taskId")
+    fun getTaskById(taskId: Int): Task?
 }
