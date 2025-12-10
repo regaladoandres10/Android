@@ -23,7 +23,7 @@ import com.example.tasks.viewmodel.TaskViewModel
 
 @Composable
 fun SearchBar(
-    viewModel: TaskViewModel = viewModel(),
+    viewModel: TaskViewModel,
     modifier: Modifier = Modifier
 ) {
     //NOs traemos searchText desde el viewModel

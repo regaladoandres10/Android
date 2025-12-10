@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.ui.common.AttachFileField
 import com.example.tasks.ui.common.DatePickerFieldToModal
+import com.example.tasks.ui.common.ReminderTimePickerField
 import com.example.tasks.ui.common.TimesPicker
 import com.example.tasks.viewmodel.TaskViewModel
 
@@ -58,8 +59,6 @@ fun CreateTask(
             "Editar Tarea"
         else "Crear Nueva Tarea"
 
-    var textState by remember { mutableStateOf("") }
-    var descriptionState by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
     //Top bar
     Scaffold(
@@ -129,7 +128,12 @@ fun CreateTask(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-
+            ReminderTimePickerField(
+                reminderTime = state.reminderTime,
+                onTimeSelected = { newTime ->
+                    onEvent(TaskEvent.SetReminderTime(newTime))
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
             //Descripcion
             Text(
