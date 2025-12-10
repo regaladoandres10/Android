@@ -47,7 +47,7 @@ fun NoteScreen(
             fontSize = 30.sp
         )
         Spacer( modifier = Modifier.height(5.dp) )
-        SearchBar()
+        //SearchBar()
     }
 
 

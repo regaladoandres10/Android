@@ -37,7 +37,7 @@ fun DatePickerFieldToModal(
     var showModal by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = selectedDateMillis?.let { convertMillisToDate(it) } ?: " ",
+        value = selectedDateMillis?.let { convertMillisToDate(it) } ?: "",
         onValueChange = { },
         label = { Text("Fecha de vencimiento") },
         readOnly = true,
@@ -54,7 +54,7 @@ fun DatePickerFieldToModal(
 
     if(showModal) {
         DatePickerModal(
-            onDateSelected = {  onDateSelected },
+            onDateSelected = onDateSelected,
             onDismiss = { showModal = false }
         )
     }
