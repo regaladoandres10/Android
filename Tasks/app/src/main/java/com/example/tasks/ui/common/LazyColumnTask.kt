@@ -60,7 +60,7 @@ import java.util.Locale
 fun LazyColumnTask(
     tasks: List<Task>,
     onEditTask: (Int) -> Unit,
-    viewModel: TaskViewModel = viewModel(),
+    viewModel: TaskViewModel,
     modifier: Modifier = Modifier
 ) {
 

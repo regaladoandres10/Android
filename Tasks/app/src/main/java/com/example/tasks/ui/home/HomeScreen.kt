@@ -64,7 +64,7 @@ fun HomeScreen(taskViewModelFactory: TaskViewModelFactory) {
                 FloatingAddTaskButton(navigateToCreateTask)
             }
             if (showFABNote) {
-                FloatingAddNoteButton { navigateToCreateNote }
+                FloatingAddNoteButton(navigateToCreateNote)
             }
         }
     ) { paddingValues ->

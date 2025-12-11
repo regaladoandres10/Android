@@ -87,6 +87,7 @@ class TaskViewModel(
     fun loadTaskForEdit(taskId: Int) {
         viewModelScope.launch {
             val task = dao.getTaskById(taskId)
+            /*
             if (task != null) {
                 _state.value = _state.value.copy(
                     taskToEditId = task.id,
@@ -100,6 +101,7 @@ class TaskViewModel(
                     isAddingTask = true //Mostrar el modal o pantalla
                 )
             }
+            */
         }
     }
 

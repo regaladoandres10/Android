@@ -24,8 +24,8 @@ class MainActivity : ComponentActivity() {
     }
 
     //Obtener la instancia del DAO
-    private val dao by lazy {
-        database.dao
+    private val daoTask by lazy {
+        database.taskDao()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             TasksTheme {
 
                 //Crear la instancia de la fabrica aquí, usando el DAO inicializado
-                val taskViewModelFactory = TaskViewModelFactory(dao)
+                val taskViewModelFactory = TaskViewModelFactory(daoTask)
                 HomeScreen(
                     taskViewModelFactory = taskViewModelFactory
                 )

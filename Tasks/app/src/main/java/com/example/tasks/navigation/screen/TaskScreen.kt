@@ -27,7 +27,7 @@ import com.example.tasks.viewmodel.TaskViewModel
 @Composable
 fun TaskScreen(
     navController: NavController,
-    taskViewModel: TaskViewModel = viewModel(),
+    taskViewModel: TaskViewModel,
 ) {
     //Estado completo que contiene la lista de tareas filtrada
     val state by taskViewModel.state.collectAsState()

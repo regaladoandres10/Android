@@ -35,7 +35,10 @@ fun BottomNavGraph(
             )
         }
         composable(route = BottomBarScreen.Note.route) {
-            NoteScreen()
+            NoteScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
         }
         composable( route = BottomBarScreen.Configuration.route ) {
             SettingScreen()
