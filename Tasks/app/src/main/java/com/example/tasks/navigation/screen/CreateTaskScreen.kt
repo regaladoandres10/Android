@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tasks.data.local.events.TaskEvent
@@ -45,15 +47,23 @@ import com.example.tasks.viewmodel.TaskViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTask(
-    navController: NavController,
-    viewModel: TaskViewModel = viewModel()
+    taskId: Int?,
+    navigateBack: () -> Unit,
+    onNavigateUp: () -> Unit
 ) {
-
+    val viewModel = viewModel<TaskViewModel>()
     val state by viewModel.state.collectAsState()
     val onEvent = viewModel::onEvent
 
+    //Uploading task
+    LaunchedEffect(taskId) {
+        taskId?.let {
+            onEvent(TaskEvent.SetTaskToEditId(it))
+        }
+    }
+
     //Determinar si estamos editando o creando
-    val isEditing = state.taskToEditId != null
+    val isEditing = taskId != null
     val titleText =
         if (isEditing)
             "Editar Tarea"
@@ -72,7 +82,7 @@ fun CreateTask(
                     IconButton( onClick = {
                         //Ocultar el modal de activo
                         onEvent(TaskEvent.hideModal)
-                        navController.popBackStack()
+                        onNavigateUp()
                     } ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -173,7 +183,7 @@ fun CreateTask(
                 onClick = {
                     onEvent(TaskEvent.SaveTask)
                     //Una vez guardada volver a la lista de tareas
-                    navController.popBackStack()
+                    navigateBack()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 //Desabilitar si el titulo esta vacio

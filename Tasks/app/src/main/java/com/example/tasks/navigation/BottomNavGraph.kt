@@ -2,6 +2,7 @@ package com.example.tasks.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -10,62 +11,73 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.navigation.screen.CreateTask
+import com.example.tasks.navigation.Destinations
+import com.example.tasks.navigation.screen.NoteEntryBody
+import com.example.tasks.navigation.screen.NoteEntryScreen
 import com.example.tasks.navigation.screen.NoteScreen
 import com.example.tasks.navigation.screen.SettingScreen
 import com.example.tasks.navigation.screen.TaskScreen
+import com.example.tasks.viewmodel.NoteEntryViewModel
 import com.example.tasks.viewmodel.TaskViewModel
 import com.example.tasks.viewmodel.TaskViewModelFactory
 
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    taskViewModelFactory: TaskViewModelFactory
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Task.route
+        startDestination = Destinations.TASK_ROUTE,
+        modifier = modifier
     ) {
-        //Agregando las pantallas
-        composable(route = BottomBarScreen.Task.route) {
-            //Inyectar TaskViewModel con la factory
-            val taskViewModel: TaskViewModel = viewModel(factory = taskViewModelFactory)
+        //Screens
+        composable(route = Destinations.TASK_ROUTE) {
             TaskScreen(
-                navController = navController,
-                taskViewModel = taskViewModel
+                navigateToCreateTask = { taskId ->
+                    navController.navigateToCreateTask(taskId)
+                },
+                navigateToTaskDetails = { taskId ->
+                    navController.navigateToTaskDetails(taskId)
+                }
             )
         }
-        composable(route = BottomBarScreen.Note.route) {
+        composable(route = Destinations.NOTES_ROUTE) {
             NoteScreen(
+                navigateToNoteEntry = {
+                    navController.navigateToCreateNote()
+                }
+            )
+        }
+        //Create notes
+        composable(route = Destinations.CREATE_NOTE_ROUTE) {
+            NoteEntryScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )
         }
-        composable( route = BottomBarScreen.Configuration.route ) {
+
+        composable( route = Destinations.SETTINGS_ROUTE ) {
             SettingScreen()
         }
+
         //Pantalla de creacion y edición de tareas
         composable(
-            route = "${AppScreen.CREATE_TASK}?taskId={taskId}",
+            route = Destinations.CREATE_TASK_WITH_ARGS,
             arguments = listOf(
-                navArgument("taskId") {
+                navArgument(Destinations.TASK_ID) {
                     type = NavType.IntType
                     defaultValue = -1
                 }
             )
         ) { backStackEntry ->
-            val taskViewModel: TaskViewModel = viewModel(factory = taskViewModelFactory)
+            val taskId = backStackEntry.arguments?.getInt(Destinations.TASK_ID) ?: -1
 
-            //Lógica de carga de tarea (solo si se está editando)
-            val taskId = backStackEntry.arguments?.getInt("taskId") ?: -1
-            LaunchedEffect(taskId) {
-                if (taskId != -1) {
-                    taskViewModel.loadTaskForEdit(taskId)
-                } else {
-                    //Limpiar el estado de edición al crear una nueva
-                    taskViewModel.onEvent(TaskEvent.SetTaskToEditId(null))
-                }
-            }
-            CreateTask(navController = navController)
+            CreateTask(
+                taskId = if (taskId == -1) null else taskId,
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
         }
     }
 }

@@ -33,12 +33,7 @@ class TaskViewModel(
     //Función para actualizar el texto
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-        //Mostramos la carga si hay texto y el filtrado va a ocurrir
-        if (text.isBlank()) {
-            _isSearching.value = true
-        } else {
-            _isSearching.value = false
-        }
+        _isSearching.value = text.isNotBlank()
     }
 
     private val _sortType = MutableStateFlow(SortTypeTask.TODAS)
@@ -60,19 +55,22 @@ class TaskViewModel(
     //Crear el flow de tareas mostradas filtrado por texto
     val tasksDisplay = combine(_tasks, _searchText) { tasks, text ->
         //Logica de filtrado/no filtrado
-        val filteredList = if (text.isBlank()) {
+        val filtered = if (text.isBlank()) {
             tasks
         } else {
             //Realiza la busqueda
-            tasks.filter { task ->
-                (task.title ?: "").contains(text, ignoreCase = true) ||
-                        (task.description ?: "").contains(text, ignoreCase = true)
+            tasks.filter {
+                (it.title ?: "").contains(text, true) ||
+                        (it.description ?: "").contains(text, true)
             }
         }
         //Desactivar la bandera de carga
         _isSearching.value = false
-        return@combine filteredList
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        filtered
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList())
 
     private val _state = MutableStateFlow(TaskState())
     val state = combine(_state, _sortType, tasksDisplay ) { state, sortType, tasks ->
@@ -80,30 +78,10 @@ class TaskViewModel(
             tasks = tasks,
             sortType = sortType
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskState())
-
-
-    //Cargar datos de la tarea o editarlos
-    fun loadTaskForEdit(taskId: Int) {
-        viewModelScope.launch {
-            val task = dao.getTaskById(taskId)
-            /*
-            if (task != null) {
-                _state.value = _state.value.copy(
-                    taskToEditId = task.id,
-                    title = task.title ?: "",
-                    description = task.description ?: "",
-                    dueDate = task.dueDate,
-                    reminderTime = task.reminderTime,
-                    filePath = task.filePath,
-                    fileType = task.fileType ?: FileType.NONE,
-                    isCompleted = task.isCompleted,
-                    isAddingTask = true //Mostrar el modal o pantalla
-                )
-            }
-            */
-        }
-    }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        TaskState())
 
     fun onEvent( event: TaskEvent ){
         when(event) {
@@ -114,33 +92,23 @@ class TaskViewModel(
             }
             //Insertar tareas
             TaskEvent.SaveTask -> {
-                //Desestructurar los campos del estado
-                val title = state.value.title
-                val description = state.value.description
-                val dueDate = state.value.dueDate
-                val isCompleted = state.value.isCompleted
-                val createdAt = state.value.createdAt
-                val reminderTime = state.value.reminderTime
-                val filePath = state.value.filePath
-                val fileType = state.value.fileType
-                val taskId = state.value.taskToEditId ?: 0
-
+                val s = state.value
                 //Validar los campos
-                if (title.isBlank()) {
-                    return
-                }
-                //Crear el objeto Task
+                if (s.title.isBlank()) return
+
                 val task = Task(
-                    id = taskId,
-                    title = title,
-                    description = description,
-                    dueDate = dueDate,
-                    isCompleted = isCompleted,
-                    createdAt = createdAt,
-                    reminderTime = reminderTime,
-                    filePath = filePath,
-                    fileType = fileType
+                    //Desestructurar los campos del estado
+                    id = s.taskToEditId ?: 0,
+                    title = s.title,
+                    description = s.description,
+                    dueDate = s.dueDate,
+                    isCompleted = s.isCompleted,
+                    createdAt = s.createdAt,
+                    reminderTime = s.reminderTime,
+                    filePath = s.filePath,
+                    fileType = s.fileType
                 )
+
                 //Insertar y actualizar el estado
                 viewModelScope.launch {
                     dao.upsertTask(task)
