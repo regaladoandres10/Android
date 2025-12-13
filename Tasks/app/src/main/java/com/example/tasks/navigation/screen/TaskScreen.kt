@@ -13,33 +13,44 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tasks.MainViewModel
+import com.example.tasks.data.local.AppDatabase
+import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.ui.common.LazyColumnTask
 import com.example.tasks.ui.common.SearchBar
 import com.example.tasks.ui.common.SegmentedButtons
 import com.example.tasks.viewmodel.TaskViewModel
+import com.example.tasks.viewmodel.TaskViewModelFactory
 
 @Composable
 fun TaskScreen(
-    navController: NavController,
-    taskViewModel: TaskViewModel = viewModel(),
+    navigateToCreateTask: (Int?) -> Unit,
+    navigateToTaskDetails: (Int) -> Unit
 ) {
-    //Estado completo que contiene la lista de tareas filtrada
-    val state by taskViewModel.state.collectAsState()
+    val context = LocalContext.current
+    val dao = AppDatabase.getDatabase(context).taskDao()
 
-    val isSearching by taskViewModel.isSearching.collectAsState()
+    val viewModel: TaskViewModel = viewModel(
+        factory = TaskViewModelFactory(dao)
+    )
+
+    //Estado completo que contiene la lista de tareas filtrada
+    val state by viewModel.state.collectAsState()
+
+    val isSearching by viewModel.isSearching.collectAsState()
 
     //Función que contiene la lógica de navegación
     val handleEditNavigation: (Int) -> Unit = { taskId ->
         //Cargar la tarea en el estado de edición del ViewModel
-        taskViewModel.loadTaskForEdit(taskId)
+        viewModel.loadTaskForEdit(taskId)
         //Navegar usando el NavController
-        navController.navigate("create_task_route")
+        navigateToCreateTask(taskId)
     }
 
     //Contenido de la pantalla
@@ -55,10 +66,10 @@ fun TaskScreen(
             fontSize = 30.sp
         )
         Spacer( modifier = Modifier.height(5.dp) )
-        SearchBar( viewModel = taskViewModel )
+        SearchBar( viewModel = viewModel )
         Spacer( modifier = Modifier.height(16.dp) )
         //Navegación
-        SegmentedButtons( viewModel = taskViewModel )
+        SegmentedButtons( viewModel = viewModel )
         Spacer( modifier = Modifier.height(16.dp) )
         //Mandar llamar el composable de LazyColumnTask
         if(isSearching) {
@@ -69,7 +80,7 @@ fun TaskScreen(
             LazyColumnTask(
                 tasks = state.tasks,
                 onEditTask = handleEditNavigation,
-                viewModel = taskViewModel
+                viewModel = viewModel
             )
         }
 

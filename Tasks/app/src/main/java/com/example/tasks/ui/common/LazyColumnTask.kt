@@ -60,7 +60,7 @@ import java.util.Locale
 fun LazyColumnTask(
     tasks: List<Task>,
     onEditTask: (Int) -> Unit,
-    viewModel: TaskViewModel = viewModel(),
+    viewModel: TaskViewModel,
     modifier: Modifier = Modifier
 ) {
 
@@ -94,7 +94,7 @@ fun LazyColumnTask(
                 },
                 onEdit = {
                     //Cargar la tarea en el estado de edición del viewModel
-                    viewModel.loadTaskForEdit(task.id)
+                    viewModel.onEvent(TaskEvent.SetTaskToEditId(task.id))
                     //TODO: Navegación a pantalla de edicion
                     onEditTask(task.id)
                 },

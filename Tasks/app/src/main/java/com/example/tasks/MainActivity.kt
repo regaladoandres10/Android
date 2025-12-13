@@ -13,32 +13,12 @@ import kotlin.getValue
 
 
 class MainActivity : ComponentActivity() {
-
-    //Inicializa la base de datos y obtiene el DAO
-    private val database by lazy {
-        Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "task_db"
-        ).build()
-    }
-
-    //Obtener la instancia del DAO
-    private val dao by lazy {
-        database.dao
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TasksTheme {
-
-                //Crear la instancia de la fabrica aquí, usando el DAO inicializado
-                val taskViewModelFactory = TaskViewModelFactory(dao)
-                HomeScreen(
-                    taskViewModelFactory = taskViewModelFactory
-                )
+                HomeScreen()
             }
         }
     }

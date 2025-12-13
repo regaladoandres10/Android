@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Notes
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Task
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.tasks.navigation.Destinations
 
 sealed class BottomBarScreen(
     val route: String,
@@ -18,22 +19,22 @@ sealed class BottomBarScreen(
     val badgeCount: Int? = null
 ) {
     data object Task : BottomBarScreen(
-        route = "tareas",
+        route = Destinations.TASK_ROUTE,
         title = "Tareas",
         selectedIcon = Icons.Filled.Task,
         unSelectedIcon = Icons.Outlined.Task,
         hasNews = false
     )
     data object Note : BottomBarScreen(
-        route = "notas",
+        route = Destinations.NOTES_ROUTE,
         title = "Notas",
         selectedIcon = Icons.Filled.Notes,
         unSelectedIcon = Icons.Outlined.Notes,
         hasNews = false,
-        badgeCount = 30
+        badgeCount = null
     )
     data object Configuration : BottomBarScreen(
-        route = "configuracion",
+        route = Destinations.SETTINGS_ROUTE,
         title = "Configuracion",
         selectedIcon = Icons.Filled.Settings,
         unSelectedIcon = Icons.Outlined.Settings,
