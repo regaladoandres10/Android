@@ -59,7 +59,7 @@ fun TaskScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Spacer( modifier = Modifier.height(20.dp) )
+        //Spacer( modifier = Modifier.height(20.dp) )
         Text(
             text = "Tareas",
             fontWeight = FontWeight.Bold,

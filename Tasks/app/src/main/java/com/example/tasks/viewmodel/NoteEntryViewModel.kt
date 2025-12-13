@@ -45,8 +45,6 @@ data class NoteDetails(
     val id: Int = 0,
     val title: String = "",
     val content: String = "",
-    val dueDate: Long? = null,
-    val reminderTime: Long? = null,
     val createdAt: Long? = null,
     val lastModified: Long? = null,
     val filePath: String = "",
@@ -57,8 +55,6 @@ fun NoteDetails.toItem(): Note = Note(
     id = id,
     title = title,
     content = content,
-    dueDate = dueDate,
-    reminderTime = reminderTime,
     filePath = filePath.ifBlank { null },
     fileType = fileType ?: FileType.NONE
 )
@@ -72,8 +68,6 @@ fun Note.toNoteDetails(): NoteDetails = NoteDetails(
     id = id,
     title = title,
     content = content,
-    dueDate = dueDate,
-    reminderTime = reminderTime,
     createdAt = createdAt,
     lastModified = lastModified,
     filePath = filePath ?: "",
