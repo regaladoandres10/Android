@@ -48,7 +48,7 @@ fun TaskScreen(
     //Función que contiene la lógica de navegación
     val handleEditNavigation: (Int) -> Unit = { taskId ->
         //Cargar la tarea en el estado de edición del ViewModel
-        viewModel.onEvent(TaskEvent.SetTaskToEditId(taskId))
+        viewModel.loadTaskForEdit(taskId)
         //Navegar usando el NavController
         navigateToCreateTask(taskId)
     }

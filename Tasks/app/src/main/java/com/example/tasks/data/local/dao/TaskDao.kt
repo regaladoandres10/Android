@@ -31,5 +31,5 @@ interface TaskDao {
 
     //Regresa una sola tarea
     @Query("SELECT * FROM task WHERE id = :taskId")
-    fun getTaskById(taskId: Int): Flow<Task>
+    fun getTaskById(taskId: Int): Task?
 }
