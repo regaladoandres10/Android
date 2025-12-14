@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasks.data.local.NotesRepository
+import com.example.tasks.data.local.entities.Note
 import com.example.tasks.navigation.Destinations
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +38,10 @@ class NoteDetailsViewModel(
      * Deletes the note from the [NotesRepository] data source
      */
     suspend fun deleteNote() {
-        notesRepository.deleteNote(uiState.value.noteDetails.toItem())
+        //notesRepository.deleteNote(uiState.value.noteDetails.toItem())
+        noteId?.let {
+            notesRepository.deleteNote(uiState.value.noteDetails.toItem())
+        }
     }
 
     companion object {

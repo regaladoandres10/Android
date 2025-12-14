@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.tasks.viewmodel.NoteDetailsViewModel
+import com.example.tasks.viewmodel.NoteEditViewModel
 import com.example.tasks.viewmodel.NoteEntryViewModel
 import com.example.tasks.viewmodel.NoteViewModel
 
@@ -22,6 +23,13 @@ object AppViewModelProvider {
 
         initializer {
             NoteDetailsViewModel(
+                this.createSavedStateHandle(),
+                taskApplication().container.noteRepository
+            )
+        }
+
+        initializer {
+            NoteEditViewModel(
                 this.createSavedStateHandle(),
                 taskApplication().container.noteRepository
             )

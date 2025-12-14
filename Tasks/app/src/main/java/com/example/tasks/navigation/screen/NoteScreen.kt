@@ -55,6 +55,7 @@ fun NoteScreen(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
+        //Set search
         NoteBody(
             noteList = noteUiState.noteList,
             onItemClick = navigateToNoteUpdate,

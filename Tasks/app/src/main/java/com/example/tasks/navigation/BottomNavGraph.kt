@@ -13,6 +13,7 @@ import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.navigation.screen.CreateTask
 import com.example.tasks.navigation.Destinations
 import com.example.tasks.navigation.screen.NoteDetailsScreen
+import com.example.tasks.navigation.screen.NoteEditScreen
 import com.example.tasks.navigation.screen.NoteEntryBody
 import com.example.tasks.navigation.screen.NoteEntryScreen
 import com.example.tasks.navigation.screen.NoteScreen
@@ -43,13 +44,15 @@ fun BottomNavGraph(
                 }
             )
         }
+        //Show notes
         composable(route = Destinations.NOTES_ROUTE) {
             NoteScreen(
                 navigateToNoteEntry = {
                     navController.navigateToCreateNote()
                 },
-                navigateToNoteUpdate = {
-                    navController.navigateToNoteUpdate(it)
+                //Go to screen details note
+                navigateToNoteUpdate = { noteId ->
+                    navController.navigateToNoteDetails(noteId)
                 }
             )
         }
@@ -60,6 +63,7 @@ fun BottomNavGraph(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
+        //Details notes
         composable(
             route = Destinations.NOTE_DETAILS_WITH_ARGS,
             arguments = listOf(
@@ -69,12 +73,28 @@ fun BottomNavGraph(
             )
         ) {
             NoteDetailsScreen(
-                navigateToEditNote = {
-                    navController.navigateToNoteUpdate(id)
+                //Go to screen edit notes
+                navigateToEditNote = { noteId ->
+                    navController.navigateToNoteEdit(noteId)
                 },
                 navigateBack = { navController.navigateUp() }
             )
         }
+        //Update notes
+        composable(
+            route = Destinations.EDIT_NOTE_WITH_ARGS,
+            arguments = listOf(
+                navArgument(Destinations.NOTE_ID) {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            NoteEditScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+
         composable( route = Destinations.SETTINGS_ROUTE ) {
             SettingScreen()
         }

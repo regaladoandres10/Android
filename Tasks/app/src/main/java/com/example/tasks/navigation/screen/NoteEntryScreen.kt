@@ -53,7 +53,8 @@ fun NoteEntryScreen(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.Start
         ) {
             NoteEntryBody(
