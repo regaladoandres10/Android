@@ -23,15 +23,15 @@ import com.example.tasks.viewmodel.TaskViewModel
 
 @Composable
 fun SearchBar(
-    viewModel: TaskViewModel,
-    modifier: Modifier = Modifier
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeHolderText: String = "Buscar..."
 ) {
-    //NOs traemos searchText desde el viewModel
-    val searchText by viewModel.searchText.collectAsState()
     //Buscador
     OutlinedTextField(
         value = searchText,
-        onValueChange = viewModel::onSearchTextChange,
+        onValueChange = onSearchTextChange,
         //Agregar icono de busqueda
         leadingIcon = {
             Icon(Icons.Default.Search, contentDescription = "Icono de busqueda")
@@ -40,7 +40,7 @@ fun SearchBar(
             .fillMaxWidth()
             .heightIn(max = 56.dp),
             //.padding(vertical = 5.dp),
-        placeholder = { Text(text = "Buscar...") },
+        placeholder = { Text(text = placeHolderText) },
         //Una sola linea
         singleLine = true,
         shape = RoundedCornerShape(percent = 50), //redondear

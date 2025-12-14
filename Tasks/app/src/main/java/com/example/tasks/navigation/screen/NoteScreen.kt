@@ -2,6 +2,7 @@ package com.example.tasks.navigation.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,10 +30,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasks.AppViewModelProvider
 import com.example.tasks.data.local.entities.Note
+import com.example.tasks.ui.common.SearchBar
 import com.example.tasks.ui.common.TaskTopAppBar
 import com.example.tasks.viewmodel.NoteEntryViewModel
 import com.example.tasks.viewmodel.NoteViewModel
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +47,8 @@ fun NoteScreen(
 ) {
 
     val noteUiState by viewModel.noteUiState.collectAsState()
-
+    val searchText by viewModel.searchText.collectAsState()
+    val isSearching by viewModel.isSearching.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,9 +61,15 @@ fun NoteScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         //Set search
+        SearchBar(
+            searchText = searchText,
+            onSearchTextChange = viewModel::onSearchTextChange,
+            placeHolderText = "Buscar nota..."
+        )
         NoteBody(
             noteList = noteUiState.noteList,
             onItemClick = navigateToNoteUpdate,
+            isSearching = isSearching,
             modifier = modifier.fillMaxSize()
         )
     }
@@ -68,24 +79,35 @@ fun NoteScreen(
 private fun NoteBody(
     noteList: List<Note>,
     onItemClick: (Int) -> Unit,
+    isSearching: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        if (noteList.isEmpty()) {
-            Text(
-                text = "No hay notas creadas",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
-            )
-        } else {
-            NoteList(
-                noteList = noteList,
-                onItemClick = { onItemClick(it) },
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+        when {
+            noteList.isEmpty() -> {
+                Text(
+                    text = "No hay notas creadas",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            isSearching -> {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+            }
+
+            else -> {
+                NoteList(
+                    noteList = noteList,
+                    onItemClick = onItemClick,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
         }
     }
 }

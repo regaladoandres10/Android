@@ -44,6 +44,7 @@ fun TaskScreen(
     val state by viewModel.state.collectAsState()
 
     val isSearching by viewModel.isSearching.collectAsState()
+    val searchText by viewModel.searchText.collectAsState()
 
     //Función que contiene la lógica de navegación
     val handleEditNavigation: (Int) -> Unit = { taskId ->
@@ -66,7 +67,11 @@ fun TaskScreen(
             fontSize = 30.sp
         )
         Spacer( modifier = Modifier.height(5.dp) )
-        SearchBar( viewModel = viewModel )
+        SearchBar(
+            searchText = searchText,
+            onSearchTextChange = viewModel::onSearchTextChange,
+            placeHolderText = "Buscar tarea..."
+        )
         Spacer( modifier = Modifier.height(16.dp) )
         //Navegación
         SegmentedButtons( viewModel = viewModel )
