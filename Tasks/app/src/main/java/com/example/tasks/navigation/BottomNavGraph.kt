@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.navigation.screen.CreateTask
 import com.example.tasks.navigation.Destinations
+import com.example.tasks.navigation.screen.NoteDetailsScreen
 import com.example.tasks.navigation.screen.NoteEntryBody
 import com.example.tasks.navigation.screen.NoteEntryScreen
 import com.example.tasks.navigation.screen.NoteScreen
@@ -46,6 +47,9 @@ fun BottomNavGraph(
             NoteScreen(
                 navigateToNoteEntry = {
                     navController.navigateToCreateNote()
+                },
+                navigateToNoteUpdate = {
+                    navController.navigateToNoteUpdate(it)
                 }
             )
         }
@@ -56,7 +60,21 @@ fun BottomNavGraph(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
-
+        composable(
+            route = Destinations.NOTE_DETAILS_WITH_ARGS,
+            arguments = listOf(
+                navArgument(Destinations.NOTE_ID) {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            NoteDetailsScreen(
+                navigateToEditNote = {
+                    navController.navigateToNoteUpdate(id)
+                },
+                navigateBack = { navController.navigateUp() }
+            )
+        }
         composable( route = Destinations.SETTINGS_ROUTE ) {
             SettingScreen()
         }

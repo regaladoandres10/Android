@@ -29,5 +29,5 @@ interface NoteDao {
 
     //Obtener un elemento de la tabla de Note
     @Query("SELECT * FROM note WHERE id = :id")
-    fun getNote(id: Int): Flow<Note>
+    fun getNote(id: Int): Flow<Note?>
 }

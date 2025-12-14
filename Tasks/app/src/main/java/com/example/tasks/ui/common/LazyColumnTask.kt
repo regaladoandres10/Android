@@ -63,7 +63,6 @@ fun LazyColumnTask(
     viewModel: TaskViewModel,
     modifier: Modifier = Modifier
 ) {
-
     val state by viewModel.state.collectAsState()
     val onEvent = viewModel::onEvent
 

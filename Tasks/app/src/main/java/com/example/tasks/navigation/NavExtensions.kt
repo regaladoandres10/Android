@@ -18,3 +18,7 @@ fun NavHostController.navigateToCreateTask(taskId: Int? = null) {
 fun NavHostController.navigateToCreateNote() {
     this.navigate(Destinations.CREATE_NOTE_ROUTE)
 }
+
+fun NavHostController.navigateToNoteUpdate(noteId: Int) {
+    this.navigate("${Destinations.NOTE_DETAILS_ROUTE}/$noteId")
+}
