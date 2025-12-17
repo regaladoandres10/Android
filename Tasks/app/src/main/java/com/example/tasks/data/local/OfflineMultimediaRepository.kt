@@ -6,7 +6,7 @@ import com.example.tasks.static.OwnerType
 import kotlinx.coroutines.flow.Flow
 
 class OfflineMultimediaRepository(private val mediaDao: MultimediaDao) : MultimediaRepository {
-
+    override fun getMediaByOwner(ownerId: Int, ownerType: OwnerType) = mediaDao.getMediaByOwner(ownerId, ownerType)
     override suspend fun insertMedia(media: Multimedia) = mediaDao.insertMedia(media)
     override suspend fun updateMedia(media: Multimedia) = mediaDao.updateMedia(media)
     override fun getMediaTask(taskId: Int): Flow<List<Multimedia>> = mediaDao.getMediaByOwner(taskId,
@@ -14,6 +14,7 @@ class OfflineMultimediaRepository(private val mediaDao: MultimediaDao) : Multime
     override fun getMediaNote(noteId: Int): Flow<List<Multimedia>> = mediaDao.getMediaByOwner(noteId,
         OwnerType.NOTE)
     override fun getMediaById(id: Int): Flow<Multimedia?> = mediaDao.getMediaById(id)
+    override suspend fun deleteByOwner(ownerId: Int, ownerType: OwnerType) = mediaDao.deleteByOwner(ownerId, ownerType)
     override suspend fun deleteMedia(media: Multimedia) = mediaDao.deleteMedia(media)
     override suspend fun deleteTaskMedia(taskId: Int) = mediaDao.deleteByOwner(taskId, OwnerType.TASK)
     override suspend fun deleteNoteMedia(noteId: Int) = mediaDao.deleteByOwner(noteId, OwnerType.NOTE)

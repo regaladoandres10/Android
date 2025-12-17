@@ -16,6 +16,9 @@ object Destinations {
     const val TASK_ID = "taskId"
     const val NOTE_ID = "noteId"
 
+    const val OWNER_ID = "ownerId"
+    const val OWNER_TYPE = "ownerType"
+
     //Arguments routes
     const val TASK_DETAILS_WITH_ARGS = "$TASK_DETAILS_ROUTE/{$TASK_ID}"
     const val CREATE_TASK_WITH_ARGS = "$CREATE_TASK_ROUTE?$TASK_ID={$TASK_ID}"

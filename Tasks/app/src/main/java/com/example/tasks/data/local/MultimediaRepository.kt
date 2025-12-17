@@ -1,9 +1,15 @@
 package com.example.tasks.data.local
 
 import com.example.tasks.data.local.entities.Multimedia
+import com.example.tasks.static.OwnerType
 import kotlinx.coroutines.flow.Flow
 
 interface MultimediaRepository {
+
+    fun getMediaByOwner(
+        ownerId: Int,
+        ownerType: OwnerType
+    ): Flow<List<Multimedia>>
 
     fun getMediaTask(taskId: Int): Flow<List<Multimedia>>
 
@@ -29,4 +35,5 @@ interface MultimediaRepository {
     suspend fun deleteTaskMedia(taskId: Int)
 
     suspend fun deleteNoteMedia(noteId: Int)
+    suspend fun deleteByOwner(ownerId: Int, ownerType: OwnerType)
 }
