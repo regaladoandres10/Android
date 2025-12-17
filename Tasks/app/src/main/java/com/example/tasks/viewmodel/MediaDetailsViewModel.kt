@@ -25,7 +25,7 @@ class MediaDetailsViewModel(
      * Holds the item details ui state. The data is retrieved from [MultimediaRepository] and mapped to
      * the UI state.
      */
-    val uiStateTask: StateFlow<MediaDetailsUiState> =
+    val uiState: StateFlow<MediaDetailsUiState> =
         multimediaRepository.getMediaByOwner(ownerId, ownerType)
             .map { mediaList ->
                 MediaDetailsUiState(mediaList.map { it.toDetails() })

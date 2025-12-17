@@ -11,7 +11,9 @@ import com.example.tasks.static.FileType
 import com.example.tasks.static.OwnerType
 import kotlinx.coroutines.launch
 
-class MediaEntryViewModel(private val mediaRepository: MultimediaRepository) : ViewModel() {
+class MediaEntryViewModel(
+    private val mediaRepository: MultimediaRepository
+) : ViewModel() {
 
     var mediaUiState by mutableStateOf( MediaUiState() )
         private set
@@ -26,7 +28,8 @@ class MediaEntryViewModel(private val mediaRepository: MultimediaRepository) : V
         if (!mediaUiState.mediaDetails.isValid()) return
 
         viewModelScope.launch {
-            mediaRepository.insertMedia(mediaUiState.mediaDetails.toItem())
+            mediaRepository.insertMedia(
+                mediaUiState.mediaDetails.toItem())
         }
     }
 

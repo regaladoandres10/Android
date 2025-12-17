@@ -59,7 +59,7 @@ fun AttachmentOptionsDialog(
                 //Seleccionar en la galeria
                 TextButton(onClick = {
                     onDismiss()
-                    onSelectGallery
+                    onSelectGallery()
                 }) {
                     Icon(Icons.Default.Attachment, contentDescription = "Seleccionar archivo")
                     Spacer(Modifier.width(8.dp))
