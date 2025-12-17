@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tasks.MainViewModel
 import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.data.local.sortTypeMap
 import com.example.tasks.static.options
