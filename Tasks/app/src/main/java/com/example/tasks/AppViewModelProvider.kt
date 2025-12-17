@@ -42,10 +42,7 @@ object AppViewModelProvider {
         }
 
         initializer {
-            MediaDetailsViewModel(
-                this.createSavedStateHandle(),
-                taskApplication().container.multimediaRepository
-            )
+            MediaDetailsViewModel(taskApplication().container.multimediaRepository)
         }
     }
 }

@@ -11,6 +11,7 @@ import com.example.tasks.static.FileType
 import com.example.tasks.static.OwnerType
 import kotlinx.coroutines.launch
 
+//ViewModel for Create and Insert media
 class MediaEntryViewModel(
     private val mediaRepository: MultimediaRepository
 ) : ViewModel() {

@@ -52,10 +52,12 @@ import com.example.tasks.static.OwnerType
 import com.example.tasks.ui.common.AttachFileField
 import com.example.tasks.ui.common.AttachmentOptionsDialog
 import com.example.tasks.ui.common.DatePickerFieldToModal
+import com.example.tasks.ui.common.MediaList
 import com.example.tasks.ui.common.ReminderTimePickerField
 import com.example.tasks.ui.common.TimesPicker
 import com.example.tasks.ui.common.createImageFile
 import com.example.tasks.viewmodel.MediaDetails
+import com.example.tasks.viewmodel.MediaDetailsViewModel
 import com.example.tasks.viewmodel.MediaEntryViewModel
 import com.example.tasks.viewmodel.TaskViewModel
 import com.example.tasks.viewmodel.TaskViewModelFactory
@@ -76,9 +78,9 @@ fun CreateTask(
         factory = TaskViewModelFactory(dao)
     )
 
-    val mediaViewModel: MediaEntryViewModel = viewModel(factory = AppViewModelProvider.factory)
-
+    val mediaDetailsViewModel: MediaDetailsViewModel = viewModel(factory = AppViewModelProvider.factory)
     val state by taskViewModel.state.collectAsState()
+    val mediaState by mediaDetailsViewModel.mediaForOwner.collectAsState()
     val onEvent = taskViewModel::onEvent
 
     //Dialog and camera state
@@ -92,15 +94,12 @@ fun CreateTask(
         ) { success ->
             if (success) {
                 photoUri?.let { uri ->
-                    mediaViewModel.updateUiState(
+                    mediaDetailsViewModel.addLocalMedia(
                         MediaDetails(
-                            ownerId = taskId ?: 0,
-                            ownerType = OwnerType.TASK,
                             uri = uri.toString(),
                             type = FileType.PHOTO
                         )
                     )
-                    mediaViewModel.saveMedia()
                 }
             }
         }
@@ -125,6 +124,7 @@ fun CreateTask(
     LaunchedEffect(taskId) {
         taskId?.let {
             taskViewModel.loadTaskForEdit(taskId)
+            mediaDetailsViewModel.load(it, OwnerType.TASK)
         }
     }
 
@@ -225,26 +225,50 @@ fun CreateTask(
                 minLines = 3, // Permite múltiples líneas
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            //Media list
+            if (mediaState.isNotEmpty()) {
+                Text(
+                    text = "Archivos adjuntos",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                MediaList(
+                    media = mediaState,
+                    onDelete = { item ->
+                        mediaDetailsViewModel.delete(item)
+                    }
+                )
+
+                Spacer(Modifier.height(16.dp))
+            }
 
             //Adjuntar archivos
-            Text(
-                text = "Adjuntar Archivo",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .padding(bottom = 4.dp)
-            )
+//            Text(
+//                text = "Adjuntar Archivo",
+//                style = MaterialTheme.typography.titleMedium,
+//                modifier = Modifier
+//                    .padding(bottom = 4.dp)
+//            )
 
             AttachFileField(
-                currentFile = state.filePath,
-                fileType = state.fileType,
+                currentFile = null,
+                fileType = FileType.NONE,
                 onFileAttached = { path, type ->
-                    //onEvent(TaskEvent.SetFile(path, type))
+                    if (path != null && type != null) {
+                        mediaDetailsViewModel.addLocalMedia(
+                            MediaDetails(
+                                uri = path,
+                                type = type
+                            )
+                        )
+                    }
                 },
                 //Open the showDialog
-                onClick = {
-                    showOptionsDialog = true
-                }
+                onClick = { showOptionsDialog = true }
             )
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -252,6 +276,14 @@ fun CreateTask(
             Button(
                 onClick = {
                     onEvent(TaskEvent.SaveTask)
+                    if (!isEditing) {
+                        taskViewModel.state.value.taskToEditId?.let { newTaskId ->
+                            mediaDetailsViewModel.saveAll(
+                                newTaskId,
+                                OwnerType.TASK
+                            )
+                        }
+                    }
                     //Una vez guardada volver a la lista de tareas
                     navigateBack()
                 },
