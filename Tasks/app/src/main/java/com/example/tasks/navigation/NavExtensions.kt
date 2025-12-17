@@ -18,3 +18,14 @@ fun NavHostController.navigateToCreateTask(taskId: Int? = null) {
 fun NavHostController.navigateToCreateNote() {
     this.navigate(Destinations.CREATE_NOTE_ROUTE)
 }
+
+fun NavHostController.navigateToNoteDetails(noteId: Int) {
+    this.navigate("${Destinations.NOTE_DETAILS_ROUTE}/$noteId")
+}
+
+fun NavHostController.navigateToNoteEdit(noteId: Int) {
+    this.navigate("${Destinations.NOTE_EDIT_ROUTE}/$noteId") {
+        //Clean stack. Go to back NoteDetailsScreen
+        popUpTo(Destinations.NOTE_DETAILS_ROUTE) { inclusive = false }
+    }
+}

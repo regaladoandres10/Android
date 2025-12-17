@@ -83,9 +83,9 @@ class TaskViewModel(
         //Desactivar la bandera de carga
         _isSearching.value = false
     }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000),
-        emptyList())
+        viewModelScope, //Define el ciclo de vida del StateFlow
+        SharingStarted.WhileSubscribed(5_000), //
+        emptyList()) //Establecer el valor inicial del flujo
 
     private val _state = MutableStateFlow(TaskState())
     val state = combine(_state, _sortType, tasksDisplay ) { state, sortType, tasks ->

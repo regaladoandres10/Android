@@ -9,8 +9,6 @@ import java.nio.file.Path
 data class Note(
     val title: String,
     val content: String,
-    val dueDate: Long? = null,
-    val reminderTime: Long?,
     val createdAt: Long = System.currentTimeMillis(),
     val lastModified: Long? = System.currentTimeMillis(),
     //Multimedia
