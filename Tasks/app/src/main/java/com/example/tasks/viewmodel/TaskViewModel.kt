@@ -112,8 +112,6 @@ class TaskViewModel(
                     description = it.description.orEmpty(),
                     dueDate = it.dueDate,
                     reminderTime = it.reminderTime,
-                    filePath = it.filePath,
-                    fileType = it.fileType,
                     isCompleted = it.isCompleted,
                     isAddingTask = true
                 )
@@ -143,8 +141,6 @@ class TaskViewModel(
                     isCompleted = s.isCompleted,
                     createdAt = s.createdAt,
                     reminderTime = s.reminderTime,
-                    filePath = s.filePath,
-                    fileType = s.fileType
                 )
 
                 //Insertar y actualizar el estado
@@ -172,12 +168,6 @@ class TaskViewModel(
             is TaskEvent.SetDueDate -> {
                 _state.update { it.copy(
                     dueDate = event.dueDate
-                ) }
-            }
-            is TaskEvent.SetFile -> {
-                _state.update { it.copy(
-                    filePath = event.path,
-                    fileType = event.type ?: FileType.NONE
                 ) }
             }
             is TaskEvent.SetIsCompleted -> {

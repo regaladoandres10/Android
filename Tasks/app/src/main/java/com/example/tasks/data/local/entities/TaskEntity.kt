@@ -13,9 +13,6 @@ data class Task(
     val createdAt: Long = System.currentTimeMillis(),
     //Recordatorio
     val reminderTime: Long?,
-    //Multimedia
-    val filePath: String?,
-    val fileType: FileType,
     //Id
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0

@@ -11,9 +11,6 @@ data class Note(
     val content: String,
     val createdAt: Long = System.currentTimeMillis(),
     val lastModified: Long? = System.currentTimeMillis(),
-    //Multimedia
-    val filePath: String?,
-    val fileType: FileType,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )

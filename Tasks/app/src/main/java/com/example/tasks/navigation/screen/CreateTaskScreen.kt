@@ -183,7 +183,7 @@ fun CreateTask(
                 currentFile = state.filePath,
                 fileType = state.fileType,
                 onFileAttached = { path, type ->
-                    onEvent(TaskEvent.SetFile(path, type))
+                    //onEvent(TaskEvent.SetFile(path, type))
                 }
             )
             Spacer(modifier = Modifier.height(24.dp))

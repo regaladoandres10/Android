@@ -249,22 +249,22 @@ fun TaskItem(
                 }
 
                 //Archivo Adjunto (Solo si existe)
-                if (task.filePath != null) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.AttachFile,
-                            contentDescription = "Archivo Adjunto",
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Adjunto: ${task.fileType?.name ?: "Archivo"}",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+//                if (task.filePath != null) {
+//                    Row(verticalAlignment = Alignment.CenterVertically) {
+//                        Icon(
+//                            imageVector = Icons.Default.AttachFile,
+//                            contentDescription = "Archivo Adjunto",
+//                            modifier = Modifier.size(16.dp),
+//                            tint = MaterialTheme.colorScheme.primary
+//                        )
+//                        Spacer(modifier = Modifier.width(4.dp))
+//                        Text(
+//                            text = "Adjunto: ${task.fileType?.name ?: "Archivo"}",
+//                            fontSize = 12.sp,
+//                            color = MaterialTheme.colorScheme.primary
+//                        )
+//                    }
+//                }
             }
         }
     }

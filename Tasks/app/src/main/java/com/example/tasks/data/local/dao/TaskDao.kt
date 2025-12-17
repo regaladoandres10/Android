@@ -17,8 +17,8 @@ interface TaskDao {
     suspend fun deleteTask(task: Task)
 
     //Definir consultas
-    //Mostrar todas las tareas ordenas por nombre o titulo
-    @Query("SELECT * FROM task ORDER BY title")
+    //Mostrar todas las tareas ordenas por fecha
+    @Query("SELECT * FROM task ORDER BY createdAt")
     fun getAllTaskOrderByName(): Flow<List<Task>>
 
     //Mostrar todas las tareas pendientes

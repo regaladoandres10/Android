@@ -4,19 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.tasks.data.local.dao.MultimediaDao
 import com.example.tasks.data.local.dao.NoteDao
 import com.example.tasks.data.local.dao.TaskDao
+import com.example.tasks.data.local.entities.Multimedia
 import com.example.tasks.data.local.entities.Note
 import com.example.tasks.data.local.entities.Task
 
 @Database(
-    entities =[Task::class, Note::class ],
-    version = 2,
+    entities =[Task::class, Note::class, Multimedia::class ],
+    version = 1,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun noteDao(): NoteDao
+    abstract fun mediaDao(): MultimediaDao
 
     companion object {
         @Volatile
@@ -37,5 +40,4 @@ abstract class AppDatabase: RoomDatabase() {
             }
         }
     }
-    //abstract val dao: NoteDao
 }
