@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import com.example.tasks.data.local.AppDatabase
 import com.example.tasks.data.local.events.TaskEvent
 import com.example.tasks.ui.common.AttachFileField
+import com.example.tasks.ui.common.AttachmentOptionsDialog
 import com.example.tasks.ui.common.DatePickerFieldToModal
 import com.example.tasks.ui.common.ReminderTimePickerField
 import com.example.tasks.ui.common.TimesPicker
@@ -57,7 +58,8 @@ fun CreateTask(
 
     val context = LocalContext.current
     val dao = AppDatabase.getDatabase(context).taskDao()
-
+    //State for pick a file
+    var showOptionsDialog by remember { mutableStateOf(false) }
     val viewModel: TaskViewModel = viewModel(
         factory = TaskViewModelFactory(dao)
     )
@@ -184,6 +186,10 @@ fun CreateTask(
                 fileType = state.fileType,
                 onFileAttached = { path, type ->
                     //onEvent(TaskEvent.SetFile(path, type))
+                },
+                //Open the showDialog
+                onClick = {
+                    showOptionsDialog = true
                 }
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -201,6 +207,15 @@ fun CreateTask(
             ) {
                 Text(if (isEditing) "Guardar cambios" else "Crear tarea")
             }
+        }
+        if (showOptionsDialog) {
+            AttachmentOptionsDialog(
+                onDismiss = { showOptionsDialog = false },
+                onTakePhoto = {},
+                onRecordVideo = {},
+                onRecordAudio = {},
+                onSelectGallery = {}
+            )
         }
     }
 }

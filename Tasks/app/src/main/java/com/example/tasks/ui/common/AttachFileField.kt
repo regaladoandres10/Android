@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,8 @@ import com.example.tasks.static.persistUriPermission
 fun AttachFileField(
     currentFile: String?,
     fileType: FileType,
-    onFileAttached: (String?, FileType?) -> Unit
+    onFileAttached: (String?, FileType?) -> Unit,
+    onClick: () -> Unit
 ) {
     val context = LocalContext.current
     //Muestra el nombre del archivo si existe, sino "Ningún archivo adjunto"
@@ -64,6 +66,7 @@ fun AttachFileField(
                 MaterialTheme.colorScheme.outline,
                 RoundedCornerShape(4.dp)
             )
+            .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
