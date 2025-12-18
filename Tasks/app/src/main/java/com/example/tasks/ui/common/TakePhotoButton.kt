@@ -55,3 +55,14 @@ fun createImageFile(context: Context): File {
         storageDir
     )
 }
+
+fun createVideoFile(context: Context): File {
+    val timestamp = System.currentTimeMillis()
+    val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+
+    return File.createTempFile(
+        "VID_${timestamp}_",
+        ".mp4",
+        storageDir
+    )
+}

@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,11 +57,13 @@ import com.example.tasks.ui.common.MediaList
 import com.example.tasks.ui.common.ReminderTimePickerField
 import com.example.tasks.ui.common.TimesPicker
 import com.example.tasks.ui.common.createImageFile
+import com.example.tasks.ui.common.createVideoFile
 import com.example.tasks.viewmodel.MediaDetails
 import com.example.tasks.viewmodel.MediaDetailsViewModel
 import com.example.tasks.viewmodel.MediaEntryViewModel
 import com.example.tasks.viewmodel.TaskViewModel
 import com.example.tasks.viewmodel.TaskViewModelFactory
+import java.io.File
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,7 +92,8 @@ fun CreateTask(
     val isEditing = taskId != null
     //Dialog and camera state
     var showOptionsDialog by remember { mutableStateOf(false) }
-    var photoUri by remember { mutableStateOf<Uri?>(null) }
+    var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var videoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     //Cargar datos si es edicion
     LaunchedEffect(taskId) {
@@ -127,6 +131,25 @@ fun CreateTask(
             }
         }
 
+    val videoLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.CaptureVideo()
+        ) { success ->
+            if (success && videoUri != null) {
+                mediaDetailsViewModel.addLocalMedia(
+                    MediaDetails(
+                        uri = videoUri.toString(),
+                        type = FileType.VIDEO
+                    )
+                )
+            } else {
+                videoUri?.let { uri ->
+                    File(uri.path ?: return@let).delete()
+                }
+            }
+        }
+
+
     val cameraPermissionLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -143,6 +166,21 @@ fun CreateTask(
             }
         }
 
+    val videoPermisionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                val videoFile = createVideoFile(context)
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.provider",
+                    videoFile
+                )
+                videoUri = uri
+                videoLauncher.launch(uri)
+            }
+        }
 
 
 
@@ -341,7 +379,28 @@ fun CreateTask(
                         cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                     }
                 },
-                onRecordVideo = {},
+                onRecordVideo = {
+                    showOptionsDialog = false
+
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        val videoFile = createVideoFile(context)
+
+                        val uri = FileProvider.getUriForFile(
+                            context,
+                            "${context.packageName}.provider",
+                            videoFile
+                        )
+
+                        videoUri = uri
+                        videoLauncher.launch(uri)
+                    } else {
+                        videoPermisionLauncher.launch(Manifest.permission.CAMERA) 
+                    }
+                },
                 onRecordAudio = {},
                 onSelectGallery = {}
             )
