@@ -21,29 +21,33 @@ class MediaEntryViewModel(
 
     //Update [NoteUiState] with the values
     fun updateUiState(mediaDetails: MediaDetails) {
-        mediaUiState = MediaUiState(mediaDetails = mediaDetails)
+        mediaUiState = mediaUiState.copy(
+            mediaDetails = mediaDetails
+        )
     }
 
     //Save a media
     fun saveMedia() {
-        if (!mediaUiState.mediaDetails.isValid()) return
+        val details = mediaUiState.mediaDetails
+        if (!details.isValid()) return
 
         viewModelScope.launch {
-            mediaRepository.insertMedia(
-                mediaUiState.mediaDetails.toItem())
+            mediaRepository.insertMedia(details.toItem())
         }
     }
 
 }
 
 data class MediaUiState(
-    val mediaDetails: MediaDetails = MediaDetails(),
-    val isValid: Boolean = false
-)
+    val mediaDetails: MediaDetails = MediaDetails()
+) {
+    val isValid: Boolean
+        get() = mediaDetails.isValid()
+}
 
 data class MediaDetails(
     val id: Int = 0,
-    val ownerId: Int = -1,
+    val ownerId: Int? = null,
     val ownerType: OwnerType = OwnerType.TASK,
     //Ruta del archivo
     val uri: String = "",
@@ -52,26 +56,30 @@ data class MediaDetails(
     val createdAt: Long? = null
 ) {
     fun isValid(): Boolean =
-        ownerId > 0 && uri.isNotBlank()
+        ownerId != null && ownerId > 0 && uri.isNotBlank()
 }
 
-fun MediaDetails.toItem(): Multimedia = Multimedia(
-    id = id,
-    ownerId = ownerId,
-    ownerType = ownerType,
-    uri = uri,
-    type = type
-)
+fun MediaDetails.toItem(): Multimedia {
+    requireNotNull(ownerId) { "ownerId no puede ser null al guardar Multimedia" }
 
-fun Multimedia.toUiState() : MediaUiState = MediaUiState(
-    mediaDetails = this.toDetails(),
-    isValid = true
-)
+    return Multimedia(
+        id = id,
+        ownerId = ownerId,
+        ownerType = ownerType,
+        uri = uri,
+        type = type,
+    )
+}
 
-fun Multimedia.toDetails(): MediaDetails = MediaDetails(
-    id = id,
-    ownerId = ownerId,
-    ownerType = ownerType,
-    uri = uri,
-    type = type
-)
+fun Multimedia.toUiState(): MediaUiState =
+    MediaUiState(mediaDetails = toDetails())
+
+fun Multimedia.toDetails(): MediaDetails =
+    MediaDetails(
+        id = id,
+        ownerId = ownerId,
+        ownerType = ownerType,
+        uri = uri,
+        type = type,
+        createdAt = createdAt
+    )

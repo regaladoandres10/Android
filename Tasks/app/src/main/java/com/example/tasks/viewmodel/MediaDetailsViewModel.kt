@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasks.data.local.MultimediaRepository
+import com.example.tasks.models.Owner
 import com.example.tasks.navigation.Destinations
 import com.example.tasks.static.OwnerType
 import kotlinx.coroutines.flow.Flow
@@ -25,18 +26,24 @@ class MediaDetailsViewModel(
 ) : ViewModel() {
 
     //Cuando se edita una tarea existente
-    private val _owner = MutableStateFlow<Pair<Int, OwnerType>?>(null)
+    private val _owner = MutableStateFlow<Owner?>(null)
 
     //Media temporal cuando se crea una tarea nueva
     private val _localMedia = MutableStateFlow<List<MediaDetails>>(emptyList())
 
     //Media desde base de datos modo edicion
     private val remoteMedia: Flow<List<MediaDetails>> =
-        _owner.filterNotNull()
-            .flatMapLatest { (id, type) ->
-                multimediaRepository.getMediaByOwner(id, type)
+        _owner
+            .filterNotNull()
+            .flatMapLatest { owner ->
+                multimediaRepository.getMediaByOwner(
+                    ownerId = owner.id,
+                    ownerType = owner.type
+                )
             }
-            .map { list -> list.map { it.toDetails() } }
+            .map { list ->
+                list.map { it.toDetails() }
+            }
 
     val mediaForOwner: StateFlow<List<MediaDetails>> =
         combine(
@@ -44,12 +51,9 @@ class MediaDetailsViewModel(
             _localMedia,
             remoteMedia.onStart { emit(emptyList()) }
         ) { owner, local, remote ->
-            if (owner == null) {
-                // Creando tarea → media en memoria
-                local
-            } else {
-                // Editando tarea → media en BD
-                remote
+            when (owner) {
+                null -> local                     // Creando
+                else -> remote + local            // Editando
             }
         }.stateIn(
             scope = viewModelScope,
@@ -59,7 +63,7 @@ class MediaDetailsViewModel(
 
     //Llamara solo cuando se edita una tarea existente
     fun load(ownerId: Int, ownerType: OwnerType) {
-        _owner.value = ownerId to ownerType
+        _owner.value = Owner(ownerId, ownerType)
     }
 
     /**
@@ -73,14 +77,17 @@ class MediaDetailsViewModel(
      * Eliminar media (local o remota)
      */
     fun delete(media: MediaDetails) {
-        val owner = _owner.value
-        if (owner == null) {
-            // Media local
-            _localMedia.update { it - media }
-        } else {
-            // Media en BD
-            viewModelScope.launch {
-                multimediaRepository.deleteMedia(media.toItem())
+        when {
+            media.ownerId == null -> {
+                // Media local
+                _localMedia.update { it - media }
+            }
+
+            else -> {
+                // Media persistida
+                viewModelScope.launch {
+                    multimediaRepository.deleteMedia(media.toItem())
+                }
             }
         }
     }
@@ -89,8 +96,11 @@ class MediaDetailsViewModel(
      * Guardar toda la media local cuando ya existe la tarea
      */
     fun saveAll(ownerId: Int, ownerType: OwnerType) {
+        val mediaToSave = _localMedia.value
+        if (mediaToSave.isEmpty()) return
+
         viewModelScope.launch {
-            _localMedia.value.forEach { media ->
+            mediaToSave.forEach { media ->
                 multimediaRepository.insertMedia(
                     media.copy(
                         ownerId = ownerId,
@@ -107,10 +117,3 @@ class MediaDetailsViewModel(
     }
 
 }
-
-/**
- * UI State for
- */
-data class MediaDetailsUiState(
-    val mediaList: List<MediaDetails> = emptyList()
-)

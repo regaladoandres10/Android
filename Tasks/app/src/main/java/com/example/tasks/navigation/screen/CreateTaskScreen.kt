@@ -78,21 +78,44 @@ fun CreateTask(
         factory = TaskViewModelFactory(dao)
     )
 
-    val mediaDetailsViewModel: MediaDetailsViewModel = viewModel(factory = AppViewModelProvider.factory)
+    val mediaDetailsViewModel:
+            MediaDetailsViewModel = viewModel(factory = AppViewModelProvider.factory)
+
     val state by taskViewModel.state.collectAsState()
     val mediaState by mediaDetailsViewModel.mediaForOwner.collectAsState()
     val onEvent = taskViewModel::onEvent
 
+    //Determinar si estamos editando o creando
+    val isEditing = taskId != null
     //Dialog and camera state
     var showOptionsDialog by remember { mutableStateOf(false) }
     var photoUri by remember { mutableStateOf<Uri?>(null) }
+
+    //Cargar datos si es edicion
+    LaunchedEffect(taskId) {
+        taskId?.let {
+            taskViewModel.loadTaskForEdit(it)
+            mediaDetailsViewModel.load(it, OwnerType.TASK)
+        }
+    }
+
+    //Escuchar cuando la tarea se guarda
+    LaunchedEffect(Unit) {
+        taskViewModel.savedTaskId.collect { newTaskId ->
+            mediaDetailsViewModel.saveAll(
+                ownerId = newTaskId,
+                ownerType = OwnerType.TASK
+            )
+            navigateBack()
+        }
+    }
 
     //Camera launcher
     val cameraLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.TakePicture()
         ) { success ->
-            if (success) {
+            if (success && photoUri != null) {
                 photoUri?.let { uri ->
                     mediaDetailsViewModel.addLocalMedia(
                         MediaDetails(
@@ -120,22 +143,27 @@ fun CreateTask(
             }
         }
 
-    //Uploading task
-    LaunchedEffect(taskId) {
-        taskId?.let {
-            taskViewModel.loadTaskForEdit(taskId)
-            mediaDetailsViewModel.load(it, OwnerType.TASK)
-        }
-    }
 
-    //Determinar si estamos editando o creando
-    val isEditing = taskId != null
+
+
+//    //Guardar archivos despues de crear la tarea
+//    LaunchedEffect(state.taskToEditId) {
+//        if (!isEditing && state.taskToEditId != null) {
+//            mediaDetailsViewModel.saveAll(
+//                state.taskToEditId!!,
+//                OwnerType.TASK
+//            )
+//            navigateBack()
+//        }
+//    }
+
     val titleText =
         if (isEditing)
             "Editar Tarea"
         else "Crear Nueva Tarea"
 
     val scrollState = rememberScrollState()
+
     //Top bar
     Scaffold(
         topBar = {
@@ -238,13 +266,14 @@ fun CreateTask(
 
                 MediaList(
                     media = mediaState,
-                    onDelete = { item ->
-                        mediaDetailsViewModel.delete(item)
+                    onDelete = {
+                        mediaDetailsViewModel.delete(it)
                     }
                 )
 
-                Spacer(Modifier.height(16.dp))
             }
+
+            Spacer(Modifier.height(16.dp))
 
             //Adjuntar archivos
 //            Text(
@@ -275,17 +304,7 @@ fun CreateTask(
             //Boton de crear tarea/guardar tarea
             Button(
                 onClick = {
-                    onEvent(TaskEvent.SaveTask)
-                    if (!isEditing) {
-                        taskViewModel.state.value.taskToEditId?.let { newTaskId ->
-                            mediaDetailsViewModel.saveAll(
-                                newTaskId,
-                                OwnerType.TASK
-                            )
-                        }
-                    }
-                    //Una vez guardada volver a la lista de tareas
-                    navigateBack()
+                    taskViewModel.onEvent(TaskEvent.SaveTask)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 //Desabilitar si el titulo esta vacio

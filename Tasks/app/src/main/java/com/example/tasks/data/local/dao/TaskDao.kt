@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface TaskDao {
     //Insertar si no existe y si existe lo remplaza
     @Upsert
-    suspend fun upsertTask(task: Task)
+    suspend fun upsertTask(task: Task): Long
 
     @Delete
     suspend fun deleteTask(task: Task)

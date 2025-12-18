@@ -35,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,8 +50,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tasks.AppViewModelProvider
 import com.example.tasks.data.local.entities.Task
 import com.example.tasks.data.local.events.TaskEvent
+import com.example.tasks.static.FileType
+import com.example.tasks.static.OwnerType
+import com.example.tasks.viewmodel.MediaDetails
+import com.example.tasks.viewmodel.MediaDetailsViewModel
 import com.example.tasks.viewmodel.TaskViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -116,6 +122,16 @@ fun TaskItem(
     onEdit: () -> Unit,
     formatTimestamp: (Long?) -> String
 ) {
+
+    val mediaViewModel: MediaDetailsViewModel =
+        viewModel(factory = AppViewModelProvider.factory)
+
+    LaunchedEffect(task.id) {
+        mediaViewModel.load(task.id, OwnerType.TASK)
+    }
+
+    val photos by mediaViewModel.mediaForOwner.collectAsState()
+
     //Mostrar u ocultar las acciones (editar/eliminar)
     var expanded by remember { mutableStateOf(false) }
 
@@ -205,8 +221,17 @@ fun TaskItem(
                         },
                         leadingIcon = { Icon(Icons.Default.Delete, contentDescription = "Eliminar") }
                     )
+
                 }
             }
+
+            if (photos.isNotEmpty()) {
+                TaskPhotoPreview(photos)
+            }
+
+            TaskPhotoPreview(
+                photos = photos.filter { it.type == FileType.PHOTO }
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
             FlowRow(

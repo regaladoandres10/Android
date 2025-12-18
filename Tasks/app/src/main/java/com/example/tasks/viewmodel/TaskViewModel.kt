@@ -10,8 +10,10 @@ import com.example.tasks.data.local.state.TaskState
 import com.example.tasks.static.FileType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -27,6 +29,12 @@ import kotlinx.coroutines.withContext
 class TaskViewModel(
     private val dao: TaskDao
 ): ViewModel() {
+
+    private val _savedTaskId = MutableSharedFlow<Int>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+    val savedTaskId = _savedTaskId.asSharedFlow()
 
     //Estado de busquedas
     private val _searchText = MutableStateFlow("")
@@ -119,7 +127,8 @@ class TaskViewModel(
         }
     }
 
-    fun onEvent( event: TaskEvent ){
+
+        fun onEvent( event: TaskEvent ){
         when(event) {
             is TaskEvent.DeleteTask -> {
                 viewModelScope.launch {
@@ -139,21 +148,20 @@ class TaskViewModel(
                     description = s.description,
                     dueDate = s.dueDate,
                     isCompleted = s.isCompleted,
-                    createdAt = s.createdAt,
+                    createdAt = s.createdAt ?: System.currentTimeMillis(),
                     reminderTime = s.reminderTime,
                 )
 
                 //Insertar y actualizar el estado
                 viewModelScope.launch {
-                    dao.upsertTask(task)
+                    val id = dao.upsertTask(task) //Id real
+                    _savedTaskId.emit(id.toInt()) //Emitir id
                     //Limpiar el estado despues de guardar, utilizar una nueva tarea
                     _state.update { it.copy(
                         title = "",
                         description = "",
                         dueDate = null,
                         reminderTime = null,
-                        filePath = null,
-                        fileType = FileType.NONE,
                         isAddingTask = false,
                         taskToEditId = null
                     ) }
