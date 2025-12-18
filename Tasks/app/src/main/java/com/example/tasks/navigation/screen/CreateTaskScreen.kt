@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import com.example.tasks.AppViewModelProvider
 import com.example.tasks.data.local.AppDatabase
 import com.example.tasks.data.local.events.TaskEvent
+import com.example.tasks.static.AudioRecorder
 import com.example.tasks.static.FileType
 import com.example.tasks.static.OwnerType
 import com.example.tasks.ui.common.AttachFileField
@@ -56,6 +57,7 @@ import com.example.tasks.ui.common.DatePickerFieldToModal
 import com.example.tasks.ui.common.MediaList
 import com.example.tasks.ui.common.ReminderTimePickerField
 import com.example.tasks.ui.common.TimesPicker
+import com.example.tasks.ui.common.createAudioFile
 import com.example.tasks.ui.common.createImageFile
 import com.example.tasks.ui.common.createVideoFile
 import com.example.tasks.viewmodel.MediaDetails
@@ -94,6 +96,32 @@ fun CreateTask(
     var showOptionsDialog by remember { mutableStateOf(false) }
     var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var videoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+
+    //Estados para el audio
+    val audioRecorder = remember { AudioRecorder(context) }
+    var isRecordingAudio by remember { mutableStateOf(false) }
+    var audioFile by remember { mutableStateOf<File?>(null) }
+
+    fun toggleAudioRecording() {
+        if (!isRecordingAudio) {
+            val file = createAudioFile(context)
+            audioFile = file
+            audioRecorder.startRecording(file)
+            isRecordingAudio = true
+        } else {
+            audioRecorder.stopRecording()
+            isRecordingAudio = false
+
+            audioFile?.let { file ->
+                mediaDetailsViewModel.addLocalMedia(
+                    MediaDetails(
+                        uri = file.absolutePath,
+                        type = FileType.AUDIO
+                    )
+                )
+            }
+        }
+    }
 
     //Cargar datos si es edicion
     LaunchedEffect(taskId) {
@@ -181,6 +209,19 @@ fun CreateTask(
                 videoLauncher.launch(uri)
             }
         }
+
+        //Permisos para el audio
+        val audioPermissionLauncher =
+            rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted ->
+                if (isGranted) {
+                    val file = createAudioFile(context)
+                    audioFile = file
+                    audioRecorder.startRecording(file)
+                    isRecordingAudio = true
+                }
+            }
 
 
 
@@ -339,6 +380,16 @@ fun CreateTask(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
+            if (isRecordingAudio) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Grabando audio...",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+
             //Boton de crear tarea/guardar tarea
             Button(
                 onClick = {
@@ -398,10 +449,22 @@ fun CreateTask(
                         videoUri = uri
                         videoLauncher.launch(uri)
                     } else {
-                        videoPermisionLauncher.launch(Manifest.permission.CAMERA) 
+                        videoPermisionLauncher.launch(Manifest.permission.CAMERA)
                     }
                 },
-                onRecordAudio = {},
+                onRecordAudio = {
+                    showOptionsDialog = false
+
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.RECORD_AUDIO
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        toggleAudioRecording()
+                    } else {
+                        audioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                    }
+                },
                 onSelectGallery = {}
             )
         }

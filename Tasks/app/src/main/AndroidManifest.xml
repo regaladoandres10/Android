@@ -4,6 +4,8 @@
 
     <!-- Camara -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Audio -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>

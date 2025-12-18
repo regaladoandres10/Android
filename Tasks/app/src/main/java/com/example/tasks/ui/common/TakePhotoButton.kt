@@ -66,3 +66,16 @@ fun createVideoFile(context: Context): File {
         storageDir
     )
 }
+
+//Ruta donde se guardan
+// /storage/emulated/0/Android/data/tu.paquete.app/files/Pictures/IMG_169999999.jpg
+
+fun createAudioFile(context: Context): File {
+    val timestamp = System.currentTimeMillis()
+    val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+    return File.createTempFile(
+        "AUD_${timestamp}_",
+        ".m4a",
+        storageDir
+    )
+}
