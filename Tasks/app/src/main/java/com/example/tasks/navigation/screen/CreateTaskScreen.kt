@@ -1,9 +1,11 @@
 package com.example.tasks.navigation.screen
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,12 +62,14 @@ import com.example.tasks.ui.common.TimesPicker
 import com.example.tasks.ui.common.createAudioFile
 import com.example.tasks.ui.common.createImageFile
 import com.example.tasks.ui.common.createVideoFile
+import com.example.tasks.ui.common.saveMediaToInternalStorage
 import com.example.tasks.viewmodel.MediaDetails
 import com.example.tasks.viewmodel.MediaDetailsViewModel
 import com.example.tasks.viewmodel.MediaEntryViewModel
 import com.example.tasks.viewmodel.TaskViewModel
 import com.example.tasks.viewmodel.TaskViewModelFactory
 import java.io.File
+import java.io.FileOutputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -177,6 +181,46 @@ fun CreateTask(
             }
         }
 
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickVisualMedia()
+        ) { uri: Uri? ->
+            uri?.let {
+                val path = saveMediaToInternalStorage(
+                    context,
+                    it,
+                    "IMG_${System.currentTimeMillis()}.jpg"
+                )
+
+                mediaDetailsViewModel.addLocalMedia(
+                    MediaDetails(
+                        uri = path,
+                        type = FileType.PHOTO
+                    )
+                )
+            }
+        }
+
+    // Video picker
+    val videoPickerLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickVisualMedia()
+        ) { uri: Uri? ->
+            uri?.let {
+                val path = saveMediaToInternalStorage(
+                    context,
+                    it,
+                    "VID_${System.currentTimeMillis()}.mp4"
+                )
+
+                mediaDetailsViewModel.addLocalMedia(
+                    MediaDetails(
+                        uri = path,
+                        type = FileType.VIDEO
+                    )
+                )
+            }
+        }
 
     val cameraPermissionLauncher =
         rememberLauncherForActivityResult(
@@ -222,8 +266,6 @@ fun CreateTask(
                     isRecordingAudio = true
                 }
             }
-
-
 
 //    //Guardar archivos despues de crear la tarea
 //    LaunchedEffect(state.taskToEditId) {
@@ -388,7 +430,9 @@ fun CreateTask(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+
             Spacer(modifier = Modifier.height(24.dp))
+
 
             //Boton de crear tarea/guardar tarea
             Button(
@@ -465,7 +509,14 @@ fun CreateTask(
                         audioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                     }
                 },
-                onSelectGallery = {}
+                onSelectGallery = {
+                    showOptionsDialog = false
+
+                    //Abrir selector para foto o video
+                    imagePickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                    )
+                }
             )
         }
     }
