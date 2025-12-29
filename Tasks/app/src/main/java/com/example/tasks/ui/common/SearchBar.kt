@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tasks.MainViewModel
 import com.example.tasks.viewmodel.TaskViewModel
 
 @Composable

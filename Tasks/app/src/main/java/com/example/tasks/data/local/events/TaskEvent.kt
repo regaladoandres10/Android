@@ -17,6 +17,4 @@ sealed interface TaskEvent {
     data class SetTaskToEditId(val id: Int?): TaskEvent
     //Evento de recordatorio
     data class SetReminderTime(val time: Long?): TaskEvent
-    //Evento de multimedia
-    data class SetFile(val path: String?, val type: FileType?): TaskEvent
 }

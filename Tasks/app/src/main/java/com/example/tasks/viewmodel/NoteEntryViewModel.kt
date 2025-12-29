@@ -54,9 +54,7 @@ data class NoteDetails(
 fun NoteDetails.toItem(): Note = Note(
     id = id,
     title = title,
-    content = content,
-    filePath = filePath.ifBlank { null },
-    fileType = fileType ?: FileType.NONE
+    content = content
 )
 
 fun Note.toNoteUiState(isEntryValid: Boolean = false): NoteUiState = NoteUiState(
@@ -70,6 +68,4 @@ fun Note.toNoteDetails(): NoteDetails = NoteDetails(
     content = content,
     createdAt = createdAt,
     lastModified = lastModified,
-    filePath = filePath ?: "",
-    fileType = fileType
 )

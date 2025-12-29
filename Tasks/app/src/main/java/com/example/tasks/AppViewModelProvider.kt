@@ -5,6 +5,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.tasks.viewmodel.MediaDetailsViewModel
+import com.example.tasks.viewmodel.MediaEntryViewModel
 import com.example.tasks.viewmodel.NoteDetailsViewModel
 import com.example.tasks.viewmodel.NoteEditViewModel
 import com.example.tasks.viewmodel.NoteEntryViewModel
@@ -33,6 +35,14 @@ object AppViewModelProvider {
                 this.createSavedStateHandle(),
                 taskApplication().container.noteRepository
             )
+        }
+
+        initializer {
+            MediaEntryViewModel(taskApplication().container.multimediaRepository)
+        }
+
+        initializer {
+            MediaDetailsViewModel(taskApplication().container.multimediaRepository)
         }
     }
 }

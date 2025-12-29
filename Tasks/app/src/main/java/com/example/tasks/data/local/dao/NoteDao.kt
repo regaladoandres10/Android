@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import androidx.room.Upsert
 import com.example.tasks.data.local.entities.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -24,7 +23,7 @@ interface NoteDao {
 
     //Definir consultas
     //Mostrar todas las notas
-    @Query("SELECT * FROM note ORDER BY title ASC")
+    @Query("SELECT * FROM note ORDER BY createdAt ASC")
     fun getAllItmes(): Flow<List<Note>>
 
     //Obtener un elemento de la tabla de Note
