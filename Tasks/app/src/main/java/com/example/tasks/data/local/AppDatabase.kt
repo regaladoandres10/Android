@@ -13,7 +13,7 @@ import com.example.tasks.data.local.entities.Task
 
 @Database(
     entities =[Task::class, Note::class, Multimedia::class ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
