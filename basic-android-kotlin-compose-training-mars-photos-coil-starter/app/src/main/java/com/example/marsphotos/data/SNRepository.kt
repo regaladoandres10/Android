@@ -18,8 +18,10 @@ package com.example.marsphotos.data
 import android.util.Log
 import com.example.marsphotos.model.ProfileStudent
 import com.example.marsphotos.model.Usuario
+import com.example.marsphotos.network.NetworkModule
 import com.example.marsphotos.network.SICENETWService
 import com.example.marsphotos.network.bodyacceso
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.BufferedReader
 import java.io.IOException
@@ -69,10 +71,12 @@ class DBLocalSNRepository(val apiDB : Any):SNRepository {
 /**
  * Network Implementation of Repository that fetch mars photos list from marsApi.
  */
+
 class NetworSNRepository(
     private val snApiService: SICENETWService
 ) : SNRepository {
     /** Fetches list of MarsPhoto from marsApi*/
+    //private val api = NetworkModule.provideApi(context)
     override suspend fun acceso(m: String, p: String): String {
 
         val bodyacceso =
@@ -90,15 +94,22 @@ class NetworSNRepository(
     """.trimIndent()
 
         //callHTTPS()
-        val res = snApiService.acceso(bodyacceso.toRequestBody() )
 
-        Log.d("RXML", res.string() )
+        val requestBody = bodyacceso.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        //Arma el XML y llama el servicio
+        //Se guarda la cookie
+        val respone = snApiService.acceso(requestBody )
+
+        //Respuesta en XML
+        val xml = respone.string()
+
+        Log.d("RXML", xml )
        /* Log.d("RXML", res.body?.accesoLoginResponse?.accesoLoginResult.toString() )
 
         return res.body?.accesoLoginResponse?.accesoLoginResult.toString()*/
         /*Log.d("RXML", res.message() )
         return res.message()*/
-        return ""
+        return xml
     }
 
     override suspend fun accesoObjeto(m: String, p: String): Usuario {

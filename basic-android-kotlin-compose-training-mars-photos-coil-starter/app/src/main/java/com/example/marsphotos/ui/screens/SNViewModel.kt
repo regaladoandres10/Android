@@ -15,9 +15,13 @@
  */
 package com.example.marsphotos.ui.screens
 
+import android.app.Application
+import android.preference.PreferenceManager
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -42,7 +46,21 @@ sealed interface SNUiState {
     object Loading : SNUiState
 }
 
-class SNViewModel(private val snRepository: SNRepository) : ViewModel() {
+/*
+    Probar si estamos obteniendo las cookies
+
+    class SNViewModel(
+    application: Application,
+    private val snRepository: SNRepository
+) : AndroidViewModel(application) {
+}
+
+ */
+
+class SNViewModel(
+    application: Application,
+    private val snRepository: SNRepository
+) : AndroidViewModel(application) {
     /** The mutable State that stores the status of the most recent request */
     var snUiState: SNUiState by mutableStateOf(SNUiState.Loading)
         private set
@@ -63,6 +81,13 @@ class SNViewModel(private val snRepository: SNRepository) : ViewModel() {
             //snUiState = SNUiState.Loading
             snUiState = try {
                 val listResult = snRepository.acceso("S21120230", "Tc4_b2=")
+                //Verificar cookies
+                val prefs = PreferenceManager
+                    .getDefaultSharedPreferences(getApplication())
+
+                val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
+                Log.d("COOKIES", cookies.toString())
+
                 SNUiState.Success(
                     //"Success: ${listResult.size} Mars photos retrieved"
                     //"First Mars image URL: ${listResult[0].imgSrc}"
@@ -76,6 +101,13 @@ class SNViewModel(private val snRepository: SNRepository) : ViewModel() {
         }
     }
 
+
+    /*
+    * val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
+                val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
+                Log.d("COOKIES", cookies.toString())
+    * */
+
     /**
      * Factory for [MarsViewModel] that takes [MarsPhotosRepository] as a dependency
      */
@@ -84,7 +116,10 @@ class SNViewModel(private val snRepository: SNRepository) : ViewModel() {
             initializer {
                 val application = (this[APPLICATION_KEY] as MarsPhotosApplication)
                 val snRepository = application.container.snRepository
-                SNViewModel(snRepository = snRepository)
+                SNViewModel(
+                    application = application,
+                    snRepository = snRepository
+                )
             }
         }
     }
