@@ -46,8 +46,10 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun acceso(@Body soap: RequestBody): ResponseBody
 
+    /*
     @GET("/")
     suspend fun con (): ResponseBody
+     */
 
     //Obtener alumnos con lineamientos
     @Headers(
@@ -55,7 +57,7 @@ interface SICENETWService {
         "SOAPAction: http://tempuri.org/getAlumnoAcademicoWithLineamiento",
     )
     @POST("/ws/wsalumnos.asmx")
-    suspend fun obtenerAlumno(@Body soap: RequestBody): ResponseBody
+    suspend fun profile(@Body soap: RequestBody): ResponseBody
 
 
 }

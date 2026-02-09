@@ -120,8 +120,22 @@ class NetworSNRepository(
     }
 
     override suspend fun profile(m: String, p: String): ProfileStudent {
-        TODO("Not yet implemented")
+        val bodyProfile =
+            """
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+        <getAlumnoAcademicoWithLineamiento xmlns="http://tempuri.org/" />
+        </soap:Body>
+        </soap:Envelope>
+        """.trimIndent()
 
+        val requestBody = bodyacceso.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val respone = snApiService.acceso(requestBody )
+        val xmlProfile = respone.string()
+        //Obteniendo los datos en el log cat
+        Log.d("PROFILE", xmlProfile)
+        return ProfileStudent(matricula = "")
     }
 
     suspend fun callHTTPS(){
@@ -145,6 +159,7 @@ class NetworSNRepository(
           </soap:Body>
         </soap:Envelope>
     """.trimIndent()
+
 
         try {
             // Establecer la conexión HTTPS

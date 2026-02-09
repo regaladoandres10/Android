@@ -70,6 +70,22 @@ class SNViewModel(
      */
     init {
         accesoSN()
+        profile()
+    }
+
+    /**
+     * Obtenemos el perfil del alumno
+     */
+    fun profile() {
+        viewModelScope.launch(Dispatchers.IO) {
+            snUiState = try {
+                SNUiState.Success {
+                    
+                }
+            } catch (e: IOException) {
+                SNUiState.Error
+            }
+        }
     }
 
     /**
@@ -85,6 +101,7 @@ class SNViewModel(
                 val prefs = PreferenceManager
                     .getDefaultSharedPreferences(getApplication())
 
+                //Verificación de cookies
                 val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
                 Log.d("COOKIES", cookies.toString())
 
@@ -114,6 +131,7 @@ class SNViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
+                //Obtenemos la instancia global de la app
                 val application = (this[APPLICATION_KEY] as MarsPhotosApplication)
                 val snRepository = application.container.snRepository
                 SNViewModel(
