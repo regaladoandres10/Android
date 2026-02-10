@@ -18,18 +18,22 @@ class AddCookiesInterceptor(
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
+        //Preparar la peticion (request)
         val builder = chain.request().newBuilder()
 
+        //Leer cookies
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        //Guardar cookies
         val cookies = prefs.getStringSet(PREF_COOKIES, emptySet()) ?: emptySet()
 
         if (cookies.isNotEmpty()) {
+            //Enviar las cookie
             val cookieHeader = cookies.joinToString("; ") {
                 it.split(";")[0] // solo nombre=valor
             }
             builder.addHeader("Cookie", cookieHeader)
         }
-
+    
         return chain.proceed(builder.build())
     }
 }

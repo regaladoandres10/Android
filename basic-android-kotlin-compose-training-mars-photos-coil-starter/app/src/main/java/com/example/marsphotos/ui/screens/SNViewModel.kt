@@ -70,18 +70,20 @@ class SNViewModel(
      */
     init {
         accesoSN()
-        profile()
+        loadProfile()
     }
 
     /**
      * Obtenemos el perfil del alumno
      */
-    fun profile() {
+    fun loadProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             snUiState = try {
-                SNUiState.Success {
-                    
-                }
+                val profile = snRepository.profile()
+
+                Log.d("VIEWMODEL_PROFILE", profile.toString())
+
+                SNUiState.Success("Perfil obtenido correctamente")
             } catch (e: IOException) {
                 SNUiState.Error
             }
