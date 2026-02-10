@@ -47,6 +47,7 @@ import coil.request.ImageRequest
 import com.example.marsphotos.R
 import com.example.marsphotos.model.MarsPhoto
 import com.example.marsphotos.ui.theme.MarsPhotosTheme
+import com.example.marsphotos.viewmodel.MarsUiState
 
 @Composable
 fun HomeScreen(

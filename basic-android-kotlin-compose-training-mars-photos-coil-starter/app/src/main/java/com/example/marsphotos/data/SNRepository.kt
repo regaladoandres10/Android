@@ -38,7 +38,7 @@ interface SNRepository {
     /** Fetches list of MarsPhoto from marsApi */
     suspend fun acceso(m: String, p: String): String
     suspend fun accesoObjeto(m: String, p: String): Usuario
-    suspend fun profile(m: String, p: String): ProfileStudent
+    suspend fun profile(): ProfileStudent
 
 
 }
@@ -62,7 +62,7 @@ class DBLocalSNRepository(val apiDB : Any):SNRepository {
         return Usuario(matricula = "")
     }
 
-    override suspend fun profile(m: String, p: String): ProfileStudent {
+    override suspend fun profile(): ProfileStudent {
         //TODO("Not yet implemented")
         return ProfileStudent("S")
     }
@@ -115,13 +115,27 @@ class NetworSNRepository(
     override suspend fun accesoObjeto(m: String, p: String): Usuario {
         //TODO("Not yet implemented")
         return Usuario(matricula = "")
-
-
     }
 
-    override suspend fun profile(m: String, p: String): ProfileStudent {
-        TODO("Not yet implemented")
+    override suspend fun profile(): ProfileStudent {
+        val bodyProfile =
+            """
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+                       xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+        <getAlumnoAcademicoWithLineamiento xmlns="http://tempuri.org/" />
+        </soap:Body>
+        </soap:Envelope>
+        """.trimIndent()
 
+        val requestBody = bodyProfile.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val respone = snApiService.profile(requestBody )
+        val xmlProfile = respone.string()
+        //Obteniendo los datos en el log cat
+        Log.d("PROFILE", xmlProfile)
+        return ProfileStudent(matricula = "")
     }
 
     suspend fun callHTTPS(){
@@ -145,6 +159,7 @@ class NetworSNRepository(
           </soap:Body>
         </soap:Envelope>
     """.trimIndent()
+
 
         try {
             // Establecer la conexión HTTPS

@@ -36,6 +36,7 @@ val bodyacceso = "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">
 
 interface SICENETWService {
 
+    //Login
     // sicenet.surguanajuato.tecnm.mx
     @Headers(
         "Content-Type: text/xml;charset=utf-8",
@@ -45,6 +46,19 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun acceso(@Body soap: RequestBody): ResponseBody
 
+    //Obtener alumnos con lineamientos
+    @Headers(
+        "Content-Type: text/xml;charset=utf-8",
+        "SOAPAction: http://tempuri.org/getAlumnoAcademicoWithLineamiento",
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun profile(@Body soap: RequestBody): ResponseBody
+
+    /*
     @GET("/")
     suspend fun con (): ResponseBody
+     */
+
+
+
 }

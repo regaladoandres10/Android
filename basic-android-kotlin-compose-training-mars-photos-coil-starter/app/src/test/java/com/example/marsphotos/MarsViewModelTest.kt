@@ -18,8 +18,8 @@ package com.example.marsphotos
 import com.example.marsphotos.fake.FakeDataSource
 import com.example.marsphotos.fake.FakeNetworkMarsPhotosRepository
 import com.example.marsphotos.rules.TestDispatcherRule
-import com.example.marsphotos.ui.screens.MarsUiState
-import com.example.marsphotos.ui.screens.MarsViewModel
+import com.example.marsphotos.viewmodel.MarsUiState
+import com.example.marsphotos.viewmodel.MarsViewModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule

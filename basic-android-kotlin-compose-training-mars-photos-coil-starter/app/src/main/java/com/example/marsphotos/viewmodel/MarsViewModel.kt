@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.marsphotos.ui.screens
+package com.example.marsphotos.viewmodel
 
-import android.app.Application
-import android.preference.PreferenceManager
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -30,9 +26,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.marsphotos.MarsPhotosApplication
 import com.example.marsphotos.data.MarsPhotosRepository
-import com.example.marsphotos.data.SNRepository
 import com.example.marsphotos.model.MarsPhoto
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -40,73 +34,45 @@ import java.io.IOException
 /**
  * UI state for the Home screen
  */
-sealed interface SNUiState {
-    data class Success(val accesoLogin: String) : SNUiState
-    object Error : SNUiState
-    object Loading : SNUiState
+sealed interface MarsUiState {
+    data class Success(val photos: List< MarsPhoto>) : MarsUiState
+    object Error : MarsUiState
+    object Loading : MarsUiState
 }
 
-/*
-    Probar si estamos obteniendo las cookies
-
-    class SNViewModel(
-    application: Application,
-    private val snRepository: SNRepository
-) : AndroidViewModel(application) {
-}
-
- */
-
-class SNViewModel(
-    application: Application,
-    private val snRepository: SNRepository
-) : AndroidViewModel(application) {
+class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
-    var snUiState: SNUiState by mutableStateOf(SNUiState.Loading)
+    var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
      */
     init {
-        accesoSN()
+        //getMarsPhotos()
     }
 
     /**
      * Gets Mars photos information from the Mars API Retrofit service and updates the
      * [MarsPhoto] [List] [MutableList].
      */
-    fun accesoSN() {
-        viewModelScope.launch(Dispatchers.IO) {
-            //snUiState = SNUiState.Loading
-            snUiState = try {
-                val listResult = snRepository.acceso("S21120230", "Tc4_b2=")
-                //Verificar cookies
-                val prefs = PreferenceManager
-                    .getDefaultSharedPreferences(getApplication())
-
-                val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
-                Log.d("COOKIES", cookies.toString())
-
-                SNUiState.Success(
+    fun getMarsPhotos() {
+        viewModelScope.launch {
+            marsUiState = MarsUiState.Loading
+            marsUiState = try {
+                val listResult = marsPhotosRepository.getMarsPhotos()
+                MarsUiState.Success(
                     //"Success: ${listResult.size} Mars photos retrieved"
                     //"First Mars image URL: ${listResult[0].imgSrc}"
                     listResult
                 )
             } catch (e: IOException) {
-                SNUiState.Error
+                MarsUiState.Error
             } catch (e: HttpException) {
-                SNUiState.Error
+                MarsUiState.Error
             }
         }
     }
-
-
-    /*
-    * val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
-                val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
-                Log.d("COOKIES", cookies.toString())
-    * */
 
     /**
      * Factory for [MarsViewModel] that takes [MarsPhotosRepository] as a dependency
@@ -115,11 +81,8 @@ class SNViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as MarsPhotosApplication)
-                val snRepository = application.container.snRepository
-                SNViewModel(
-                    application = application,
-                    snRepository = snRepository
-                )
+                val marsPhotosRepository = application.container.marsPhotosRepository
+                MarsViewModel(marsPhotosRepository = marsPhotosRepository)
             }
         }
     }
