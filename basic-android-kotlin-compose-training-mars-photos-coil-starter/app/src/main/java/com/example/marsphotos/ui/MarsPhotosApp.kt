@@ -34,8 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marsphotos.R
 import com.example.marsphotos.ui.screens.HomeScreen
-import com.example.marsphotos.ui.screens.MarsViewModel
-import com.example.marsphotos.ui.screens.SNViewModel
+import com.example.marsphotos.viewmodel.MarsViewModel
+import com.example.marsphotos.viewmodel.SNViewModel
 
 @Composable
 fun MarsPhotosApp() {

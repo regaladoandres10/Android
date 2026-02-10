@@ -33,7 +33,7 @@ class AddCookiesInterceptor(
             }
             builder.addHeader("Cookie", cookieHeader)
         }
-    
+
         return chain.proceed(builder.build())
     }
 }
