@@ -115,8 +115,6 @@ class NetworSNRepository(
     override suspend fun accesoObjeto(m: String, p: String): Usuario {
         //TODO("Not yet implemented")
         return Usuario(matricula = "")
-
-
     }
 
     override suspend fun profile(): ProfileStudent {

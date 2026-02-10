@@ -34,15 +34,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marsphotos.R
 import com.example.marsphotos.ui.screens.HomeScreen
+import com.example.marsphotos.ui.screens.ScreenLogin
 import com.example.marsphotos.viewmodel.MarsViewModel
+import com.example.marsphotos.viewmodel.SNUiState
 import com.example.marsphotos.viewmodel.SNViewModel
 
 @Composable
-fun MarsPhotosApp() {
+fun SicenetApp() {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { MarsTopAppBar(scrollBehavior = scrollBehavior) }
+        topBar = { TopAppBar(scrollBehavior = scrollBehavior) }
     ) {
         Surface(
             modifier = Modifier.fillMaxSize()
@@ -53,17 +55,30 @@ fun MarsPhotosApp() {
             val snViewModel: SNViewModel =
                 viewModel(factory = SNViewModel.Factory)
 
+            when(snViewModel.snUiState) {
+                is SNUiState.Success -> {
+                    Text("Inicio de sesión")
+                }
+                else -> {
+                    ScreenLogin(
+                        snViewModel = snViewModel,
+                        snUiState = snViewModel.snUiState,
+                        contentPadding = it
+                    )
+                }
+            }
+            /*
             HomeScreen(
                 marsUiState = marsViewModel.marsUiState,
                 retryAction = marsViewModel::getMarsPhotos ,
                 contentPadding = it
-            )
+            )*/
         }
     }
 }
 
 @Composable
-fun MarsTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier) {
+fun TopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
         title = {

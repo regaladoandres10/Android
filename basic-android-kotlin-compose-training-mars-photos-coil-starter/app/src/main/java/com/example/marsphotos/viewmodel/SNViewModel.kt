@@ -68,8 +68,8 @@ class SNViewModel(
      * Call getMarsPhotos() on init so we can display status immediately.
      */
     init {
-        accesoSN()
-        loadProfile()
+        //accesoSN("", "")
+        //loadProfile()
     }
 
     /**
@@ -77,7 +77,7 @@ class SNViewModel(
      */
     fun loadProfile() {
         viewModelScope.launch(Dispatchers.IO) {
-            snUiState = try {
+            try {
                 val profile = snRepository.profile()
 
                 Log.d("VIEWMODEL_PROFILE", profile.toString())
@@ -93,11 +93,11 @@ class SNViewModel(
      * Gets Mars photos information from the Mars API Retrofit service and updates the
      * [MarsPhoto] [List] [MutableList].
      */
-    fun accesoSN() {
+    fun accesoSN(matricula: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            //snUiState = SNUiState.Loading
-            snUiState = try {
-                val listResult = snRepository.acceso("S21120230", "Tc4_b2=")
+            snUiState = SNUiState.Loading
+            try {
+                val result = snRepository.acceso(matricula, password)
                 //Verificar cookies
                 val prefs = PreferenceManager
                     .getDefaultSharedPreferences(getApplication())
@@ -109,8 +109,10 @@ class SNViewModel(
                 SNUiState.Success(
                     //"Success: ${listResult.size} Mars photos retrieved"
                     //"First Mars image URL: ${listResult[0].imgSrc}"
-                    listResult
+                    result
                 )
+                //Cargar el perfil del alumno
+                loadProfile()
             } catch (e: IOException) {
                 SNUiState.Error
             } catch (e: HttpException) {

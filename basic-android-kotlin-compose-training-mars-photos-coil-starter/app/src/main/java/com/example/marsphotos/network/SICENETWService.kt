@@ -46,11 +46,6 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun acceso(@Body soap: RequestBody): ResponseBody
 
-    /*
-    @GET("/")
-    suspend fun con (): ResponseBody
-     */
-
     //Obtener alumnos con lineamientos
     @Headers(
         "Content-Type: text/xml;charset=utf-8",
@@ -58,6 +53,12 @@ interface SICENETWService {
     )
     @POST("/ws/wsalumnos.asmx")
     suspend fun profile(@Body soap: RequestBody): ResponseBody
+
+    /*
+    @GET("/")
+    suspend fun con (): ResponseBody
+     */
+
 
 
 }

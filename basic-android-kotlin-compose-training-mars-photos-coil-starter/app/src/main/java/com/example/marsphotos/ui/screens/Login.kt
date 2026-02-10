@@ -2,6 +2,7 @@ package com.example.marsphotos.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -16,7 +18,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,9 +26,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.marsphotos.viewmodel.SNUiState
+import com.example.marsphotos.viewmodel.SNViewModel
 
 @Composable
-fun ScreenLogin() {
+fun ScreenLogin(
+    snViewModel: SNViewModel,
+    snUiState: SNUiState,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
     var text by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -72,12 +79,20 @@ fun ScreenLogin() {
             },
             modifier = Modifier.padding(16.dp).fillMaxWidth()
         )
-        //Boton
+        //Boton de inciar sesión
         Button(
-            onClick = { /*Mandar a otra pantalla*/ },
+            onClick = {
+                snViewModel.accesoSN(text, password)
+            },
             modifier = Modifier.fillMaxWidth().padding(20.dp)
         ) {
             Text(text = "Iniciar sesión")
+        }
+
+        when (snUiState) {
+            is SNUiState.Loading -> CircularProgressIndicator()
+            is SNUiState.Error -> Text("Error al iniciar sesión")
+            is SNUiState.Success -> Text("Sesión iniciada correctamente")
         }
     }
 }
