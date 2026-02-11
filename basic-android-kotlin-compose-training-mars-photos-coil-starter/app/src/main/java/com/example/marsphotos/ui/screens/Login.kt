@@ -1,5 +1,6 @@
 package com.example.marsphotos.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +35,7 @@ import com.example.marsphotos.viewmodel.SNViewModel
 fun ScreenLogin(
     snViewModel: SNViewModel,
     snUiState: SNUiState,
+    onLoginSuccesed: () -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     var text by rememberSaveable { mutableStateOf("") }
@@ -82,11 +85,20 @@ fun ScreenLogin(
         //Boton de inciar sesión
         Button(
             onClick = {
+                //Conectarnos a la api
                 snViewModel.accesoSN(text, password)
             },
             modifier = Modifier.fillMaxWidth().padding(20.dp)
         ) {
             Text(text = "Iniciar sesión")
+        }
+
+        LaunchedEffect(snUiState) {
+            if (snUiState is SNUiState.Success) {
+                Log.d("navigacion", "Navegando a profile")
+                //Cambiar de pantalla
+                onLoginSuccesed()
+            }
         }
 
         when (snUiState) {
