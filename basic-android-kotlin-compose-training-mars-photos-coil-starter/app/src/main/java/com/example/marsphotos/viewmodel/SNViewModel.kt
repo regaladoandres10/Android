@@ -106,17 +106,18 @@ class SNViewModel(
                 val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
                 Log.d("COOKIES", cookies.toString())
 
-                SNUiState.Success(
+                snUiState = SNUiState.Success(
                     //"Success: ${listResult.size} Mars photos retrieved"
                     //"First Mars image URL: ${listResult[0].imgSrc}"
+                    //"TEST"
                     result
                 )
                 //Cargar el perfil del alumno
                 loadProfile()
             } catch (e: IOException) {
-                SNUiState.Error
+                snUiState = SNUiState.Error
             } catch (e: HttpException) {
-                SNUiState.Error
+                snUiState = SNUiState.Error
             }
         }
     }
