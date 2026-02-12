@@ -33,7 +33,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
  */
 interface AppContainer {
 
-    val marsPhotosRepository: MarsPhotosRepository
+    //val marsPhotosRepository: MarsPhotosRepository
     val snRepository: SNRepository
 }
 
@@ -43,30 +43,29 @@ interface AppContainer {
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
 class DefaultAppContainer(applicationContext: Context) : AppContainer {
-    private val baseUrl = "https://android-kotlin-fun-mars-server.appspot.com/"
-    private val baseUrlSN = "https://sicenet.surguanajuato.tecnm.mx"
+    //private val baseUrl = "https://android-kotlin-fun-mars-server.appspot.com/"
+    private val baseUrlSN = "https://sicenet.surguanajuato.tecnm.mx/"
     private var client: OkHttpClient
     init {
+        //Cookies
         client = OkHttpClient()
         val builder = OkHttpClient.Builder()
-
         builder.addInterceptor(AddCookiesInterceptor(applicationContext)) // VERY VERY IMPORTANT
-
         builder.addInterceptor(ReceivedCookiesInterceptor(applicationContext)) // VERY VERY IMPORTANT
-
         client = builder.build()
     }
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
      */
+    /*
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .build()
-
+    */
     private val retrofitSN: Retrofit = Retrofit.Builder()
-        .baseUrl(baseUrlSN)
-        .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
+        .baseUrl(baseUrlSN) //URL del servicio
+        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .client(client)
         .build()
 
@@ -75,9 +74,12 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
     /**
      * Retrofit service object for creating api calls
      */
+
+    /*
     private val retrofitService: MarsApiService by lazy {
         retrofit.create(MarsApiService::class.java)
     }
+     */
 
     /**
      * Retrofit service object for creating api calls
@@ -85,9 +87,12 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
     private val retrofitServiceSN: SICENETWService by lazy {
         retrofitSN.create(SICENETWService::class.java)
     }
+
+    /*
     override val marsPhotosRepository: NetworkMarsPhotosRepository by lazy {
         NetworkMarsPhotosRepository(retrofitService)
-    }
+    }*/
+
     /**
      * DI implementation for Mars photos repository
      */

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:OptIn(InternalSerializationApi::class)
+
 package com.example.marsphotos.data
 
 import android.util.Log
 import com.example.marsphotos.model.ProfileStudent
 import com.example.marsphotos.model.Usuario
-import com.example.marsphotos.network.NetworkModule
 import com.example.marsphotos.network.SICENETWService
 import com.example.marsphotos.network.bodyacceso
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.BufferedReader
@@ -34,16 +37,15 @@ import javax.net.ssl.HttpsURLConnection
 /**
  * Repository that fetch mars photos list from marsApi.
  */
+
 interface SNRepository {
     /** Fetches list of MarsPhoto from marsApi */
     suspend fun acceso(m: String, p: String): String
     suspend fun accesoObjeto(m: String, p: String): Usuario
     suspend fun profile(): ProfileStudent
-
-
 }
 
-
+/*
 class DBLocalSNRepository(val apiDB : Any):SNRepository {
     override suspend fun acceso(m: String, p: String): String {
         //TODO("Not yet implemented")
@@ -62,11 +64,14 @@ class DBLocalSNRepository(val apiDB : Any):SNRepository {
         return Usuario(matricula = "")
     }
 
+    /*
     override suspend fun profile(): ProfileStudent {
         //TODO("Not yet implemented")
-        return ProfileStudent("S")
+        return ProfileStudent("")
     }
+     */
 }
+ */
 
 /**
  * Network Implementation of Repository that fetch mars photos list from marsApi.
@@ -133,9 +138,23 @@ class NetworSNRepository(
         val requestBody = bodyProfile.toRequestBody("text/xml; charset=utf-8".toMediaType())
         val respone = snApiService.profile(requestBody )
         val xmlProfile = respone.string()
-        //Obteniendo los datos en el log cat
+
         Log.d("PROFILE", xmlProfile)
-        return ProfileStudent(matricula = "")
+
+        //Extraer el JSON del XML
+        val json = xmlProfile
+            .substringAfter("<getAlumnoAcademicoWithLineamientoResult>")
+            .substringBefore("</getAlumnoAcademicoWithLineamientoResult>")
+            .trim()
+
+        Log.d("JSON", json)
+
+        //Convertir JSON a objeto
+        val profile = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<ProfileStudent>(json)
+
+        return profile
     }
 
     suspend fun callHTTPS(){

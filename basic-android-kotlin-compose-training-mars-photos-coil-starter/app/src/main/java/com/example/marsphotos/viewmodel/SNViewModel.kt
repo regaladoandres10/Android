@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:OptIn(InternalSerializationApi::class)
+
 package com.example.marsphotos.viewmodel
 
 import android.app.Application
@@ -31,8 +33,11 @@ import com.example.marsphotos.MarsPhotosApplication
 import com.example.marsphotos.data.MarsPhotosRepository
 import com.example.marsphotos.data.SNRepository
 import com.example.marsphotos.model.MarsPhoto
+import com.example.marsphotos.model.ProfileStudent
+import com.example.marsphotos.network.MarsApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.InternalSerializationApi
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -40,7 +45,7 @@ import java.io.IOException
  * UI state for the Home screen
  */
 sealed interface SNUiState {
-    data class Success(val accesoLogin: String) : SNUiState
+    data class Success(val profile: ProfileStudent) : SNUiState
     object Error : SNUiState
     object Loading : SNUiState
 }
@@ -56,6 +61,7 @@ sealed interface SNUiState {
 
  */
 
+@OptIn(InternalSerializationApi::class)
 class SNViewModel(
     application: Application,
     private val snRepository: SNRepository
@@ -75,6 +81,8 @@ class SNViewModel(
     /**
      * Obtenemos el perfil del alumno
      */
+
+    /*
     fun loadProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -82,12 +90,13 @@ class SNViewModel(
 
                 Log.d("VIEWMODEL_PROFILE", profile.toString())
 
-                SNUiState.Success("Perfil obtenido correctamente")
+                SNUiState.Success(profile)
             } catch (e: IOException) {
                 SNUiState.Error
             }
         }
     }
+     */
 
     /**
      * Gets Mars photos information from the Mars API Retrofit service and updates the
@@ -97,7 +106,10 @@ class SNViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             snUiState = SNUiState.Loading
             try {
-                val result = snRepository.acceso(matricula, password)
+                //val result = snRepository.acceso(matricula, password)
+                //Login
+                snRepository.acceso(matricula, password)
+
                 //Verificar cookies
                 val prefs = PreferenceManager
                     .getDefaultSharedPreferences(getApplication())
@@ -106,14 +118,17 @@ class SNViewModel(
                 val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
                 Log.d("COOKIES", cookies.toString())
 
-                snUiState = SNUiState.Success(
-                    //"Success: ${listResult.size} Mars photos retrieved"
-                    //"First Mars image URL: ${listResult[0].imgSrc}"
-                    //"TEST"
-                    result
-                )
+                //Obtener el perfil
+                val profile = snRepository.profile()
+
+                //Pintando el nombre
+                Log.d("Nombre", profile.nombre ?: "")
+
+                //Actualizar el estado final
+                snUiState = SNUiState.Success(profile)
                 //Cargar el perfil del alumno
-                loadProfile()
+                //loadProfile()
+
             } catch (e: IOException) {
                 snUiState = SNUiState.Error
             } catch (e: HttpException) {

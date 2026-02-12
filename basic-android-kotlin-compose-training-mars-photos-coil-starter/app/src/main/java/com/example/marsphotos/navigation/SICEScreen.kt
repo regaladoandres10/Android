@@ -1,6 +1,9 @@
 package com.example.marsphotos.navigation
 
-enum class SICEScreen {
-    LogIn,
-    Profile
+import androidx.annotation.StringRes
+import com.example.marsphotos.R
+
+enum class SICEScreen(@StringRes val title: Int) {
+    LogIn(title = R.string.sicedroid),
+    Profile(title = R.string.profile)
 }

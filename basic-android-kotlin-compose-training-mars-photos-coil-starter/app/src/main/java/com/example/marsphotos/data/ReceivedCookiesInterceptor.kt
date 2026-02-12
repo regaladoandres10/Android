@@ -31,7 +31,7 @@ class ReceivedCookiesInterceptor(context: Context?) : Interceptor {
         //Revisar si hay cookies en la respuesta
         //Busca headers llamados "Set-Cookie"
         if (!originalResponse.headers("Set-Cookie").isEmpty()) {
-            //Leer cookies guardas previamente
+            //Leer cookies guardadass previamente
             val cookies = PreferenceManager.getDefaultSharedPreferences(context)
                 .getStringSet("PREF_COOKIES", HashSet<String?>()) as HashSet<String?>
 
