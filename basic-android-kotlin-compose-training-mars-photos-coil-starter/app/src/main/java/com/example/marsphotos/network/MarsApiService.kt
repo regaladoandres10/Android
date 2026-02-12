@@ -17,6 +17,7 @@
 package com.example.marsphotos.network
 
 import com.example.marsphotos.model.MarsPhoto
+import com.example.marsphotos.model.ProfileStudent
 import retrofit2.http.GET
 
 /**
@@ -30,4 +31,9 @@ interface MarsApiService {
      */
     @GET("photos")
     suspend fun getPhotos(): List<MarsPhoto>
+
+    @GET("getAlumnoAcademicoWithLineamiento")
+    //suspend fun getAlumno(): List<ProfileStudent>
+    suspend fun getAlumno(): String
+
 }

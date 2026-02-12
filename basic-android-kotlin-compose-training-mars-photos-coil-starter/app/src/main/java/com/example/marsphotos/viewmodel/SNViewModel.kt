@@ -31,8 +31,10 @@ import com.example.marsphotos.MarsPhotosApplication
 import com.example.marsphotos.data.MarsPhotosRepository
 import com.example.marsphotos.data.SNRepository
 import com.example.marsphotos.model.MarsPhoto
+import com.example.marsphotos.network.MarsApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.InternalSerializationApi
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -56,6 +58,7 @@ sealed interface SNUiState {
 
  */
 
+@OptIn(InternalSerializationApi::class)
 class SNViewModel(
     application: Application,
     private val snRepository: SNRepository
@@ -114,6 +117,10 @@ class SNViewModel(
                 )
                 //Cargar el perfil del alumno
                 loadProfile()
+
+                val profile = snRepository.profile()
+                Log.d("Nombre", profile.nombre ?: "")
+
             } catch (e: IOException) {
                 snUiState = SNUiState.Error
             } catch (e: HttpException) {

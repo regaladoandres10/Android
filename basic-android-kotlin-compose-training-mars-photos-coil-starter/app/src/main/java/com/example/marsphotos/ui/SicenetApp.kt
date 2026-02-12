@@ -43,7 +43,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marsphotos.R
 import androidx.navigation.compose.rememberNavController
 import com.example.marsphotos.ui.screens.ScreenLogin
-import com.example.marsphotos.viewmodel.MarsViewModel
 import com.example.marsphotos.viewmodel.SNViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -57,9 +56,10 @@ fun SicenetApp(
     navController: NavHostController = rememberNavController()
 ) {
 
+    /*
     val marsViewModel: MarsViewModel =
         viewModel(factory = MarsViewModel.Factory)
-
+*/
     val snViewModel: SNViewModel =
         viewModel(factory = SNViewModel.Factory)
 
@@ -100,7 +100,7 @@ fun SicenetApp(
                         //Navegar hacia la pantalla de profile
                         onLoginSuccesed = {
                             navController.navigate(SICEScreen.Profile.name) {
-                                popUpTo(SICEScreen.LogIn.name) { inclusive = true }
+                                    popUpTo(SICEScreen.LogIn.name) { inclusive = true }
                             }
                         },
                     )
