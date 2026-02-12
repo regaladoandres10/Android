@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 
 data class ProfileStudent (
-    @SerialName("fechaReins") val fechaReins: String? = null,
+    @SerialName("fechaReins")
+    val fechaReins: String? = null,
     @SerialName(value = "modEducativo")
     val modEducativo: Int? = null,
     @SerialName(value = "adeudo")

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, InternalSerializationApi::class)
 
 package com.example.marsphotos.ui
 
@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +51,8 @@ import com.example.marsphotos.navigation.SICEScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.marsphotos.ui.screens.ScreenProfile
+import com.example.marsphotos.viewmodel.SNUiState
+import kotlinx.serialization.InternalSerializationApi
 
 @Composable
 fun SicenetApp(
@@ -106,7 +109,18 @@ fun SicenetApp(
                     )
                 }
                 composable(route = SICEScreen.Profile.name) {
-                    ScreenProfile()
+                    when (val state = snViewModel.snUiState) {
+                        is SNUiState.Success -> {
+                            ScreenProfile(profile = state.profile)
+                        }
+                        is SNUiState.Loading -> {
+                            CircularProgressIndicator()
+                        }
+                        is SNUiState.Error -> {
+                            Text("Error al cargar el perfil")
+                        }
+                    }
+
                 }
             }
 
@@ -145,7 +159,7 @@ fun TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
             Text(
-                text = stringResource(R.string.app_name),
+                text = stringResource(currentScreen.title),
                 style = MaterialTheme.typography.headlineSmall,
             )
         },
