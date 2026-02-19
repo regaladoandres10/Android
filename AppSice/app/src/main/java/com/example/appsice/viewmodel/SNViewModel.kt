@@ -123,6 +123,11 @@ class SNViewModel(
                 //Pintando el nombre
                 Log.d("Nombre", profile.nombre ?: "")
 
+
+                val cargaAcademica = snRepository.getCargaAcademica()
+                Log.d("carga", cargaAcademica.toString())
+
+
                 //Actualizar el estado final
                 snUiState = SNUiState.Success(profile)
                 //Cargar el perfil del alumno

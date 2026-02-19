@@ -18,6 +18,7 @@
 package com.example.appsice.data
 
 import android.util.Log
+import com.example.appsice.model.CargaAcademica
 import com.example.appsice.model.ProfileStudent
 import com.example.appsice.model.Usuario
 import com.example.appsice.network.SICENETWService
@@ -42,6 +43,9 @@ interface SNRepository {
     suspend fun acceso(m: String, p: String): String
     suspend fun accesoObjeto(m: String, p: String): Usuario
     suspend fun profile(): ProfileStudent
+
+    suspend fun getCargaAcademica(): String
+
 }
 
 /*
@@ -141,19 +145,47 @@ class NetworSNRepository(
         Log.d("PROFILE", xmlProfile)
 
         //Extraer el JSON del XML
-        val json = xmlProfile
+        val jsonProfile = xmlProfile
             .substringAfter("<getAlumnoAcademicoWithLineamientoResult>")
             .substringBefore("</getAlumnoAcademicoWithLineamientoResult>")
             .trim()
 
-        Log.d("JSON", json)
+        Log.d("JSONProfile", jsonProfile)
 
         //Convertir JSON a objeto
         val profile = Json {
             ignoreUnknownKeys = true
-        }.decodeFromString<ProfileStudent>(json)
+        }.decodeFromString<ProfileStudent>(jsonProfile)
 
         return profile
+    }
+
+    override suspend fun getCargaAcademica(): String {
+        val bodyCarga = """
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <getCargaAcademicaByAlumno xmlns="http://tempuri.org/" />
+              </soap:Body>
+            </soap:Envelope>
+        """.trimIndent()
+
+        val requestBody = bodyCarga.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val response = snApiService.cargaAcademica(requestBody)
+        val xmlCarga = response.string()
+
+        //Consologeando el response
+        Log.d("CARGA", xmlCarga)
+
+        //Extraer el json del xml
+        val jsonCarga = xmlCarga
+            .substringAfter("<getCargaAcademicaByAlumnoResult>")
+            .substringBefore("</getCargaAcademicaByAlumnoResult>")
+
+        val cargaAcademica = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<CargaAcademica>(jsonCarga)
+
+        return ""
     }
 
     suspend fun callHTTPS(){

@@ -3,6 +3,7 @@ package com.example.appsice.network
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
@@ -53,11 +54,24 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun profile(@Body soap: RequestBody): ResponseBody
 
+    //Obtener carga academica del alumno
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getCargaAcademicaByAlumno",
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun cargaAcademica(@Body soap: RequestBody): ResponseBody
+
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getAllKardexConPromedioByAlumno"
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun cargaCardex(@Body soap: RequestBody): ResponseBody
+
     /*
     @GET("/")
     suspend fun con (): ResponseBody
      */
-
-
 
 }
