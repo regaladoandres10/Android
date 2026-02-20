@@ -44,7 +44,7 @@ interface SNRepository {
     suspend fun accesoObjeto(m: String, p: String): Usuario
     suspend fun profile(): ProfileStudent
 
-    suspend fun getCargaAcademica(): String
+    suspend fun getCargaAcademica(): List<CargaAcademica>
 
 }
 
@@ -160,7 +160,7 @@ class NetworSNRepository(
         return profile
     }
 
-    override suspend fun getCargaAcademica(): String {
+    override suspend fun getCargaAcademica(): List<CargaAcademica> {
         val bodyCarga = """
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
               <soap:Body>
@@ -183,9 +183,10 @@ class NetworSNRepository(
 
         val cargaAcademica = Json {
             ignoreUnknownKeys = true
-        }.decodeFromString<CargaAcademica>(jsonCarga)
+        }.decodeFromString<List<CargaAcademica>>(jsonCarga)
 
-        return ""
+
+        return cargaAcademica
     }
 
     suspend fun callHTTPS(){

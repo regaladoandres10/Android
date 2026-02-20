@@ -125,7 +125,7 @@ class SNViewModel(
 
 
                 val cargaAcademica = snRepository.getCargaAcademica()
-                Log.d("carga", cargaAcademica.toString())
+                Log.d("Carga grupo", cargaAcademica.toString())
 
 
                 //Actualizar el estado final
