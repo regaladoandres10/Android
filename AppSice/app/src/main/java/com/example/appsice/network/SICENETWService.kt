@@ -62,12 +62,15 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun cargaAcademica(@Body soap: RequestBody): ResponseBody
 
+    //Obtener cardex del alumno
     @Headers(
         "Content-Type: text/xml; charset=utf-8",
         "SOAPAction: http://tempuri.org/getAllKardexConPromedioByAlumno"
     )
     @POST("/ws/wsalumnos.asmx")
-    suspend fun cargaCardex(@Body soap: RequestBody): ResponseBody
+    suspend fun getkardex(@Body soap: RequestBody): ResponseBody
+
+
 
     /*
     @GET("/")

@@ -127,6 +127,8 @@ class SNViewModel(
                 val cargaAcademica = snRepository.getCargaAcademica()
                 Log.d("Carga grupo", cargaAcademica.toString())
 
+                val kardex = snRepository.getCargaCardex(1)
+                //Log.d("")
 
                 //Actualizar el estado final
                 snUiState = SNUiState.Success(profile)
