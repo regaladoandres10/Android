@@ -18,6 +18,7 @@
 package com.example.appsice.data
 
 import android.util.Log
+import com.example.appsice.model.CalifacionesUnidad
 import com.example.appsice.model.Cardex
 import com.example.appsice.model.CardexResponse
 import com.example.appsice.model.CargaAcademica
@@ -47,8 +48,8 @@ interface SNRepository {
     suspend fun profile(): ProfileStudent
     suspend fun getCargaAcademica(): List<CargaAcademica>
     suspend fun getCargaCardex(id: Int): List<Cardex>
-
-
+    suspend fun getCaliPorUnidad(): List<CalifacionesUnidad>
+    suspend fun getCaliFinal(id: Int): String
 }
 
 /*
@@ -220,6 +221,40 @@ class NetworSNRepository(
         }.decodeFromString<CardexResponse>(jsonKardex)
 
         return cardex.listCardex
+    }
+
+    override suspend fun getCaliPorUnidad(): List<CalifacionesUnidad> {
+        val bodyCaliUnidad = """
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <getCalifUnidadesByAlumno xmlns="http://tempuri.org/" />
+              </soap:Body>
+            </soap:Envelope>
+        """.trimIndent()
+
+        val requestBody = bodyCaliUnidad.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val response = snApiService.getCaliPorUnidad(requestBody)
+        val xmlCaliUnidad = response.string()
+
+        Log.d("CALI UNIDAD", xmlCaliUnidad)
+
+        val jsonCaliUnidad = xmlCaliUnidad
+            .substringAfter("<getCalifUnidadesByAlumnoResult>")
+            .substringBefore("</getCalifUnidadesByAlumnoResult>")
+
+        //Obtener el json
+        val caliUnidad = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<List<CalifacionesUnidad>>(jsonCaliUnidad)
+
+        return caliUnidad
+    }
+
+    override suspend fun getCaliFinal(id: Int): String {
+        TODO("Not yet implemented")
+        val bodyCaliFinal = """
+            
+        """.trimIndent()
     }
 
     suspend fun callHTTPS(){

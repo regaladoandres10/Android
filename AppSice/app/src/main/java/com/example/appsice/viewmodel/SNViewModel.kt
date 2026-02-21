@@ -130,6 +130,8 @@ class SNViewModel(
                 val kardex = snRepository.getCargaCardex(1)
                 //Log.d("")
 
+                val caliUnidad = snRepository.getCaliPorUnidad()
+
                 //Actualizar el estado final
                 snUiState = SNUiState.Success(profile)
                 //Cargar el perfil del alumno

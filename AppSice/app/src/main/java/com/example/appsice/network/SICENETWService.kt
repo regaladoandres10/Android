@@ -70,6 +70,21 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun getkardex(@Body soap: RequestBody): ResponseBody
 
+    //Obtener calificaciones por unidad del alumno
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getCalifUnidadesByAlumno"
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun getCaliPorUnidad(@Body soap: RequestBody): ResponseBody
+
+    //Obtener califacion unidad
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getAllCalifFinalByAlumnos"
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun getCaliFinal(@Body soap: ResponseBody): ResponseBody
 
 
     /*
