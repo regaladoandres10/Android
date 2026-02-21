@@ -3,6 +3,7 @@ package com.example.appsice.network
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
@@ -53,11 +54,42 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun profile(@Body soap: RequestBody): ResponseBody
 
+    //Obtener carga academica del alumno
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getCargaAcademicaByAlumno",
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun cargaAcademica(@Body soap: RequestBody): ResponseBody
+
+    //Obtener cardex del alumno
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getAllKardexConPromedioByAlumno"
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun getkardex(@Body soap: RequestBody): ResponseBody
+
+    //Obtener calificaciones por unidad del alumno
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getCalifUnidadesByAlumno"
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun getCaliPorUnidad(@Body soap: RequestBody): ResponseBody
+
+    //Obtener califacion unidad
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getAllCalifFinalByAlumnos"
+    )
+    @POST("/ws/wsalumnos.asmx")
+    suspend fun getCaliFinal(@Body soap: RequestBody): ResponseBody
+
+
     /*
     @GET("/")
     suspend fun con (): ResponseBody
      */
-
-
 
 }

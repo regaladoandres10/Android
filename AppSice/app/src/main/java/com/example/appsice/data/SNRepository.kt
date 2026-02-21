@@ -18,6 +18,11 @@
 package com.example.appsice.data
 
 import android.util.Log
+import com.example.appsice.model.CalifacionUnidad
+import com.example.appsice.model.CalificacionFinal
+import com.example.appsice.model.Cardex
+import com.example.appsice.model.CardexResponse
+import com.example.appsice.model.CargaAcademica
 import com.example.appsice.model.ProfileStudent
 import com.example.appsice.model.Usuario
 import com.example.appsice.network.SICENETWService
@@ -42,6 +47,10 @@ interface SNRepository {
     suspend fun acceso(m: String, p: String): String
     suspend fun accesoObjeto(m: String, p: String): Usuario
     suspend fun profile(): ProfileStudent
+    suspend fun getCargaAcademica(): List<CargaAcademica>
+    suspend fun getCargaCardex(lineamiento: Int): List<Cardex>
+    suspend fun getCaliPorUnidad(): List<CalifacionUnidad>
+    suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal>
 }
 
 /*
@@ -141,19 +150,133 @@ class NetworSNRepository(
         Log.d("PROFILE", xmlProfile)
 
         //Extraer el JSON del XML
-        val json = xmlProfile
+        val jsonProfile = xmlProfile
             .substringAfter("<getAlumnoAcademicoWithLineamientoResult>")
             .substringBefore("</getAlumnoAcademicoWithLineamientoResult>")
             .trim()
 
-        Log.d("JSON", json)
+        Log.d("JSONProfile", jsonProfile)
 
         //Convertir JSON a objeto
         val profile = Json {
             ignoreUnknownKeys = true
-        }.decodeFromString<ProfileStudent>(json)
+        }.decodeFromString<ProfileStudent>(jsonProfile)
 
         return profile
+    }
+
+    override suspend fun getCargaAcademica(): List<CargaAcademica> {
+        val bodyCarga = """
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <getCargaAcademicaByAlumno xmlns="http://tempuri.org/" />
+              </soap:Body>
+            </soap:Envelope>
+        """.trimIndent()
+
+        val requestBody = bodyCarga.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val response = snApiService.cargaAcademica(requestBody)
+        val xmlCarga = response.string()
+
+        //Consologeando el response
+        Log.d("CARGA", xmlCarga)
+
+        //Extraer el json del xml
+        val jsonCarga = xmlCarga
+            .substringAfter("<getCargaAcademicaByAlumnoResult>")
+            .substringBefore("</getCargaAcademicaByAlumnoResult>")
+
+        val cargaAcademica = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<List<CargaAcademica>>(jsonCarga)
+
+
+        return cargaAcademica
+    }
+
+    override suspend fun getCargaCardex(lineamiento: Int): List<Cardex> {
+        val bodyKardex = """
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <getAllKardexConPromedioByAlumno xmlns="http://tempuri.org/">
+                  <aluLineamiento>${lineamiento}</aluLineamiento>
+                </getAllKardexConPromedioByAlumno>
+              </soap:Body>
+            </soap:Envelope>
+        """.trimIndent()
+
+        val requestBody = bodyKardex.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val response = snApiService.getkardex(requestBody)
+        val xmlCardex = response.string()
+
+        Log.d("KARDEX", xmlCardex)
+
+        val jsonKardex = xmlCardex
+            .substringAfter("<getAllKardexConPromedioByAlumnoResult>")
+            .substringBefore("</getAllKardexConPromedioByAlumnoResult>")
+
+        Log.d("JSON cardex", jsonKardex)
+
+        val cardex = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<CardexResponse>(jsonKardex)
+
+        return cardex.listCardex
+    }
+
+    override suspend fun getCaliPorUnidad(): List<CalifacionUnidad> {
+        val bodyCaliUnidad = """
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <getCalifUnidadesByAlumno xmlns="http://tempuri.org/" />
+              </soap:Body>
+            </soap:Envelope>
+        """.trimIndent()
+
+        val requestBody = bodyCaliUnidad.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val response = snApiService.getCaliPorUnidad(requestBody)
+        val xmlCaliUnidad = response.string()
+
+        Log.d("CALI UNIDAD", xmlCaliUnidad)
+
+        val jsonCaliUnidad = xmlCaliUnidad
+            .substringAfter("<getCalifUnidadesByAlumnoResult>")
+            .substringBefore("</getCalifUnidadesByAlumnoResult>")
+
+        //Obtener el json
+        val caliUnidad = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<List<CalifacionUnidad>>(jsonCaliUnidad)
+
+        return caliUnidad
+    }
+
+    override suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal> {
+        val bodyCaliFinal = """
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <getAllCalifFinalByAlumnos xmlns="http://tempuri.org/">
+                  <bytModEducativo>${modEducativo}</bytModEducativo>
+                </getAllCalifFinalByAlumnos>
+              </soap:Body>
+            </soap:Envelope>
+        """.trimIndent()
+
+        val requestBody = bodyCaliFinal.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        val response = snApiService.getCaliFinal(requestBody)
+        val xmlCaliFinal = response.string()
+
+        Log.d("CALI FINAL", xmlCaliFinal)
+
+        val jsonCaliFinal = xmlCaliFinal
+            .substringAfter("<getAllCalifFinalByAlumnosResult>")
+            .substringBefore("</getAllCalifFinalByAlumnosResult>")
+
+        val caliFinal = Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<List<CalificacionFinal>>(jsonCaliFinal)
+
+        return caliFinal
     }
 
     suspend fun callHTTPS(){
