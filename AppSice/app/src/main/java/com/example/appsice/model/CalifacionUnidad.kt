@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @InternalSerializationApi @Serializable
-data class CalifacionesUnidad(
+data class CalifacionUnidad(
     @SerialName("Observaciones")
     val observaciones: String ?= null,
     @SerialName("C13")

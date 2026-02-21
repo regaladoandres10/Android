@@ -84,7 +84,7 @@ interface SICENETWService {
         "SOAPAction: http://tempuri.org/getAllCalifFinalByAlumnos"
     )
     @POST("/ws/wsalumnos.asmx")
-    suspend fun getCaliFinal(@Body soap: ResponseBody): ResponseBody
+    suspend fun getCaliFinal(@Body soap: RequestBody): ResponseBody
 
 
     /*

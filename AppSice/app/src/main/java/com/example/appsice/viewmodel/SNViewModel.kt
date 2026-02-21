@@ -127,10 +127,12 @@ class SNViewModel(
                 val cargaAcademica = snRepository.getCargaAcademica()
                 Log.d("Carga grupo", cargaAcademica.toString())
 
-                val kardex = snRepository.getCargaCardex(1)
+                val kardex = snRepository.getCargaCardex(3)
                 //Log.d("")
 
                 val caliUnidad = snRepository.getCaliPorUnidad()
+
+                val caliFinal = snRepository.getCaliFinal(2)
 
                 //Actualizar el estado final
                 snUiState = SNUiState.Success(profile)
