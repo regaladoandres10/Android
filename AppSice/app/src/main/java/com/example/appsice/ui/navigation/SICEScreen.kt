@@ -1,4 +1,4 @@
-package com.example.appsice.navigation
+package com.example.appsice.ui.navigation
 
 import androidx.annotation.StringRes
 import com.example.appsice.R

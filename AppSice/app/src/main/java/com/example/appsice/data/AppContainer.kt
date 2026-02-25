@@ -18,7 +18,9 @@ package com.example.appsice.data
 import AddCookiesInterceptor
 import ReceivedCookiesInterceptor
 import android.content.Context
-import com.example.appsice.network.SICENETWService
+import com.example.appsice.data.repository.NetworSNRepository
+import com.example.appsice.data.repository.SNRepository
+import com.example.appsice.data.remote.SICENETWService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

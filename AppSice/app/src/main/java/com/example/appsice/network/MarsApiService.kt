@@ -16,7 +16,7 @@
 
 package com.example.appsice.network
 
-import com.example.appsice.model.MarsPhoto
+import com.example.appsice.data.remote.model.MarsPhoto
 import retrofit2.http.GET
 
 /**

@@ -1,4 +1,4 @@
-package com.example.appsice.model
+package com.example.appsice.data.remote.model
 
 import kotlinx.serialization.Serializable
 import org.simpleframework.xml.Element

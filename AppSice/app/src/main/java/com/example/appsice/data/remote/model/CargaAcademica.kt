@@ -1,4 +1,4 @@
-package com.example.appsice.model
+package com.example.appsice.data.remote.model
 
 import androidx.annotation.Nullable
 import kotlinx.serialization.InternalSerializationApi

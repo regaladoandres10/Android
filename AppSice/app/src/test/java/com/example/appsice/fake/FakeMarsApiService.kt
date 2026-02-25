@@ -15,7 +15,7 @@
  */
 package com.example.appsice.fake
 
-import com.example.appsice.model.MarsPhoto
+import com.example.appsice.data.remote.model.MarsPhoto
 import com.example.appsice.network.MarsApiService
 
 class FakeMarsApiService : MarsApiService {

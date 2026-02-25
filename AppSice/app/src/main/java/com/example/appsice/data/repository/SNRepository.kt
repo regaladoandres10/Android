@@ -15,17 +15,17 @@
  */
 @file:OptIn(InternalSerializationApi::class)
 
-package com.example.appsice.data
+package com.example.appsice.data.repository
 
 import android.util.Log
-import com.example.appsice.model.CalifacionUnidad
-import com.example.appsice.model.CalificacionFinal
-import com.example.appsice.model.Cardex
-import com.example.appsice.model.CardexResponse
-import com.example.appsice.model.CargaAcademica
-import com.example.appsice.model.ProfileStudent
-import com.example.appsice.model.Usuario
-import com.example.appsice.network.SICENETWService
+import com.example.appsice.data.remote.model.CalifacionUnidad
+import com.example.appsice.data.remote.model.CalificacionFinal
+import com.example.appsice.data.remote.model.Cardex
+import com.example.appsice.data.remote.model.CardexResponse
+import com.example.appsice.data.remote.model.CargaAcademica
+import com.example.appsice.data.remote.model.ProfileStudent
+import com.example.appsice.data.remote.model.Usuario
+import com.example.appsice.data.remote.SICENETWService
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

@@ -44,7 +44,7 @@ import com.example.appsice.ui.screens.ScreenLogin
 import com.example.appsice.viewmodel.SNViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.appsice.navigation.SICEScreen
+import com.example.appsice.ui.navigation.SICEScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.appsice.ui.screens.ScreenProfile

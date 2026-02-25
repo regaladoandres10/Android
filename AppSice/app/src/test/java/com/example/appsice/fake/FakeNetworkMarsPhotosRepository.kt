@@ -16,7 +16,7 @@
 package com.example.appsice.fake
 
 import com.example.appsice.data.MarsPhotosRepository
-import com.example.appsice.model.MarsPhoto
+import com.example.appsice.data.remote.model.MarsPhoto
 
 class FakeNetworkMarsPhotosRepository : MarsPhotosRepository{
     override suspend fun getMarsPhotos(): List<MarsPhoto> {

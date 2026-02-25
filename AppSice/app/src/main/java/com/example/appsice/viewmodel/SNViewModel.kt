@@ -31,9 +31,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.appsice.MarsPhotosApplication
 import com.example.appsice.data.MarsPhotosRepository
-import com.example.appsice.data.SNRepository
-import com.example.appsice.model.MarsPhoto
-import com.example.appsice.model.ProfileStudent
+import com.example.appsice.data.repository.SNRepository
+import com.example.appsice.data.remote.model.MarsPhoto
+import com.example.appsice.data.remote.model.ProfileStudent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
