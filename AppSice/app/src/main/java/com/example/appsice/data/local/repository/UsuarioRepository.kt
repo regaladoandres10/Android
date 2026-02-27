@@ -15,21 +15,21 @@ interface UsuarioRepository {
     /**
      * Retrieve an usuario from the given data source that matches with the [id].
      */
-    fun getUsuarioStream(id: Int): Flow<UsuarioEntity>
+    fun getUsuarioStream(id: Int): Flow<UsuarioEntity?>
 
     /**
      * Insert usuario in the data source
      */
-    suspend fun insertUsuario(usuarioEntity: UsuarioEntity)
+    suspend fun insertUsuario(usuario: UsuarioEntity)
 
     /**
      * Delete usuario from the data source
      */
-    suspend fun deleteUsuario(usuarioEntity: UsuarioEntity)
+    suspend fun deleteUsuario(usuario: UsuarioEntity)
 
     /**
      * Update usuario in the data source
      */
-    suspend fun updateUsuario(usuarioEntity: UsuarioEntity)
+    suspend fun updateUsuario(usuario: UsuarioEntity)
 
 }
