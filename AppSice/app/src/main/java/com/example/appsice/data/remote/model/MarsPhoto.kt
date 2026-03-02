@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.appsice.model
+package com.example.appsice.data.remote.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
