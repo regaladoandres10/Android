@@ -1,7 +1,9 @@
 package com.example.appsice.data
 
 import android.content.Context
+import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -17,21 +19,32 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
 
     override fun login(m: String, p: String) {
         // Add WorkRequest to Cleanup temporary images
-        var continuation = workManager
-            .beginUniqueWork(
-                "SICENET_MANIPULATION_WORK_NAME",
-                ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequestBuilder<LoginWorker>()
-                    .addTag("EsteQuieroMonitorear").build()
-            )
+        //Creamos el constraint para saber si hay internet
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
-        // Add WorkRequest to blur the image
-        val wrdbWorker = OneTimeWorkRequestBuilder<LoginDBWorker>()
+        //Creamos el Worker 1 (LoginWorker) -> Llama a la API de retrofit.
+        val loginWorkRequest =
+            //Se ejecuta una sola vez el worker
+            OneTimeWorkRequestBuilder<LoginWorker>()
+                .setConstraints(constraints)
+                .addTag("LOGIN_WORK")
+                .build()
 
-        continuation = continuation.then(wrdbWorker.build())
+        //Creamos el Worker 2 -> Para almacenar en la base de datos
+        val saveWorker =
+            OneTimeWorkRequestBuilder<LoginDBWorker>()
+                .build()
 
-        // Actually start the work
-        continuation.enqueue()
+        //Worker unico
+        workManager.beginUniqueWork(
+            "SYNC_LOGIN_WORK",
+            ExistingWorkPolicy.REPLACE, //Si se repite el proceso 2 veces solo se hace 1
+            loginWorkRequest //Mandamos llamar el primer trabajo
+        )
+            .then(saveWorker) //Mandamos llamar o encolar el segundo trabajo
+            .enqueue() //Encolamos el segundo trabajo
 
     }
 

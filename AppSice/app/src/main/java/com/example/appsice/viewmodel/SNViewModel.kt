@@ -29,11 +29,14 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import com.example.appsice.MarsPhotosApplication
-import com.example.appsice.data.MarsPhotosRepository
 import com.example.appsice.data.repository.SNRepository
 import com.example.appsice.data.remote.model.MarsPhoto
 import com.example.appsice.data.remote.model.ProfileStudent
+import com.example.appsice.workers.LoginWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi

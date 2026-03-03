@@ -5,17 +5,27 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.example.appsice.MarsPhotosApplication
+import com.example.appsice.data.repository.SNRepository
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-class LoginWorker(ctx: Context, params: WorkerParameters)
+class LoginWorker(
+    ctx: Context,
+    params: WorkerParameters
+)
     : CoroutineWorker(ctx,params){
 
-        val net = ctx as MarsPhotosApplication
-
+    @OptIn(InternalSerializationApi::class)
     override suspend fun doWork(): Result {
-        //TODO("Not yet implemented")
-        val u = net.container.snRepository.acceso("", "")
+        val profile = (applicationContext as SNRepository).profile()
 
-        return Result.success(workDataOf("u" to u))
+        //Deserializar el profile
+        val json = Json.encodeToString(profile)
+
+        //Datos de salida
+        val output = workDataOf("profile_json" to json)
+        return Result.success(output)
 
     }
 
