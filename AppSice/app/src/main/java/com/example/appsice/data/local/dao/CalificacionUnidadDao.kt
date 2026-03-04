@@ -14,6 +14,9 @@ interface CalificacionUnidadDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(calificacionU: CalificacionUnidadEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(cargas: List<CalificacionUnidadEntity>)
+
     @Update
     suspend fun update(calificacionU: CalificacionUnidadEntity)
 

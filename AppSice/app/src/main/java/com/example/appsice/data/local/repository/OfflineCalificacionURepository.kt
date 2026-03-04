@@ -11,6 +11,7 @@ class OfflineCalificacionURepository(private val calificacionUDao: CalificacionU
     override fun getCalificacionUStream(id: Int): Flow<CalificacionUnidadEntity?> = calificacionUDao.getCalificacionUnidad(id)
 
     override suspend fun insertCalificacionU(calificacionU: CalificacionUnidadEntity) = calificacionUDao.insert(calificacionU)
+    override suspend fun insertAll(calisFinal: List<CalificacionUnidadEntity>) = calificacionUDao.insertAll(calisFinal)
 
     override suspend fun deleteCalificacionU(calificacionU: CalificacionUnidadEntity) = calificacionUDao.delete(calificacionU)
 
