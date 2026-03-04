@@ -76,6 +76,8 @@ dependencies {
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
 
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+
     // Import the Compose BOM
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
     implementation("androidx.activity:activity-compose:1.8.0")

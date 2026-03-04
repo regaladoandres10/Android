@@ -10,24 +10,24 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class LoginWorker(
+class CalificacionUnidadWorker(
     ctx: Context,
     params: WorkerParameters
-)
-    : CoroutineWorker(ctx,params){
-
+) : CoroutineWorker(ctx, params) {
     @OptIn(InternalSerializationApi::class)
     override suspend fun doWork(): Result {
         val container = (applicationContext as SNApplication).container
         val repository = container.snRepository
 
-        val profile = repository.profile()
+        val calificacionUnidad = repository.getCaliPorUnidad()
 
-        //Deserializar el profile
-        val json = Json.encodeToString(profile)
-        Log.d("Worker1 JSONProfile", json)
-        //Datos de salida
-        val output = workDataOf("profile_json" to json)
+        //Convertimos el objeto de CalificacionUnidad a Json(String)
+        val jsonCaliUnidad = Json.encodeToString(calificacionUnidad)
+        Log.d("Worker1 JSONCaliUnidad", jsonCaliUnidad)
+
+        //Mandamos el JSON al segundo worker
+        val output = workDataOf("calisUnidad_json" to jsonCaliUnidad)
         return Result.success(output)
     }
+
 }

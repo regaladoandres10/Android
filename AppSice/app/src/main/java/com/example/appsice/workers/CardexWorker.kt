@@ -10,24 +10,21 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class LoginWorker(
+class CardexWorker(
     ctx: Context,
     params: WorkerParameters
-)
-    : CoroutineWorker(ctx,params){
-
+): CoroutineWorker(ctx, params) {
     @OptIn(InternalSerializationApi::class)
     override suspend fun doWork(): Result {
         val container = (applicationContext as SNApplication).container
         val repository = container.snRepository
 
-        val profile = repository.profile()
+        val cardex = repository.getCargaCardex(3)
+        val jsonCardex = Json.encodeToString(cardex)
+        Log.d("Worker1 JSONCardex", jsonCardex)
 
-        //Deserializar el profile
-        val json = Json.encodeToString(profile)
-        Log.d("Worker1 JSONProfile", json)
-        //Datos de salida
-        val output = workDataOf("profile_json" to json)
+        val output = workDataOf("cardex_json" to jsonCardex)
         return Result.success(output)
     }
+
 }

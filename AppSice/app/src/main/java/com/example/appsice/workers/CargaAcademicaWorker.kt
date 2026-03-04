@@ -10,24 +10,22 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class LoginWorker(
+class CargaAcademicaWorker(
     ctx: Context,
     params: WorkerParameters
-)
-    : CoroutineWorker(ctx,params){
-
+) : CoroutineWorker(ctx, params){
     @OptIn(InternalSerializationApi::class)
     override suspend fun doWork(): Result {
         val container = (applicationContext as SNApplication).container
         val repository = container.snRepository
 
-        val profile = repository.profile()
+        val carga = repository.getCargaAcademica()
+        //Deserializar la carga academica
+        val jsonCarga = Json.encodeToString(carga)
+        Log.d("Worker1 JSONCarga", jsonCarga)
 
-        //Deserializar el profile
-        val json = Json.encodeToString(profile)
-        Log.d("Worker1 JSONProfile", json)
-        //Datos de salida
-        val output = workDataOf("profile_json" to json)
+        val output = workDataOf("carga_json" to jsonCarga)
         return Result.success(output)
     }
+
 }

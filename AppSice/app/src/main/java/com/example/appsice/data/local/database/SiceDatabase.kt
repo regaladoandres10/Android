@@ -4,17 +4,35 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.appsice.data.local.dao.CalificacionFinalDao
+import com.example.appsice.data.local.dao.CalificacionUnidadDao
+import com.example.appsice.data.local.dao.CardexDao
+import com.example.appsice.data.local.dao.CargaAcademicaDao
 import com.example.appsice.data.local.dao.UsuarioDao
+import com.example.appsice.data.local.entity.CalificacionFinalEntity
+import com.example.appsice.data.local.entity.CalificacionUnidadEntity
+import com.example.appsice.data.local.entity.CardexEntity
+import com.example.appsice.data.local.entity.CargaAcademicaEntity
 import com.example.appsice.data.local.entity.UsuarioEntity
 
 @Database(
-    entities = [UsuarioEntity::class],
-    version = 1,
+    entities =
+        [   UsuarioEntity::class,
+            CargaAcademicaEntity::class,
+            CardexEntity::class,
+            CalificacionUnidadEntity::class,
+            CalificacionFinalEntity::class
+        ],
+    version = 2,
     exportSchema = false
 )
 abstract class SiceDatabase : RoomDatabase() {
     //Mandamos llamar los DAOs
     abstract fun usuarioDao(): UsuarioDao
+    abstract fun cargaDao(): CargaAcademicaDao
+    abstract fun cardexDao(): CardexDao
+    abstract fun calificacionUnidadDao() : CalificacionUnidadDao
+    abstract fun caificacionFinalDao(): CalificacionFinalDao
 
     companion object {
             @Volatile
@@ -23,6 +41,7 @@ abstract class SiceDatabase : RoomDatabase() {
                 // if the Instance is not null, return it, otherwise create a new database instance.
                 return Instance ?: synchronized(this) {
                     Room.databaseBuilder(context, SiceDatabase::class.java, "sice_database")
+                        .fallbackToDestructiveMigration()
                         .build()
                         .also { Instance = it }
                 }

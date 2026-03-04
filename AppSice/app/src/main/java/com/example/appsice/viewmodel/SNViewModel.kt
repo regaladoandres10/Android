@@ -29,11 +29,15 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.appsice.MarsPhotosApplication
-import com.example.appsice.data.MarsPhotosRepository
+import com.example.appsice.SNApplication
+import com.example.appsice.data.SNWMRepository
+import com.example.appsice.data.local.repository.CalificacionFinalRepository
+import com.example.appsice.data.local.repository.CalificacionUnidadRepository
+import com.example.appsice.data.local.repository.CardexRepository
+import com.example.appsice.data.local.repository.CargaAcademicaRepository
+import com.example.appsice.data.local.repository.UsuarioRepository
 import com.example.appsice.data.repository.SNRepository
 import com.example.appsice.data.remote.model.MarsPhoto
-import com.example.appsice.data.remote.model.ProfileStudent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
@@ -44,7 +48,7 @@ import java.io.IOException
  * UI state for the Home screen
  */
 sealed interface SNUiState {
-    data class Success(val profile: ProfileStudent) : SNUiState
+    object Success: SNUiState
     object Error : SNUiState
     object Loading : SNUiState
 }
@@ -63,11 +67,28 @@ sealed interface SNUiState {
 @OptIn(InternalSerializationApi::class)
 class SNViewModel(
     application: Application,
-    private val snRepository: SNRepository
+    private val snRepository: SNRepository,
+    private val syncRepository: SNWMRepository,
+    private val usuarioRepository: UsuarioRepository,
+    private val cargaRepository: CargaAcademicaRepository,
+    private val cardexRepository: CardexRepository,
+    private val caliUnidadRepository: CalificacionUnidadRepository,
+    private val caliFinalRepository: CalificacionFinalRepository
 ) : AndroidViewModel(application) {
     /** The mutable State that stores the status of the most recent request */
     var snUiState: SNUiState by mutableStateOf(SNUiState.Loading)
         private set
+
+    val usuarioFlow = usuarioRepository.getAllUsuarioStream()
+    val cargaFlow = cargaRepository.getAllCargaStream()
+    val cardexFlow = cardexRepository.getAllCardexStream()
+    val caliUnidadFlow = caliUnidadRepository.getAllCalificacionUStream()
+    val caliFinalFlow = caliFinalRepository.getAllCalisFinaltream()
+    val syncState = syncRepository.logintWorkInfo
+    val cargaState = syncRepository.cargaWorkInfo
+    val cardexState = syncRepository.cardexWorkInfo
+    val caliUnidadState = syncRepository.caliUnidadWorkInfo
+    val caliFinalState = syncRepository.caliFinalWorkInfo
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
@@ -109,6 +130,9 @@ class SNViewModel(
                 //Login
                 snRepository.acceso(matricula, password)
 
+                //Si las credenciales son correctas cambiar el estado
+                snUiState = SNUiState.Success
+
                 //Verificar cookies
                 val prefs = PreferenceManager
                     .getDefaultSharedPreferences(getApplication())
@@ -117,27 +141,9 @@ class SNViewModel(
                 val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
                 Log.d("COOKIES", cookies.toString())
 
-                //Obtener el perfil
-                val profile = snRepository.profile()
+                //Llamar el repository para sincronizar datos
+                syncRepository.profile()
 
-                //Pintando el nombre
-                Log.d("Nombre", profile.nombre ?: "")
-
-
-                val cargaAcademica = snRepository.getCargaAcademica()
-                Log.d("Carga grupo", cargaAcademica.toString())
-
-                val kardex = snRepository.getCargaCardex(3)
-                //Log.d("")
-
-                val caliUnidad = snRepository.getCaliPorUnidad()
-
-                val caliFinal = snRepository.getCaliFinal(2)
-
-                //Actualizar el estado final
-                snUiState = SNUiState.Success(profile)
-                //Cargar el perfil del alumno
-                //loadProfile()
 
             } catch (e: IOException) {
                 snUiState = SNUiState.Error
@@ -147,6 +153,19 @@ class SNViewModel(
         }
     }
 
+    fun cargaAcademica() {
+        syncRepository.cargaAcademica()
+    }
+    fun cardex() {
+        syncRepository.cardex()
+    }
+    fun calificacionUnidad() {
+        syncRepository.calificacionUnidad()
+    }
+
+    fun calificacionFinal() {
+        syncRepository.calificacionFinal()
+    }
 
     /*
     * val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
@@ -161,11 +180,23 @@ class SNViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 //Obtenemos la instancia global de la app
-                val application = (this[APPLICATION_KEY] as MarsPhotosApplication)
+                val application = (this[APPLICATION_KEY] as SNApplication)
                 val snRepository = application.container.snRepository
+                val syncRepository = application.container.syncRepository
+                val usuarioRepository = application.container.usuarioRepository
+                val cargaRepository = application.container.cargaAcademicaRepository
+                val cardexRepository = application.container.cardexRepository
+                val caliUnidadRepository = application.container.calificacionUnidadRepository
+                val caliFinalRepository = application.container.calificacionFinalRepository
                 SNViewModel(
                     application = application,
-                    snRepository = snRepository
+                    snRepository = snRepository,
+                    syncRepository = syncRepository,
+                    usuarioRepository = usuarioRepository,
+                    cargaRepository = cargaRepository,
+                    cardexRepository = cardexRepository,
+                    caliUnidadRepository = caliUnidadRepository,
+                    caliFinalRepository = caliFinalRepository
                 )
             }
         }

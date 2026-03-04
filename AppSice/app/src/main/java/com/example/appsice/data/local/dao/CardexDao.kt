@@ -14,6 +14,9 @@ interface CardexDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(cadex: CardexEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(cargas: List<CardexEntity>)
+
     @Update
     suspend fun update(cardex: CardexEntity)
 
@@ -21,8 +24,8 @@ interface CardexDao {
     suspend fun delete(cardex: CardexEntity)
 
     //Get one cardex
-    @Query("SELECT * FROM cardex WHERE id = :id")
-    fun getCardex(id: Int): Flow<CardexEntity>
+    @Query("SELECT * FROM cardex WHERE claveMateria = :clv")
+    fun getCardex(clv: String): Flow<CardexEntity>
 
     //Get all
     @Query("SELECT * FROM cardex ORDER BY materia ASC")

@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -47,6 +48,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.appsice.ui.navigation.SICEScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.work.WorkInfo
+import com.example.appsice.ui.screens.MenuScreen
+import com.example.appsice.ui.screens.ScreenCalificacionFinal
+import com.example.appsice.ui.screens.ScreenCalificacionUnidad
+import com.example.appsice.ui.screens.ScreenCardex
+import com.example.appsice.ui.screens.ScreenCargaAcademica
 import com.example.appsice.ui.screens.ScreenProfile
 import com.example.appsice.viewmodel.SNUiState
 import kotlinx.serialization.InternalSerializationApi
@@ -99,47 +106,122 @@ fun SicenetApp(
                         snUiState = snViewModel.snUiState,
                         //Navegar hacia la pantalla de profile
                         onLoginSuccesed = {
-                            navController.navigate(SICEScreen.Profile.name) {
+                            navController.navigate(SICEScreen.Menu.name) {
                                     popUpTo(SICEScreen.LogIn.name) { inclusive = true }
                             }
                         },
                     )
                 }
-                composable(route = SICEScreen.Profile.name) {
-                    when (val state = snViewModel.snUiState) {
-                        is SNUiState.Success -> {
-                            ScreenProfile(profile = state.profile)
+                composable(route = SICEScreen.Menu.name) {
+                    MenuScreen(
+                        onPerfilClick = {
+                            navController.navigate(SICEScreen.Profile.name)
+                        },
+                        onCargaClick = {
+                            snViewModel.cargaAcademica()
+                            navController.navigate(SICEScreen.Carga.name)
+                        },
+                        onCardexClick = {
+                            snViewModel.cardex()
+                            navController.navigate(SICEScreen.Cardex.name)
+                        },
+                        onCaliUnidadClick = {
+                            snViewModel.calificacionUnidad()
+                            navController.navigate(SICEScreen.CalificacionUnidad.name)
+                        },
+                        onCaliFinalClick = {
+                            snViewModel.calificacionFinal()
+                            navController.navigate(SICEScreen.CalificacionFinal.name)
                         }
-                        is SNUiState.Loading -> {
+                    )
+                }
+                composable(route = SICEScreen.Profile.name) {
+
+                    val usuarios by snViewModel.usuarioFlow.collectAsState(initial = emptyList())
+                    val workInfo by snViewModel.syncState.collectAsState(initial = null)
+
+                    when {
+                        workInfo?.state == WorkInfo.State.RUNNING -> {
                             CircularProgressIndicator()
                         }
-                        is SNUiState.Error -> {
+                        workInfo?.state == WorkInfo.State.FAILED -> {
                             Text("Error al cargar el perfil")
+                        }
+                        usuarios.isNotEmpty() -> {
+                            ScreenProfile(profile = usuarios.first())
                         }
                     }
 
                 }
-            }
+                composable(route = SICEScreen.Carga.name) {
+                    val cargas by snViewModel.cargaFlow.collectAsState(initial = emptyList())
+                    val cargaState by snViewModel.cargaState.collectAsState(initial = null)
+                    when {
+                        cargaState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
 
-            /*
-            when(snViewModel.snUiState) {
-                is SNUiState.Success -> {
-                    Text("Inicio de sesión")
+                        cargaState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        cargas.isNotEmpty() -> {
+                            ScreenCargaAcademica(cargas)
+                        }
+                    }
                 }
-                else -> {
-                    ScreenLogin(
-                        snViewModel = snViewModel,
-                        snUiState = snViewModel.snUiState,
-                        contentPadding = it
-                    )
+                composable(route = SICEScreen.Cardex.name) {
+                    val cardexs by snViewModel.cardexFlow.collectAsState(initial = emptyList())
+                    val cardexState by snViewModel.cardexState.collectAsState(initial = null)
+                    when {
+                        cardexState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
+
+                        cardexState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        cardexs.isNotEmpty() -> {
+                            ScreenCardex(cardexs)
+                        }
+                    }
+                }
+                composable(route = SICEScreen.CalificacionUnidad.name) {
+                    val calisUnidad by snViewModel.caliUnidadFlow.collectAsState(initial = emptyList())
+                    val caliUnidadState by snViewModel.caliUnidadState.collectAsState(initial = null)
+                    when {
+                        caliUnidadState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
+
+                        caliUnidadState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        calisUnidad.isNotEmpty() -> {
+                            ScreenCalificacionUnidad(calisUnidad)
+                        }
+                    }
+                }
+                composable(route = SICEScreen.CalificacionFinal.name) {
+                    val calisFinal by snViewModel.caliFinalFlow.collectAsState(initial = emptyList())
+                    val caliFinalState by snViewModel.caliFinalState.collectAsState(initial = null)
+                    when {
+                        caliFinalState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
+
+                        caliFinalState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        calisFinal.isNotEmpty() -> {
+                            ScreenCalificacionFinal(calisFinal)
+                        }
+                    }
                 }
             }
-
-            HomeScreen(
-                marsUiState = marsViewModel.marsUiState,
-                retryAction = marsViewModel::getMarsPhotos ,
-                contentPadding = it
-            )*/
         }
     }
 }

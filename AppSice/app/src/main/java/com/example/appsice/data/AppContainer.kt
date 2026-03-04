@@ -18,6 +18,17 @@ package com.example.appsice.data
 import AddCookiesInterceptor
 import ReceivedCookiesInterceptor
 import android.content.Context
+import com.example.appsice.data.local.database.SiceDatabase
+import com.example.appsice.data.local.repository.CalificacionFinalRepository
+import com.example.appsice.data.local.repository.CalificacionUnidadRepository
+import com.example.appsice.data.local.repository.CardexRepository
+import com.example.appsice.data.local.repository.CargaAcademicaRepository
+import com.example.appsice.data.local.repository.OfflineCalificacionFinalRepository
+import com.example.appsice.data.local.repository.OfflineCalificacionURepository
+import com.example.appsice.data.local.repository.OfflineCardexRepository
+import com.example.appsice.data.local.repository.OfflineCargaAcademicaRepository
+import com.example.appsice.data.local.repository.OfflineUsuarioRepository
+import com.example.appsice.data.local.repository.UsuarioRepository
 import com.example.appsice.data.repository.NetworSNRepository
 import com.example.appsice.data.repository.SNRepository
 import com.example.appsice.data.remote.SICENETWService
@@ -35,6 +46,12 @@ interface AppContainer {
 
     //val marsPhotosRepository: MarsPhotosRepository
     val snRepository: SNRepository
+    val syncRepository: SNWMRepository
+    val usuarioRepository: UsuarioRepository
+    val cargaAcademicaRepository: CargaAcademicaRepository
+    val cardexRepository: CardexRepository
+    val calificacionUnidadRepository : CalificacionUnidadRepository
+    val calificacionFinalRepository : CalificacionFinalRepository
 }
 
 /**
@@ -96,7 +113,27 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
     /**
      * DI implementation for Mars photos repository
      */
+    val database = SiceDatabase.getDatabase(applicationContext)
     override val snRepository: NetworSNRepository by lazy {
         NetworSNRepository(retrofitServiceSN)
+    }
+
+    override val syncRepository: SNWMRepository by lazy {
+        WorkManagerSNWMRepository(applicationContext)
+    }
+    override val usuarioRepository: UsuarioRepository by lazy {
+        OfflineUsuarioRepository(database.usuarioDao())
+    }
+    override val cargaAcademicaRepository: CargaAcademicaRepository by lazy {
+        OfflineCargaAcademicaRepository(database.cargaDao())
+    }
+    override val cardexRepository: CardexRepository by lazy {
+        OfflineCardexRepository(database.cardexDao())
+    }
+    override val calificacionUnidadRepository: CalificacionUnidadRepository by lazy {
+        OfflineCalificacionURepository(database.calificacionUnidadDao())
+    }
+    override val calificacionFinalRepository: CalificacionFinalRepository by lazy {
+        OfflineCalificacionFinalRepository(database.caificacionFinalDao())
     }
 }
