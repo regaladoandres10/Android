@@ -50,6 +50,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.work.WorkInfo
 import com.example.appsice.ui.screens.MenuScreen
+import com.example.appsice.ui.screens.ScreenCalificacionFinal
 import com.example.appsice.ui.screens.ScreenCalificacionUnidad
 import com.example.appsice.ui.screens.ScreenCardex
 import com.example.appsice.ui.screens.ScreenCargaAcademica
@@ -128,7 +129,10 @@ fun SicenetApp(
                             snViewModel.calificacionUnidad()
                             navController.navigate(SICEScreen.CalificacionUnidad.name)
                         },
-                        onCaliFinalClick = { }
+                        onCaliFinalClick = {
+                            snViewModel.calificacionFinal()
+                            navController.navigate(SICEScreen.CalificacionFinal.name)
+                        }
                     )
                 }
                 composable(route = SICEScreen.Profile.name) {
@@ -197,6 +201,23 @@ fun SicenetApp(
 
                         calisUnidad.isNotEmpty() -> {
                             ScreenCalificacionUnidad(calisUnidad)
+                        }
+                    }
+                }
+                composable(route = SICEScreen.CalificacionFinal.name) {
+                    val calisFinal by snViewModel.caliFinalFlow.collectAsState(initial = emptyList())
+                    val caliFinalState by snViewModel.caliFinalState.collectAsState(initial = null)
+                    when {
+                        caliFinalState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
+
+                        caliFinalState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        calisFinal.isNotEmpty() -> {
+                            ScreenCalificacionFinal(calisFinal)
                         }
                     }
                 }

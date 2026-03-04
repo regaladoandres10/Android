@@ -88,7 +88,7 @@ class SNViewModel(
     val cargaState = syncRepository.cargaWorkInfo
     val cardexState = syncRepository.cardexWorkInfo
     val caliUnidadState = syncRepository.caliUnidadWorkInfo
-    val caliFinal = syncRepository.caliFinalWorkInfo
+    val caliFinalState = syncRepository.caliFinalWorkInfo
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
