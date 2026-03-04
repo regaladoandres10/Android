@@ -8,6 +8,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.example.appsice.workers.CalificacionFinalDBWorker
+import com.example.appsice.workers.CalificacionFinalWorker
 import com.example.appsice.workers.CalificacionUnidadDBWorker
 import com.example.appsice.workers.CalificacionUnidadWorker
 import com.example.appsice.workers.CardexDBWorker
@@ -40,6 +42,10 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
     override val caliUnidadWorkInfo: Flow<WorkInfo?> =
         workManager
             .getWorkInfosByTagFlow("CALIUNIDAD_WORK")
+            .map { it.firstOrNull() }
+    override val caliFinalWorkInfo: Flow<WorkInfo?> =
+        workManager
+            .getWorkInfosByTagFlow("CALIFINAL_WORK")
             .map { it.firstOrNull() }
 
 
@@ -155,6 +161,34 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
             .then(saveWorkerDB) //Mandamos llamar o encolar el segundo trabajo
             .enqueue() //Encolamos el segundo trabajo
 
+    }
+
+    override fun calificacionFinal() {
+        //Creamos el constraint para saber si hay internet
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        //Creamos el Worker 1 (CalificacionFinaldWorker) -> Llama a la API de retrofit.
+        val caliFinalWorkRequest =
+            //Se ejecuta una sola vez el worker
+            OneTimeWorkRequestBuilder<CalificacionFinalWorker>()
+                .setConstraints(constraints)
+                .addTag("CALIFINAL_WORK")
+                .build()
+
+        //Creamos el Worker 2 -> Para almacenar en la base de datos de CalificacionFinalEntity
+        val saveWorkerDB =
+            OneTimeWorkRequestBuilder<CalificacionFinalDBWorker>()
+                .build()
+
+        workManager.beginUniqueWork(
+            "SYNC_CALIFINAL_WORK",
+            ExistingWorkPolicy.REPLACE, //Si se repite el proceso 2 veces solo se hace 1
+            caliFinalWorkRequest //Mandamos llamar el primer trabajo
+        )
+            .then(saveWorkerDB) //Mandamos llamar o encolar el segundo trabajo
+            .enqueue() //Encolamos el segundo trabajo
     }
 
 

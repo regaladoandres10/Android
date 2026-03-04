@@ -24,8 +24,10 @@ interface SNWMRepository {
     val cargaWorkInfo: Flow<WorkInfo?>
     val cardexWorkInfo: Flow<WorkInfo?>
     val caliUnidadWorkInfo: Flow<WorkInfo?>
+    val caliFinalWorkInfo: Flow<WorkInfo?>
     fun profile()
     fun cargaAcademica()
     fun cardex()
     fun calificacionUnidad()
+    fun calificacionFinal()
 }
