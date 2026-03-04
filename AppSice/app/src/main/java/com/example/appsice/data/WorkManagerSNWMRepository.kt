@@ -8,6 +8,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.example.appsice.workers.CardexDBWorker
+import com.example.appsice.workers.CardexWorker
 import com.example.appsice.workers.CargaAcademicaDBWorker
 import com.example.appsice.workers.CargaAcademicaWorker
 import com.example.appsice.workers.LoginDBWorker
@@ -85,5 +87,35 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
             .then(saveWorkerDB) //Mandamos llamar o encolar el segundo trabajo
             .enqueue() //Encolamos el segundo trabajo
     }
+
+    override fun cardex() {
+        //Creamos el constraint para saber si hay internet
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        //Creamos el Worker 1 (CardexWorker) -> Llama a la API de retrofit.
+        val cardexWorkRequest =
+            //Se ejecuta una sola vez el worker
+            OneTimeWorkRequestBuilder<CardexWorker>()
+                .setConstraints(constraints)
+                .addTag("CARDEX_WORK")
+                .build()
+
+        //Creamos el Worker 2 -> Para almacenar en la base de datos de CardexEntity
+        val saveWorkerDB =
+            OneTimeWorkRequestBuilder<CardexDBWorker>()
+                .build()
+
+        workManager.beginUniqueWork(
+            "SYNC_CARDEX_WORK",
+            ExistingWorkPolicy.REPLACE, //Si se repite el proceso 2 veces solo se hace 1
+            cardexWorkRequest //Mandamos llamar el primer trabajo
+        )
+            .then(saveWorkerDB) //Mandamos llamar o encolar el segundo trabajo
+            .enqueue() //Encolamos el segundo trabajo
+    }
+
+
 
 }

@@ -25,4 +25,5 @@ interface SNWMRepository {
     //fun login(m: String , p: String)
     fun profile()
     fun cargaAcademica()
+    fun cardex()
 }

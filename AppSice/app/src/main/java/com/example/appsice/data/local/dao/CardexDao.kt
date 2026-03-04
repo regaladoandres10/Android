@@ -14,6 +14,9 @@ interface CardexDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(cadex: CardexEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(cargas: List<CardexEntity>)
+
     @Update
     suspend fun update(cardex: CardexEntity)
 

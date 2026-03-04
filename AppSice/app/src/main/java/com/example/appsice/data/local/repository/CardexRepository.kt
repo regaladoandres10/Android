@@ -1,6 +1,7 @@
 package com.example.appsice.data.local.repository
 
 import com.example.appsice.data.local.entity.CardexEntity
+import com.example.appsice.data.local.entity.CargaAcademicaEntity
 import com.example.appsice.data.local.entity.UsuarioEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,8 @@ interface CardexRepository {
      * Retrieve an usuario from the given data source that matches with the [id].
      */
     fun getCardexStream(id: Int): Flow<CardexEntity?>
+
+    suspend fun insertAll(cardexs: List<CardexEntity>)
 
     /**
      * Insert usuario in the data source
