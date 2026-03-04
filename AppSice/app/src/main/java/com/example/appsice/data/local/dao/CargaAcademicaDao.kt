@@ -12,6 +12,9 @@ interface CargaAcademicaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(carga: CargaAcademicaEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(cargas: List<CargaAcademicaEntity>)
+
     @Update
     suspend fun update(carga: CargaAcademicaEntity)
 
@@ -23,4 +26,6 @@ interface CargaAcademicaDao {
 
     @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
     fun getAllCarga(): Flow<List<CargaAcademicaEntity>>
+
+
 }

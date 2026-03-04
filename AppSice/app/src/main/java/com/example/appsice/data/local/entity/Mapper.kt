@@ -1,5 +1,6 @@
 package com.example.appsice.data.local.entity
 
+import com.example.appsice.data.remote.model.CalificacionFinal
 import com.example.appsice.data.remote.model.CalificacionUnidad
 import com.example.appsice.data.remote.model.Cardex
 import com.example.appsice.data.remote.model.CargaAcademica
@@ -87,5 +88,16 @@ fun CalificacionUnidad.toEntity(): CalificacionUnidadEntity {
         unidadesActivas = this.unidadesActivas ?: "",
         materia = this.materia ?: "",
         grupo = this.grupo ?: ""
+    )
+}
+
+@OptIn(InternalSerializationApi::class)
+fun CalificacionFinal.toEntity(): CalificacionFinalEntity {
+    return CalificacionFinalEntity(
+        calif = this.calif ?: 0,
+        acred = this.acred ?: "",
+        grupo = this.grupo ?: "",
+        materia = this.materia ?: "",
+        observaciones = this.observaciones ?: ""
     )
 }

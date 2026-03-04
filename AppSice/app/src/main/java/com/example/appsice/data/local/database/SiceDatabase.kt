@@ -9,10 +9,20 @@ import com.example.appsice.data.local.dao.CalificacionUnidadDao
 import com.example.appsice.data.local.dao.CardexDao
 import com.example.appsice.data.local.dao.CargaAcademicaDao
 import com.example.appsice.data.local.dao.UsuarioDao
+import com.example.appsice.data.local.entity.CalificacionFinalEntity
+import com.example.appsice.data.local.entity.CalificacionUnidadEntity
+import com.example.appsice.data.local.entity.CardexEntity
+import com.example.appsice.data.local.entity.CargaAcademicaEntity
 import com.example.appsice.data.local.entity.UsuarioEntity
 
 @Database(
-    entities = [UsuarioEntity::class],
+    entities =
+        [   UsuarioEntity::class,
+            CargaAcademicaEntity::class,
+            CardexEntity::class,
+            CalificacionUnidadEntity::class,
+            CalificacionFinalEntity::class
+        ],
     version = 1,
     exportSchema = false
 )

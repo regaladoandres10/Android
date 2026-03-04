@@ -20,8 +20,9 @@ import androidx.work.WorkInfo
 import kotlinx.coroutines.flow.Flow
 
 interface SNWMRepository {
-    val outputWorkInfo: Flow<WorkInfo>
+    val logintWorkInfo: Flow<WorkInfo?>
+    val cargaWorkInfo: Flow<WorkInfo?>
     //fun login(m: String , p: String)
     fun profile()
-    //fun cargaAcademica()
+    fun cargaAcademica()
 }

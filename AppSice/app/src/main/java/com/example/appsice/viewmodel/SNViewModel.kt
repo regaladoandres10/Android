@@ -72,7 +72,8 @@ class SNViewModel(
         private set
 
     val usuarioFlow = usuarioRepository.getAllUsuarioStream()
-    val syncState = syncRepository.outputWorkInfo
+    val syncState = syncRepository.logintWorkInfo
+    val cargaState = syncRepository.cargaWorkInfo
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
