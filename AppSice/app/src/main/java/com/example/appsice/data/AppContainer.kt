@@ -19,6 +19,8 @@ import AddCookiesInterceptor
 import ReceivedCookiesInterceptor
 import android.content.Context
 import com.example.appsice.data.local.database.SiceDatabase
+import com.example.appsice.data.local.repository.CargaAcademicaRepository
+import com.example.appsice.data.local.repository.OfflineCargaAcademicaRepository
 import com.example.appsice.data.local.repository.OfflineUsuarioRepository
 import com.example.appsice.data.local.repository.UsuarioRepository
 import com.example.appsice.data.repository.NetworSNRepository
@@ -40,6 +42,7 @@ interface AppContainer {
     val snRepository: SNRepository
     val syncRepository: SNWMRepository
     val usuarioRepository: UsuarioRepository
+    val cargaAcademicaRepository: CargaAcademicaRepository
 }
 
 /**
@@ -112,5 +115,10 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
         val database = SiceDatabase.getDatabase(applicationContext)
         OfflineUsuarioRepository(database.usuarioDao())
     }
+    override val cargaAcademicaRepository: CargaAcademicaRepository by lazy {
+        val database = SiceDatabase.getDatabase(applicationContext)
+        OfflineCargaAcademicaRepository(database.cargaDao())
+    }
+
 
 }
