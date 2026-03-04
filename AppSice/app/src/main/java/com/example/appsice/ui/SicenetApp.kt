@@ -50,6 +50,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.work.WorkInfo
 import com.example.appsice.ui.screens.MenuScreen
+import com.example.appsice.ui.screens.ScreenCargaAcademica
 import com.example.appsice.ui.screens.ScreenProfile
 import com.example.appsice.viewmodel.SNUiState
 import kotlinx.serialization.InternalSerializationApi
@@ -113,7 +114,10 @@ fun SicenetApp(
                         onPerfilClick = {
                             navController.navigate(SICEScreen.Profile.name)
                         },
-                        onCargaClick = { },
+                        onCargaClick = {
+                            snViewModel.cargaAcademica()
+                            navController.navigate(SICEScreen.Carga.name)
+                        },
                         onCardexClick = { },
                         onCaliUnidadClick = { },
                         onCaliFinalClick = { }
@@ -136,6 +140,24 @@ fun SicenetApp(
                         }
                     }
 
+                }
+                composable(route = SICEScreen.Carga.name) {
+                    val cargas by snViewModel.cargaFlow.collectAsState(initial = emptyList())
+                    val cargaState by snViewModel.cargaState.collectAsState(initial = null)
+                    when {
+                        cargaState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
+
+                        cargaState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        cargas.isNotEmpty() -> {
+                            ScreenCargaAcademica(cargas)
+                        }
+
+                    }
                 }
             }
 

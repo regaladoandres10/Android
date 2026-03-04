@@ -18,6 +18,10 @@
     <string name="sicedroid"> LogIn Sicedroid </string>
     <string name="profile"> Perfil estudiante </string>
     <string name="menu"> Menu Sice </string>
+    <string name="carga"> Carga Academica </string>
+    <string name="cardex"> Cardex </string>
+    <string name="calificacionUnidad"> Calificación Unidad </string>
+    <string name="calificacionFinal"> Calificacion Final </string>
     <string name="loading_failed">Failed to load</string>
     <string name="retry">Retry</string>
     <string name="loading">Loading</string>

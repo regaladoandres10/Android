@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.appsice.SNApplication
 import com.example.appsice.data.SNWMRepository
+import com.example.appsice.data.local.repository.CargaAcademicaRepository
 import com.example.appsice.data.local.repository.UsuarioRepository
 import com.example.appsice.data.repository.SNRepository
 import com.example.appsice.data.remote.model.MarsPhoto
@@ -65,13 +66,15 @@ class SNViewModel(
     application: Application,
     private val snRepository: SNRepository,
     private val syncRepository: SNWMRepository,
-    private val usuarioRepository: UsuarioRepository
+    private val usuarioRepository: UsuarioRepository,
+    private val cargaRepository: CargaAcademicaRepository
 ) : AndroidViewModel(application) {
     /** The mutable State that stores the status of the most recent request */
     var snUiState: SNUiState by mutableStateOf(SNUiState.Loading)
         private set
 
     val usuarioFlow = usuarioRepository.getAllUsuarioStream()
+    val cargaFlow = cargaRepository.getAllCargaStream()
     val syncState = syncRepository.logintWorkInfo
     val cargaState = syncRepository.cargaWorkInfo
 
@@ -138,6 +141,10 @@ class SNViewModel(
         }
     }
 
+    fun cargaAcademica() {
+        syncRepository.cargaAcademica()
+    }
+
 
     /*
     * val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
@@ -156,11 +163,13 @@ class SNViewModel(
                 val snRepository = application.container.snRepository
                 val syncRepository = application.container.syncRepository
                 val usuarioRepository = application.container.usuarioRepository
+                val cargaRepository = application.container.cargaAcademicaRepository
                 SNViewModel(
                     application = application,
                     snRepository = snRepository,
                     syncRepository = syncRepository,
-                    usuarioRepository = usuarioRepository
+                    usuarioRepository = usuarioRepository,
+                    cargaRepository = cargaRepository
                 )
             }
         }
