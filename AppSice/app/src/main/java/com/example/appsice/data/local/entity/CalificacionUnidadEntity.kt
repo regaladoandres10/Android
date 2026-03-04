@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity("calificacionUnidad")
-data class CaliificacionUnidadEntity(
+data class CalificacionUnidadEntity(
     @PrimaryKey
     val id: Int = 0,
     val observaciones: String,

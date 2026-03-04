@@ -18,7 +18,7 @@
 package com.example.appsice.data.repository
 
 import android.util.Log
-import com.example.appsice.data.remote.model.CalifacionUnidad
+import com.example.appsice.data.remote.model.CalificacionUnidad
 import com.example.appsice.data.remote.model.CalificacionFinal
 import com.example.appsice.data.remote.model.Cardex
 import com.example.appsice.data.remote.model.CardexResponse
@@ -49,7 +49,7 @@ interface SNRepository {
     suspend fun profile(): ProfileStudent
     suspend fun getCargaAcademica(): List<CargaAcademica>
     suspend fun getCargaCardex(lineamiento: Int): List<Cardex>
-    suspend fun getCaliPorUnidad(): List<CalifacionUnidad>
+    suspend fun getCaliPorUnidad(): List<CalificacionUnidad>
     suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal>
 }
 
@@ -224,7 +224,7 @@ class NetworSNRepository(
         return cardex.listCardex
     }
 
-    override suspend fun getCaliPorUnidad(): List<CalifacionUnidad> {
+    override suspend fun getCaliPorUnidad(): List<CalificacionUnidad> {
         val bodyCaliUnidad = """
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
               <soap:Body>
@@ -246,7 +246,7 @@ class NetworSNRepository(
         //Obtener el json
         val caliUnidad = Json {
             ignoreUnknownKeys = true
-        }.decodeFromString<List<CalifacionUnidad>>(jsonCaliUnidad)
+        }.decodeFromString<List<CalificacionUnidad>>(jsonCaliUnidad)
 
         return caliUnidad
     }
