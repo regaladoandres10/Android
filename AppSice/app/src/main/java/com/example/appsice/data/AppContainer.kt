@@ -19,9 +19,11 @@ import AddCookiesInterceptor
 import ReceivedCookiesInterceptor
 import android.content.Context
 import com.example.appsice.data.local.database.SiceDatabase
+import com.example.appsice.data.local.repository.CalificacionFinalRepository
 import com.example.appsice.data.local.repository.CalificacionUnidadRepository
 import com.example.appsice.data.local.repository.CardexRepository
 import com.example.appsice.data.local.repository.CargaAcademicaRepository
+import com.example.appsice.data.local.repository.OfflineCalificacionFinalRepository
 import com.example.appsice.data.local.repository.OfflineCalificacionURepository
 import com.example.appsice.data.local.repository.OfflineCardexRepository
 import com.example.appsice.data.local.repository.OfflineCargaAcademicaRepository
@@ -49,6 +51,7 @@ interface AppContainer {
     val cargaAcademicaRepository: CargaAcademicaRepository
     val cardexRepository: CardexRepository
     val calificacionUnidadRepository : CalificacionUnidadRepository
+    val calificacionFinalRepository : CalificacionFinalRepository
 }
 
 /**
@@ -130,5 +133,7 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
     override val calificacionUnidadRepository: CalificacionUnidadRepository by lazy {
         OfflineCalificacionURepository(database.calificacionUnidadDao())
     }
-
+    override val calificacionFinalRepository: CalificacionFinalRepository by lazy {
+        OfflineCalificacionFinalRepository(database.caificacionFinalDao())
+    }
 }
