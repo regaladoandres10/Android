@@ -31,6 +31,13 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
             .getWorkInfosByTagFlow("CARGA_WORK")
             .map { it.firstOrNull() }
 
+    override val cardeWorkInfo: Flow<WorkInfo?> =
+        workManager
+            .getWorkInfosByTagFlow("CARDEX_WORK")
+            .map{ it.firstOrNull() }
+
+
+
     override fun profile() {
         //Creamos el constraint para saber si hay internet
         val constraints = Constraints.Builder()

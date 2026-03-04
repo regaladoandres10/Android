@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.appsice.SNApplication
 import com.example.appsice.data.SNWMRepository
+import com.example.appsice.data.local.repository.CardexRepository
 import com.example.appsice.data.local.repository.CargaAcademicaRepository
 import com.example.appsice.data.local.repository.UsuarioRepository
 import com.example.appsice.data.repository.SNRepository
@@ -67,7 +68,8 @@ class SNViewModel(
     private val snRepository: SNRepository,
     private val syncRepository: SNWMRepository,
     private val usuarioRepository: UsuarioRepository,
-    private val cargaRepository: CargaAcademicaRepository
+    private val cargaRepository: CargaAcademicaRepository,
+    private val cardexRepository: CardexRepository
 ) : AndroidViewModel(application) {
     /** The mutable State that stores the status of the most recent request */
     var snUiState: SNUiState by mutableStateOf(SNUiState.Loading)
@@ -75,8 +77,10 @@ class SNViewModel(
 
     val usuarioFlow = usuarioRepository.getAllUsuarioStream()
     val cargaFlow = cargaRepository.getAllCargaStream()
+    val cardexFlow = cardexRepository.getAllCardexStream()
     val syncState = syncRepository.logintWorkInfo
     val cargaState = syncRepository.cargaWorkInfo
+    val cardexState = syncRepository.cardeWorkInfo
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
@@ -144,7 +148,9 @@ class SNViewModel(
     fun cargaAcademica() {
         syncRepository.cargaAcademica()
     }
-
+    fun cardex() {
+        syncRepository.cardex()
+    }
 
     /*
     * val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
@@ -164,12 +170,14 @@ class SNViewModel(
                 val syncRepository = application.container.syncRepository
                 val usuarioRepository = application.container.usuarioRepository
                 val cargaRepository = application.container.cargaAcademicaRepository
+                val cardexRepository = application.container.cardexRepository
                 SNViewModel(
                     application = application,
                     snRepository = snRepository,
                     syncRepository = syncRepository,
                     usuarioRepository = usuarioRepository,
-                    cargaRepository = cargaRepository
+                    cargaRepository = cargaRepository,
+                    cardexRepository = cardexRepository
                 )
             }
         }

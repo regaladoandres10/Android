@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.Flow
 interface SNWMRepository {
     val logintWorkInfo: Flow<WorkInfo?>
     val cargaWorkInfo: Flow<WorkInfo?>
+    val cardeWorkInfo: Flow<WorkInfo?>
     //fun login(m: String , p: String)
     fun profile()
     fun cargaAcademica()
