@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.appsice.SNApplication
 import com.example.appsice.data.SNWMRepository
+import com.example.appsice.data.local.repository.CalificacionFinalRepository
 import com.example.appsice.data.local.repository.CalificacionUnidadRepository
 import com.example.appsice.data.local.repository.CardexRepository
 import com.example.appsice.data.local.repository.CargaAcademicaRepository
@@ -71,7 +72,8 @@ class SNViewModel(
     private val usuarioRepository: UsuarioRepository,
     private val cargaRepository: CargaAcademicaRepository,
     private val cardexRepository: CardexRepository,
-    private val caliUnidadRepository: CalificacionUnidadRepository
+    private val caliUnidadRepository: CalificacionUnidadRepository,
+    private val caliFinalRepository: CalificacionFinalRepository
 ) : AndroidViewModel(application) {
     /** The mutable State that stores the status of the most recent request */
     var snUiState: SNUiState by mutableStateOf(SNUiState.Loading)
@@ -81,10 +83,12 @@ class SNViewModel(
     val cargaFlow = cargaRepository.getAllCargaStream()
     val cardexFlow = cardexRepository.getAllCardexStream()
     val caliUnidadFlow = caliUnidadRepository.getAllCalificacionUStream()
+    val caliFinalFlow = caliFinalRepository.getAllCalisFinaltream()
     val syncState = syncRepository.logintWorkInfo
     val cargaState = syncRepository.cargaWorkInfo
     val cardexState = syncRepository.cardexWorkInfo
     val caliUnidadState = syncRepository.caliUnidadWorkInfo
+    val caliFinal = syncRepository.caliFinalWorkInfo
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
@@ -159,6 +163,10 @@ class SNViewModel(
         syncRepository.calificacionUnidad()
     }
 
+    fun calificacionFinal() {
+        syncRepository.calificacionFinal()
+    }
+
     /*
     * val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
                 val cookies = prefs.getStringSet("PREF_COOKIES", emptySet())
@@ -179,6 +187,7 @@ class SNViewModel(
                 val cargaRepository = application.container.cargaAcademicaRepository
                 val cardexRepository = application.container.cardexRepository
                 val caliUnidadRepository = application.container.calificacionUnidadRepository
+                val caliFinalRepository = application.container.calificacionFinalRepository
                 SNViewModel(
                     application = application,
                     snRepository = snRepository,
@@ -186,7 +195,8 @@ class SNViewModel(
                     usuarioRepository = usuarioRepository,
                     cargaRepository = cargaRepository,
                     cardexRepository = cardexRepository,
-                    caliUnidadRepository = caliUnidadRepository
+                    caliUnidadRepository = caliUnidadRepository,
+                    caliFinalRepository = caliFinalRepository
                 )
             }
         }
