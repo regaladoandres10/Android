@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.appsice.data.local.dao.CardexDao
 import com.example.appsice.data.local.dao.CargaAcademicaDao
 import com.example.appsice.data.local.dao.UsuarioDao
 import com.example.appsice.data.local.entity.UsuarioEntity
@@ -17,6 +18,7 @@ abstract class SiceDatabase : RoomDatabase() {
     //Mandamos llamar los DAOs
     abstract fun usuarioDao(): UsuarioDao
     abstract fun cargaDao(): CargaAcademicaDao
+    abstract fun cardexDao(): CardexDao
 
     companion object {
             @Volatile
