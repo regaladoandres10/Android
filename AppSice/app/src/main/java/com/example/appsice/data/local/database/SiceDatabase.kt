@@ -23,7 +23,7 @@ import com.example.appsice.data.local.entity.UsuarioEntity
             CalificacionUnidadEntity::class,
             CalificacionFinalEntity::class
         ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class SiceDatabase : RoomDatabase() {
@@ -41,6 +41,7 @@ abstract class SiceDatabase : RoomDatabase() {
                 // if the Instance is not null, return it, otherwise create a new database instance.
                 return Instance ?: synchronized(this) {
                     Room.databaseBuilder(context, SiceDatabase::class.java, "sice_database")
+                        .fallbackToDestructiveMigration()
                         .build()
                         .also { Instance = it }
                 }

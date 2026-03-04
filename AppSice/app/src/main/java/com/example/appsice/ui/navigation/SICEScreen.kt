@@ -5,5 +5,7 @@ import com.example.appsice.R
 
 enum class SICEScreen(@StringRes val title: Int) {
     LogIn(title = R.string.sicedroid),
+    Menu(title = R.string.menu),
     Profile(title = R.string.profile)
+
 }

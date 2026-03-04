@@ -49,6 +49,7 @@ import com.example.appsice.ui.navigation.SICEScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.work.WorkInfo
+import com.example.appsice.ui.screens.MenuScreen
 import com.example.appsice.ui.screens.ScreenProfile
 import com.example.appsice.viewmodel.SNUiState
 import kotlinx.serialization.InternalSerializationApi
@@ -101,10 +102,21 @@ fun SicenetApp(
                         snUiState = snViewModel.snUiState,
                         //Navegar hacia la pantalla de profile
                         onLoginSuccesed = {
-                            navController.navigate(SICEScreen.Profile.name) {
+                            navController.navigate(SICEScreen.Menu.name) {
                                     popUpTo(SICEScreen.LogIn.name) { inclusive = true }
                             }
                         },
+                    )
+                }
+                composable(route = SICEScreen.Menu.name) {
+                    MenuScreen(
+                        onPerfilClick = {
+                            navController.navigate(SICEScreen.Profile.name)
+                        },
+                        onCargaClick = { },
+                        onCardexClick = { },
+                        onCaliUnidadClick = { },
+                        onCaliFinalClick = { }
                     )
                 }
                 composable(route = SICEScreen.Profile.name) {

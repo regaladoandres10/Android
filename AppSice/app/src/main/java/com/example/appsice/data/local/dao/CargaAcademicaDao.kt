@@ -1,5 +1,6 @@
 package com.example.appsice.data.local.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,6 +9,7 @@ import androidx.room.Update
 import com.example.appsice.data.local.entity.CargaAcademicaEntity
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface CargaAcademicaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(carga: CargaAcademicaEntity)
