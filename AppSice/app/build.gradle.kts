@@ -73,9 +73,10 @@ android {
 dependencies {
     //Room
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-    //implementation("androidx.work:work-runtime-ktx:2.11.1")
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
+
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
     // Import the Compose BOM
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
@@ -96,7 +97,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     //implementation("com.subshell.simpleframework:simple-xml:2.9.0")
     implementation("com.squareup.retrofit2:converter-simplexml:2.9.0")
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.2.0")
 
     testImplementation("junit:junit:4.13.2")

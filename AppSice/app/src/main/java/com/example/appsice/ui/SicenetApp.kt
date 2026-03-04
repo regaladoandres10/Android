@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -47,6 +48,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.appsice.ui.navigation.SICEScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.work.WorkInfo
 import com.example.appsice.ui.screens.ScreenProfile
 import com.example.appsice.viewmodel.SNUiState
 import kotlinx.serialization.InternalSerializationApi
@@ -106,15 +108,19 @@ fun SicenetApp(
                     )
                 }
                 composable(route = SICEScreen.Profile.name) {
-                    when (val state = snViewModel.snUiState) {
-                        is SNUiState.Success -> {
-                            ScreenProfile(profile = state.profile)
-                        }
-                        is SNUiState.Loading -> {
+
+                    val usuarios by snViewModel.usuarioFlow.collectAsState(initial = emptyList())
+                    val workInfo by snViewModel.syncState.collectAsState(initial = null)
+
+                    when {
+                        workInfo?.state == WorkInfo.State.RUNNING -> {
                             CircularProgressIndicator()
                         }
-                        is SNUiState.Error -> {
+                        workInfo?.state == WorkInfo.State.FAILED -> {
                             Text("Error al cargar el perfil")
+                        }
+                        usuarios.isNotEmpty() -> {
+                            ScreenProfile(profile = usuarios.first())
                         }
                     }
 

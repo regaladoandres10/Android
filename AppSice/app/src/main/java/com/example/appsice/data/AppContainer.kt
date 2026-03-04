@@ -18,6 +18,9 @@ package com.example.appsice.data
 import AddCookiesInterceptor
 import ReceivedCookiesInterceptor
 import android.content.Context
+import com.example.appsice.data.local.database.SiceDatabase
+import com.example.appsice.data.local.repository.OfflineUsuarioRepository
+import com.example.appsice.data.local.repository.UsuarioRepository
 import com.example.appsice.data.repository.NetworSNRepository
 import com.example.appsice.data.repository.SNRepository
 import com.example.appsice.data.remote.SICENETWService
@@ -35,6 +38,8 @@ interface AppContainer {
 
     //val marsPhotosRepository: MarsPhotosRepository
     val snRepository: SNRepository
+    val syncRepository: SNWMRepository
+    val usuarioRepository: UsuarioRepository
 }
 
 /**
@@ -99,4 +104,13 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
     override val snRepository: NetworSNRepository by lazy {
         NetworSNRepository(retrofitServiceSN)
     }
+
+    override val syncRepository: SNWMRepository by lazy {
+        WorkManagerSNWMRepository(applicationContext)
+    }
+    override val usuarioRepository: UsuarioRepository by lazy {
+        val database = SiceDatabase.getDatabase(applicationContext)
+        OfflineUsuarioRepository(database.usuarioDao())
+    }
+
 }

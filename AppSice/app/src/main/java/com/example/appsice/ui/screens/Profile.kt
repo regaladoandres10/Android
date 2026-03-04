@@ -13,13 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.appsice.data.local.entity.UsuarioEntity
 import com.example.appsice.data.remote.model.ProfileStudent
 import kotlinx.serialization.InternalSerializationApi
 
 @OptIn(InternalSerializationApi::class)
 @Composable
 fun ScreenProfile(
-    profile: ProfileStudent,
+    profile: UsuarioEntity,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

@@ -19,14 +19,11 @@ import android.app.Application
 import com.example.appsice.data.AppContainer
 import com.example.appsice.data.DefaultAppContainer
 
-
-
-
-class MarsPhotosApplication : Application() {
+class SNApplication : Application() {
     /** AppContainer instance used by the rest of classes to obtain dependencies */
     lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
-        container = DefaultAppContainer(applicationContext)
+        container = DefaultAppContainer(this)
     }
 }
