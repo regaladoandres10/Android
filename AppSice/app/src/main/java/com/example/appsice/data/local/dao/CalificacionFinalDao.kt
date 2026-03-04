@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.appsice.data.local.entity.CalificacionFinalEntity
+import com.example.appsice.data.local.entity.CalificacionUnidadEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,6 +15,8 @@ interface CalificacionFinalDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(calificacionFinal: CalificacionFinalEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(calisFinal: List<CalificacionFinalEntity>)
     @Update
     suspend fun update(calificacionFinal: CalificacionFinalEntity)
 

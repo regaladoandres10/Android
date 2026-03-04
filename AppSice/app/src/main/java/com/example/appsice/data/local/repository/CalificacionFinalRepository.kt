@@ -1,6 +1,7 @@
 package com.example.appsice.data.local.repository
 
 import com.example.appsice.data.local.entity.CalificacionFinalEntity
+import com.example.appsice.data.local.entity.CargaAcademicaEntity
 import kotlinx.coroutines.flow.Flow
 
 interface CalificacionFinalRepository {
@@ -18,6 +19,7 @@ interface CalificacionFinalRepository {
      * Insert usuario in the data source
      */
     suspend fun insertCalisFinal(calificacionFinal: CalificacionFinalEntity)
+    suspend fun insertAll(calisFinal: List<CalificacionFinalEntity>)
 
     /**
      * Delete usuario from the data source

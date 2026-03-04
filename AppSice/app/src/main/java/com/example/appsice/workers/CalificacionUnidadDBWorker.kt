@@ -20,20 +20,20 @@ class CalificacionUnidadDBWorker(
         val jsonCaliUnidad = inputData.getString("calisUnidad_json") ?: return Result.failure()
 
         //Deserializamos el JSON y lo asignamos al DataClass [CalificacionUnidad]
-        val caliUnidad = Json.decodeFromString<List<CalificacionUnidad>>(jsonCaliUnidad)
+        val calisUnidad = Json.decodeFromString<List<CalificacionUnidad>>(jsonCaliUnidad)
         val container = (applicationContext as SNApplication).container
         val caliUnidadRepository = container.calificacionUnidadRepository
 
         //Agregamos la lista de Calificacion Unidad al metodo de insertAll para agregarlo a la Base de datos
         caliUnidadRepository.insertAll(
-            caliUnidad.map {
+            calisUnidad.map {
                 it.toEntity()
             }
         )
 
         //Asignamos la CalificacionUnidad a CalificacionUnidadEntity
         Log.i("Worker2 caliUnidad", "Guardando datos en la base de datos CalisUnidad")
-        Log.d("WORKER_CAL_UNIDAD",  "Cantidad ${caliUnidad.size}")
+        Log.d("WORKER_CAL_UNIDAD",  "Cantidad ${calisUnidad.size}")
         return Result.success()
     }
 

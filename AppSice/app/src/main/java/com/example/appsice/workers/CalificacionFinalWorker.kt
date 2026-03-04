@@ -1,6 +1,7 @@
 package com.example.appsice.workers
 
 import android.content.Context
+import android.content.ContextParams
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -10,23 +11,22 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class CalificacionUnidadWorker(
+class CalificacionFinalWorker(
     ctx: Context,
     params: WorkerParameters
-) : CoroutineWorker(ctx, params) {
+): CoroutineWorker(ctx, params) {
     @OptIn(InternalSerializationApi::class)
     override suspend fun doWork(): Result {
         val container = (applicationContext as SNApplication).container
         val repository = container.snRepository
 
-        val calificacionUnidad = repository.getCaliPorUnidad()
+        val calificacionFinal = repository.getCaliFinal(2)
 
-        //Convertimos el objeto de CalificacionUnidad a Json(String)
-        val jsonCaliUnidad = Json.encodeToString(calificacionUnidad)
-        Log.d("Worker1 JSONCaliUnidad", jsonCaliUnidad)
+        //Convertimos el objeto en JSON(String)
+        val jsonCaliFinal = Json.encodeToString(calificacionFinal)
+        Log.d("Worker 1 JSONCaliFinal", jsonCaliFinal)
 
-        //Mandamos el JSON al segundo worker
-        val output = workDataOf("calisUnidad_json" to jsonCaliUnidad)
+        val output = workDataOf("calisFinal_json" to jsonCaliFinal)
         return Result.success(output)
     }
 

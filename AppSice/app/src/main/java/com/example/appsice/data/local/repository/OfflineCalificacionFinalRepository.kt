@@ -10,6 +10,8 @@ class OfflineCalificacionFinalRepository(private val calisFinalDao: Calificacion
     override fun getCalisFinaltream(id: Int): Flow<CalificacionFinalEntity?> = calisFinalDao.getCalificacionFinal(id)
 
     override suspend fun insertCalisFinal(calificacionFinal: CalificacionFinalEntity) = calisFinalDao.insert(calificacionFinal)
+    override suspend fun insertAll(calisFinal: List<CalificacionFinalEntity>) = calisFinalDao.insertAll(calisFinal)
+
 
     override suspend fun deleteCalisFinal(calificacionFinal: CalificacionFinalEntity) = calisFinalDao.delete(calificacionFinal)
 
