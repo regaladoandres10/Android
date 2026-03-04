@@ -17,7 +17,7 @@ class CalificacionUnidadDBWorker(
     @OptIn(InternalSerializationApi::class)
     override suspend fun doWork(): Result {
         //Obtenemos el JSON de Calificacion Unidad del primer worker
-        val jsonCaliUnidad = inputData.getString("caliFinal_json") ?: return Result.failure()
+        val jsonCaliUnidad = inputData.getString("calisUnidad_json") ?: return Result.failure()
 
         //Deserializamos el JSON y lo asignamos al DataClass [CalificacionUnidad]
         val caliUnidad = Json.decodeFromString<List<CalificacionUnidad>>(jsonCaliUnidad)
@@ -33,6 +33,7 @@ class CalificacionUnidadDBWorker(
 
         //Asignamos la CalificacionUnidad a CalificacionUnidadEntity
         Log.i("Worker2 caliUnidad", "Guardando datos en la base de datos CalisUnidad")
+        Log.d("WORKER_CAL_UNIDAD",  "Cantidad ${caliUnidad.size}")
         return Result.success()
     }
 

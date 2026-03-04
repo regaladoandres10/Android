@@ -71,23 +71,23 @@ fun Cardex.toEntity(): CardexEntity {
 @OptIn(InternalSerializationApi::class)
 fun CalificacionUnidad.toEntity(): CalificacionUnidadEntity {
     return CalificacionUnidadEntity(
-        observaciones = this.observaciones ?: "",
-        c13 = this.c13 ?: "",
-        c12 = this.c12 ?: "",
-        c11 = this.c11 ?: "",
-        c10 = this.c10 ?: "",
-        c9 = this.c9 ?: "",
-        c8 = this.c8 ?: "",
-        c7 = this.c7 ?: "",
-        c6 = this.c6 ?: "",
-        c5 = this.c5 ?: "",
-        c4 = this.c4 ?: "",
-        c3 = this.c3 ?: "",
-        c2 = this.c2 ?: "",
-        c1 = this.c1 ?: "",
-        unidadesActivas = this.unidadesActivas ?: "",
-        materia = this.materia ?: "",
-        grupo = this.grupo ?: ""
+        observaciones = observaciones ?: "",
+        c13 = c13 ?: "",
+        c12 = c12 ?: "",
+        c11 = c11 ?: "",
+        c10 = c10 ?: "",
+        c9 = c9 ?: "",
+        c8 = c8 ?: "",
+        c7 = c7 ?: "",
+        c6 = c6 ?: "",
+        c5 = c5 ?: "",
+        c4 = c4 ?: "",
+        c3 = c3 ?: "",
+        c2 = c2 ?: "",
+        c1 = c1 ?: "",
+        unidadesActivas = unidadesActivas ?: "",
+        materia = materia ?: "",
+        grupo = grupo ?: ""
     )
 }
 

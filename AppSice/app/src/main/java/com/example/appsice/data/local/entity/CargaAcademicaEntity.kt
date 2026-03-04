@@ -7,11 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity("carga_academica")
 data class CargaAcademicaEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
     val semipresencial: String,
     val observaciones: String,
     val docente: String,
+    @PrimaryKey
     @ColumnInfo("claveOficial") val clvOficial: String,
     val sabado: String,
     val viernes: String,

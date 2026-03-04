@@ -8,6 +8,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.example.appsice.workers.CalificacionUnidadDBWorker
+import com.example.appsice.workers.CalificacionUnidadWorker
 import com.example.appsice.workers.CardexDBWorker
 import com.example.appsice.workers.CardexWorker
 import com.example.appsice.workers.CargaAcademicaDBWorker
@@ -31,11 +33,14 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
             .getWorkInfosByTagFlow("CARGA_WORK")
             .map { it.firstOrNull() }
 
-    override val cardeWorkInfo: Flow<WorkInfo?> =
+    override val cardexWorkInfo: Flow<WorkInfo?> =
         workManager
             .getWorkInfosByTagFlow("CARDEX_WORK")
             .map{ it.firstOrNull() }
-
+    override val caliUnidadWorkInfo: Flow<WorkInfo?> =
+        workManager
+            .getWorkInfosByTagFlow("CALIUNIDAD_WORK")
+            .map { it.firstOrNull() }
 
 
     override fun profile() {
@@ -123,6 +128,34 @@ class WorkManagerSNWMRepository(ctx: Context): SNWMRepository {
             .enqueue() //Encolamos el segundo trabajo
     }
 
+    override fun calificacionUnidad() {
+        //Creamos el constraint para saber si hay internet
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        //Creamos el Worker 1 (CalificacionUnidadWorker) -> Llama a la API de retrofit.
+        val caliUnidadWorkRequest =
+            //Se ejecuta una sola vez el worker
+            OneTimeWorkRequestBuilder<CalificacionUnidadWorker>()
+                .setConstraints(constraints)
+                .addTag("CALIUNIDAD_WORK")
+                .build()
+
+        //Creamos el Worker 2 -> Para almacenar en la base de datos de CalificacionUnidadEntity
+        val saveWorkerDB =
+            OneTimeWorkRequestBuilder<CalificacionUnidadDBWorker>()
+                .build()
+
+        workManager.beginUniqueWork(
+            "SYNC_CALIUNIDAD_WORK",
+            ExistingWorkPolicy.REPLACE, //Si se repite el proceso 2 veces solo se hace 1
+            caliUnidadWorkRequest //Mandamos llamar el primer trabajo
+        )
+            .then(saveWorkerDB) //Mandamos llamar o encolar el segundo trabajo
+            .enqueue() //Encolamos el segundo trabajo
+
+    }
 
 
 }

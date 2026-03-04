@@ -22,11 +22,11 @@ class CalificacionUnidadWorker(
         val calificacionUnidad = repository.getCaliPorUnidad()
 
         //Convertimos el objeto de CalificacionUnidad a Json(String)
-        val jsonCaliFinal = Json.encodeToString(calificacionUnidad)
-        Log.d("Worker1 JSONCaliFinal", jsonCaliFinal)
+        val jsonCaliUnidad = Json.encodeToString(calificacionUnidad)
+        Log.d("Worker1 JSONCaliFinal", jsonCaliUnidad)
 
         //Mandamos el JSON al segundo worker
-        val output = workDataOf("caliFinal_json" to jsonCaliFinal)
+        val output = workDataOf("calisUnidad_json" to jsonCaliUnidad)
         return Result.success(output)
     }
 

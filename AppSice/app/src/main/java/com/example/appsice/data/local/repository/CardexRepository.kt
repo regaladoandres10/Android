@@ -14,7 +14,7 @@ interface CardexRepository {
     /**
      * Retrieve an usuario from the given data source that matches with the [id].
      */
-    fun getCardexStream(id: Int): Flow<CardexEntity?>
+    fun getCardexStream(clv: String): Flow<CardexEntity?>
 
     suspend fun insertAll(cardexs: List<CardexEntity>)
 

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity("calificacionUnidad")
 data class CalificacionUnidadEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val observaciones: String,
     @ColumnInfo("Calificacion 13") val c13: String,

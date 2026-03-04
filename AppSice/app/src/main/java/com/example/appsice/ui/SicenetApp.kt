@@ -50,6 +50,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.work.WorkInfo
 import com.example.appsice.ui.screens.MenuScreen
+import com.example.appsice.ui.screens.ScreenCalificacionUnidad
 import com.example.appsice.ui.screens.ScreenCardex
 import com.example.appsice.ui.screens.ScreenCargaAcademica
 import com.example.appsice.ui.screens.ScreenProfile
@@ -123,7 +124,10 @@ fun SicenetApp(
                             snViewModel.cardex()
                             navController.navigate(SICEScreen.Cardex.name)
                         },
-                        onCaliUnidadClick = { },
+                        onCaliUnidadClick = {
+                            snViewModel.calificacionUnidad()
+                            navController.navigate(SICEScreen.CalificacionUnidad.name)
+                        },
                         onCaliFinalClick = { }
                     )
                 }
@@ -179,27 +183,24 @@ fun SicenetApp(
                         }
                     }
                 }
-            }
+                composable(route = SICEScreen.CalificacionUnidad.name) {
+                    val calisUnidad by snViewModel.caliUnidadFlow.collectAsState(initial = emptyList())
+                    val caliUnidadState by snViewModel.caliUnidadState.collectAsState(initial = null)
+                    when {
+                        caliUnidadState?.state == WorkInfo.State.RUNNING -> {
+                            CircularProgressIndicator()
+                        }
 
-            /*
-            when(snViewModel.snUiState) {
-                is SNUiState.Success -> {
-                    Text("Inicio de sesión")
-                }
-                else -> {
-                    ScreenLogin(
-                        snViewModel = snViewModel,
-                        snUiState = snViewModel.snUiState,
-                        contentPadding = it
-                    )
+                        caliUnidadState?.state == WorkInfo.State.FAILED -> {
+                            Text("Error")
+                        }
+
+                        calisUnidad.isNotEmpty() -> {
+                            ScreenCalificacionUnidad(calisUnidad)
+                        }
+                    }
                 }
             }
-
-            HomeScreen(
-                marsUiState = marsViewModel.marsUiState,
-                retryAction = marsViewModel::getMarsPhotos ,
-                contentPadding = it
-            )*/
         }
     }
 }

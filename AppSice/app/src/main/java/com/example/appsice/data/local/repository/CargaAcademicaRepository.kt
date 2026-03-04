@@ -13,7 +13,7 @@ interface CargaAcademicaRepository {
     /**
      * Retrieve an usuario from the given data source that matches with the [id].
      */
-    fun getCargaStream(id: Int): Flow<CargaAcademicaEntity?>
+    fun getCargaStream(clv: String): Flow<CargaAcademicaEntity?>
 
     /**
      * Insert usuario in the data source

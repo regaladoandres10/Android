@@ -6,10 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity("cardex")
 data class CardexEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
     @ColumnInfo("fecha_esperada") val fecEsp: String,
-    val clvMat: String,
+    @PrimaryKey
+    @ColumnInfo("claveMateria") val clvMat: String,
     val clvOfiMat: String,
     val materia: String,
     @ColumnInfo("creditos")val cdts: Int,

@@ -23,8 +23,8 @@ interface CargaAcademicaDao {
     @Delete
     suspend fun delete(carga: CargaAcademicaEntity)
 
-    @Query("SELECT * FROM carga_academica WHERE id = :id")
-    fun getCarga(id: Int): Flow<CargaAcademicaEntity>
+    @Query("SELECT * FROM carga_academica WHERE claveOficial = :clv")
+    fun getCarga(clv: String): Flow<CargaAcademicaEntity>
 
     @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
     fun getAllCarga(): Flow<List<CargaAcademicaEntity>>
