@@ -1,7 +1,9 @@
 package com.example.appsice.data.local.entity
 
+import com.example.appsice.data.remote.model.CargaAcademica
 import com.example.appsice.data.remote.model.ProfileStudent
 import kotlinx.serialization.InternalSerializationApi
+
 
 @OptIn(InternalSerializationApi::class)
 fun ProfileStudent.toEntity(): UsuarioEntity {
@@ -21,5 +23,25 @@ fun ProfileStudent.toEntity(): UsuarioEntity {
         lineamiento = this.lineamiento ?: 0,
         nombre = this.nombre ?: "",
         matricula = this.matricula ?: ""
+    )
+}
+
+@OptIn(InternalSerializationApi::class)
+fun CargaAcademica.toEntity(): CargaAcademicaEntity {
+    return CargaAcademicaEntity(
+        semipresencial = this.semipresencial ?: "",
+        observaciones = this.observaciones ?: "",
+        docente = this.docente ?: "",
+        clvOficial = this.clv ?: "",
+        sabado = this.sabado ?: "",
+        viernes = this.viernes ?: "",
+        jueves = this.jueves ?: "",
+        miercoles = this.miercoles ?: "",
+        martes = this.martes ?: "",
+        lunes = this.lunes ?: "",
+        estadoMateria = this.estadoMateria ?: "",
+        creditosMateria = this.creditosMateria ?: 0,
+        materia = this.materia ?: "",
+        grupo = this.grupo ?: ""
     )
 }
