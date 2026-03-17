@@ -31,6 +31,7 @@ fun ScreenProfile(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
+
         Text(
             text = profile.nombre ?: "",
             style = MaterialTheme.typography.headlineSmall

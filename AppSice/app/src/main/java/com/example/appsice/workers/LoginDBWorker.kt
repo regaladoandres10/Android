@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.appsice.SNApplication
-import com.example.appsice.data.local.entity.UsuarioEntity
 import com.example.appsice.data.local.entity.toEntity
 import com.example.appsice.data.remote.model.ProfileStudent
 import kotlinx.serialization.InternalSerializationApi
