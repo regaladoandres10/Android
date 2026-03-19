@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permisos -->
+
+    <!-- Detectar si estan llamando -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- Enviar SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
