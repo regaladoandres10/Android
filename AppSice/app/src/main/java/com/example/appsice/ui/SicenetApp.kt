@@ -62,7 +62,6 @@ import kotlinx.serialization.InternalSerializationApi
 fun SicenetApp(
     navController: NavHostController = rememberNavController()
 ) {
-
     /*
     val marsViewModel: MarsViewModel =
         viewModel(factory = MarsViewModel.Factory)

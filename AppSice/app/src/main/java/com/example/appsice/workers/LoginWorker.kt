@@ -23,11 +23,12 @@ class LoginWorker(
 
         val profile = repository.profile()
 
-        //Deserializar el profile
+
         val json = Json.encodeToString(profile)
         Log.d("Worker1 JSONProfile", json)
         //Datos de salida
         val output = workDataOf("profile_json" to json)
+
         return Result.success(output)
     }
 }

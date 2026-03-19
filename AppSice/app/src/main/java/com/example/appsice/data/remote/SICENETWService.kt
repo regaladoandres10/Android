@@ -77,7 +77,7 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun getCaliPorUnidad(@Body soap: RequestBody): ResponseBody
 
-    //Obtener califacion unidad
+    //Obtener califacion final
     @Headers(
         "Content-Type: text/xml; charset=utf-8",
         "SOAPAction: http://tempuri.org/getAllCalifFinalByAlumnos"
