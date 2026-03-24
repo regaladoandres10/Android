@@ -18,6 +18,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Permisos de lectura -->
+    <!-- se otorga automaticamente -->
+    <permission
+        android:name="com.example.appsice.READ_PROVIDER"
+        android:protectionLevel="normal" />
+
+    <!-- Permisos de escritura -->
+    <!-- el usuario debe aceptarlo -->
+    <permission
+        android:name="com.example.appsice.WRITE_PROVIDER"
+        android:protectionLevel="dangerous" />
     <application
         android:usesCleartextTraffic="true"
         android:name=".SNApplication"
@@ -28,6 +39,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MarsPhotos"
         tools:targetApi="33">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -38,5 +50,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.example.appsice.provider"
+            android:name=".providers.SiceContentProvider"
+            android:exported="true"
+            android:readPermission="com.example.appsice.READ_PROVIDER"
+            android:writePermission="com.example.appsice.WRITE_PROVIDER" />
+
     </application>
 </manifest>

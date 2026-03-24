@@ -1,5 +1,6 @@
 package com.example.appsice.data.local.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -29,5 +30,10 @@ interface CargaAcademicaDao {
     @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
     fun getAllCarga(): Flow<List<CargaAcademicaEntity>>
 
+    @Query("SELECT * FROM carga_academica WHERE claveOficial = :clv")
+    fun getCargaCursor(clv: String): Cursor
+
+    @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
+    fun getAllCargaCursor(): Cursor
 
 }

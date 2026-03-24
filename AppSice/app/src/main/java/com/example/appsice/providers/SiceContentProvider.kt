@@ -5,20 +5,29 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import com.example.appsice.data.local.database.SiceDatabase
 
 //Implementar el URIMatcher
-val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
+private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
     //Carga academica
-    addURI(AppSiceContract.AUTHORITY, AppSiceContract.CargaAcademicaContract.CONTENT_PATH,
-        AppSiceContract.CODE_CARGA_ACADEMICA)
+    addURI(AppSiceContract.AUTHORITY, AppSiceContract.CargaAcademicaContract.CONTENT_PATH, AppSiceContract.CODE_CARGA_ACADEMICA)
+    //Carga individual
+    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CargaAcademicaContract.CONTENT_PATH}/#", AppSiceContract.CODE_CARGA_ITEM)
+
     //Cardex
     addURI(AppSiceContract.AUTHORITY, AppSiceContract.CardexContract.CONTENT_PATH, AppSiceContract.CODE_CARDEX)
+    //Cardex Individual
+    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CardexContract.CONTENT_PATH}/#", AppSiceContract.CODE_CARDEX_ITEM)
 }
 
 
 class SiceContentProvider: ContentProvider() {
+    private lateinit var db: SiceDatabase
+
 
     override fun onCreate(): Boolean {
+        //Implementar la base de datos
+        db = SiceDatabase.getDatabase(context!!)
         return true
     }
 
@@ -29,11 +38,57 @@ class SiceContentProvider: ContentProvider() {
         p3: Array<out String?>?,
         p4: String?
     ): Cursor? {
-        TODO("Not yet implemented")
+
+        //Obteniendo la URI
+        val URICode = sUriMatcher.match(p0)
+
+        val code = when(URICode) {
+            //Lista de cardex
+            AppSiceContract.CODE_CARDEX -> {
+                db.cardexDao().getAllCardexCursor()
+            }
+
+            //Solo uno
+            AppSiceContract.CODE_CARDEX_ITEM -> {
+                val id = p0.lastPathSegment ?: return null
+                db.cardexDao().getCardexCursor(id)
+            }
+
+            //Lista de carga
+            AppSiceContract.CODE_CARGA_ACADEMICA -> {
+                db.cargaDao().getAllCargaCursor()
+            }
+
+            //Solo uno
+            AppSiceContract.CODE_CARGA_ITEM -> {
+                val id = p0.lastPathSegment ?: return null
+                db.cargaDao().getCargaCursor(id)
+            }
+
+            else -> null
+
+        }
+        return code
+
     }
 
     override fun getType(p0: Uri): String? {
-        TODO("Not yet implemented")
+        return when (sUriMatcher.match(p0)) {
+
+            AppSiceContract.CODE_CARDEX ->
+                AppSiceContract.CardexContract.MIME_DIR
+
+            AppSiceContract.CODE_CARDEX_ITEM ->
+                AppSiceContract.CardexContract.MIME_ITEM
+
+            AppSiceContract.CODE_CARGA_ACADEMICA ->
+                AppSiceContract.CargaAcademicaContract.MIME_DIR
+
+            AppSiceContract.CODE_CARGA_ITEM ->
+                AppSiceContract.CargaAcademicaContract.MIME_ITEM
+
+            else -> throw IllegalArgumentException("URI no soportada")
+        }
     }
 
     override fun insert(p0: Uri, p1: ContentValues?): Uri? {
