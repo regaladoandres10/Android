@@ -1,5 +1,6 @@
 package com.example.appsice.data.local.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -30,4 +31,17 @@ interface CardexDao {
     //Get all
     @Query("SELECT * FROM cardex ORDER BY materia ASC")
     fun getAllCardex(): Flow<List<CardexEntity>>
+
+    /**
+     * Obtener el cardex
+     * return cursor
+     */
+
+    @Query("SELECT * FROM cardex WHERE claveMateria = :clv")
+    fun getCardexCursor(clv: String): Cursor
+
+    //Get all
+    @Query("SELECT * FROM cardex ORDER BY materia ASC")
+    fun getAllCardexCursor(): Cursor
+
 }
