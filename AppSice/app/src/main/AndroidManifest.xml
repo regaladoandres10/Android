@@ -28,7 +28,7 @@
     <!-- el usuario debe aceptarlo -->
     <permission
         android:name="com.example.appsice.WRITE_PROVIDER"
-        android:protectionLevel="dangerous" />
+        android:protectionLevel="normal" />
     <application
         android:usesCleartextTraffic="true"
         android:name=".SNApplication"

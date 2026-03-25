@@ -5,19 +5,24 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import android.util.Log
 import com.example.appsice.data.local.database.SiceDatabase
+import com.example.appsice.data.local.entity.CardexEntity
+import kotlinx.coroutines.runBlocking
 
 //Implementar el URIMatcher
+//Se utiliza * para cualquier texto
+//Se utiliza # para numeros
 private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
     //Carga academica
     addURI(AppSiceContract.AUTHORITY, AppSiceContract.CargaAcademicaContract.CONTENT_PATH, AppSiceContract.CODE_CARGA_ACADEMICA)
     //Carga individual
-    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CargaAcademicaContract.CONTENT_PATH}/#", AppSiceContract.CODE_CARGA_ITEM)
+    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CargaAcademicaContract.CONTENT_PATH}/*", AppSiceContract.CODE_CARGA_ITEM)
 
     //Cardex
     addURI(AppSiceContract.AUTHORITY, AppSiceContract.CardexContract.CONTENT_PATH, AppSiceContract.CODE_CARDEX)
     //Cardex Individual
-    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CardexContract.CONTENT_PATH}/#", AppSiceContract.CODE_CARDEX_ITEM)
+    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CardexContract.CONTENT_PATH}/*", AppSiceContract.CODE_CARDEX_ITEM)
 }
 
 
@@ -91,8 +96,46 @@ class SiceContentProvider: ContentProvider() {
         }
     }
 
-    override fun insert(p0: Uri, p1: ContentValues?): Uri? {
-        TODO("Not yet implemented")
+    override fun insert(p0: Uri, values: ContentValues?): Uri? {
+        //val context = context ?: return null
+        val code = sUriMatcher.match(p0)
+        return when (code) {
+            AppSiceContract.CODE_CARDEX -> {
+                //Validar si son valores nulos
+                if (values == null) return null
+
+                //Convertir a Entity de cardex
+                val cardex = CardexEntity(
+                    fecEsp = values.getAsString("fecha_esperada") ?: "",
+                    clvMat = values.getAsString("claveMateria") ?: return null,
+                    clvOfiMat = values.getAsString("clvOfiMat") ?: "",
+                    materia = values.getAsString("materia") ?: "",
+                    cdts = values.getAsInteger("creditos") ?: 0,
+                    calif = values.getAsInteger("calificacion") ?: 0,
+                    acred = values.getAsString("acred") ?: "",
+                    s1 = values.getAsString("semestre1") ?: "",
+                    p1 = values.getAsString("periodo1") ?: "",
+                    a1 = values.getAsString("a1") ?: "",
+                    s2 = values.getAsString("semestre2") ?: "",
+                    p2 = values.getAsString("periodo2") ?: "",
+                    a2 = values.getAsString("a2") ?: ""
+                )
+
+                Log.d("INSERT", "Values: $values")
+
+                //Insertar con corrutina
+                runBlocking {
+                    db.cardexDao().insert(cardex)
+                }
+
+                //Regresaar la URI y construir una URI con la PK
+                Uri.withAppendedPath(
+                    AppSiceContract.CardexContract.CONTENT_URI_CARDEX,
+                    cardex.clvMat
+                )
+            }
+            else -> throw IllegalArgumentException("URI no soportada")
+        }
     }
 
     override fun delete(
