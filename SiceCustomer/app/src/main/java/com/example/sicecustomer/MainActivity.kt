@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.sicecustomer.ui.theme.CargaAcademicaClientScreen
 import com.example.sicecustomer.ui.theme.SiceCustomerTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SiceCustomerTheme {
-                CardexClientScreen()
+                //CardexClientScreen()
+                CargaAcademicaClientScreen()
             }
         }
     }

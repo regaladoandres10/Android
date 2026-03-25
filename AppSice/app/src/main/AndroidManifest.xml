@@ -25,7 +25,7 @@
         android:protectionLevel="normal" />
 
     <!-- Permisos de escritura -->
-    <!-- el usuario debe aceptarlo -->
+    <!-- se otorga automaticamente -->
     <permission
         android:name="com.example.appsice.WRITE_PROVIDER"
         android:protectionLevel="normal" />

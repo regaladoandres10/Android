@@ -8,6 +8,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.appsice.data.local.database.SiceDatabase
 import com.example.appsice.data.local.entity.CardexEntity
+import com.example.appsice.data.local.entity.CargaAcademicaEntity
 import kotlinx.coroutines.runBlocking
 
 //Implementar el URIMatcher
@@ -15,14 +16,30 @@ import kotlinx.coroutines.runBlocking
 //Se utiliza # para numeros
 private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
     //Carga academica
-    addURI(AppSiceContract.AUTHORITY, AppSiceContract.CargaAcademicaContract.CONTENT_PATH, AppSiceContract.CODE_CARGA_ACADEMICA)
+    addURI(
+        AppSiceContract.AUTHORITY,
+        AppSiceContract.CargaAcademicaContract.CONTENT_PATH,
+        AppSiceContract.CODE_CARGA_ACADEMICA
+    )
     //Carga individual
-    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CargaAcademicaContract.CONTENT_PATH}/*", AppSiceContract.CODE_CARGA_ITEM)
+    addURI(
+        AppSiceContract.AUTHORITY,
+        "${AppSiceContract.CargaAcademicaContract.CONTENT_PATH}/*",
+        AppSiceContract.CODE_CARGA_ITEM
+    )
 
     //Cardex
-    addURI(AppSiceContract.AUTHORITY, AppSiceContract.CardexContract.CONTENT_PATH, AppSiceContract.CODE_CARDEX)
+    addURI(
+        AppSiceContract.AUTHORITY,
+        AppSiceContract.CardexContract.CONTENT_PATH,
+        AppSiceContract.CODE_CARDEX
+    )
     //Cardex Individual
-    addURI(AppSiceContract.AUTHORITY, "${AppSiceContract.CardexContract.CONTENT_PATH}/*", AppSiceContract.CODE_CARDEX_ITEM)
+    addURI(
+        AppSiceContract.AUTHORITY,
+        "${AppSiceContract.CardexContract.CONTENT_PATH}/*",
+        AppSiceContract.CODE_CARDEX_ITEM
+    )
 }
 
 
@@ -97,6 +114,8 @@ class SiceContentProvider: ContentProvider() {
     }
 
     override fun insert(p0: Uri, values: ContentValues?): Uri? {
+
+
         //val context = context ?: return null
         val code = sUriMatcher.match(p0)
         return when (code) {
@@ -123,6 +142,9 @@ class SiceContentProvider: ContentProvider() {
 
                 Log.d("INSERT", "Values: $values")
 
+                Log.d("DEBUG_URI", "URI recibida: $p0")
+                Log.d("DEBUG_URI", "MATCH: ${sUriMatcher.match(p0)}")
+
                 //Insertar con corrutina
                 runBlocking {
                     db.cardexDao().insert(cardex)
@@ -133,6 +155,43 @@ class SiceContentProvider: ContentProvider() {
                     AppSiceContract.CardexContract.CONTENT_URI_CARDEX,
                     cardex.clvMat
                 )
+
+            }
+            AppSiceContract.CODE_CARGA_ACADEMICA -> {
+
+                if (values == null) return null
+
+                val carga = CargaAcademicaEntity(
+                    semipresencial = values.getAsString("semipresencial") ?: "",
+                    observaciones = values.getAsString("observaciones") ?: "",
+                    docente = values.getAsString("docente") ?: "",
+                    clvOficial = values.getAsString("claveOficial") ?: return null,
+                    sabado = values.getAsString("sabado") ?: "",
+                    viernes = values.getAsString("viernes") ?: "",
+                    jueves = values.getAsString("jueves") ?: "",
+                    miercoles = values.getAsString("miercoles") ?: "",
+                    martes = values.getAsString("martes") ?: "",
+                    lunes = values.getAsString("lunes") ?: "",
+                    estadoMateria = values.getAsString("estadoMateria") ?: "",
+                    creditosMateria = values.getAsInteger("creditosMateria") ?: 0,
+                    materia = values.getAsString("materia") ?: "",
+                    grupo = values.getAsString("grupo") ?: ""
+                )
+
+                Log.d("INSERT_CARGA", "$values")
+
+                Log.d("DEBUG_URI", "URI recibida: $p0")
+                Log.d("DEBUG_URI", "MATCH: ${sUriMatcher.match(p0)}")
+
+                runBlocking {
+                    db.cargaDao().insert(carga)
+                }
+
+                Uri.withAppendedPath(
+                    AppSiceContract.CargaAcademicaContract.CONTENT_URI_CARGA_ACADEMICA,
+                    carga.clvOficial
+                )
+
             }
             else -> throw IllegalArgumentException("URI no soportada")
         }
