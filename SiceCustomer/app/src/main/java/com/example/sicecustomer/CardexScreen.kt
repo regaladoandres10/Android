@@ -1,6 +1,8 @@
 package com.example.sicecustomer
 
+import android.content.ContentValues
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.sicecustomer.providers.AppSiceContract
 
 @Composable
 fun CardexClientScreen() {
@@ -30,7 +33,7 @@ fun CardexClientScreen() {
 
         try {
             val cursor = context.contentResolver.query(
-                Uri.parse("content://com.example.appsice.provider/cardex"),
+                AppSiceContract.CardexContract.CONTENT_URI_CARDEX,
                 null,
                 null,
                 null,
@@ -45,13 +48,14 @@ fun CardexClientScreen() {
                     lista.add(materia)
                 }
             }
+            Log.d("CURSOR", "$cursor")
 
         } catch (e: Exception) {
             lista.add("Error: ${e.message}")
         }
     }
 
-    // Se ejecuta al iniciar
+    //Se ejecuta al iniciar
     LaunchedEffect(Unit) {
         cargarDatos()
     }
@@ -63,7 +67,7 @@ fun CardexClientScreen() {
     ) {
 
         Text(
-            text = "Cardex (Cliente)",
+            text = "Cardex",
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -73,7 +77,37 @@ fun CardexClientScreen() {
             Text("Recargar")
         }
 
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+
+            val values = ContentValues().apply {
+                put("claveMateria", "MAT999")
+                put("materia", "Nueva materia")
+                put("creditos", 5)
+                put("calificacion", 100)
+            }
+
+            Log.d("INSERT", "$values")
+
+            try {
+                context.contentResolver.insert(
+                    AppSiceContract.CardexContract.CONTENT_URI_CARDEX,
+                    values
+                )
+
+                //Recargar después de insertar
+                cargarDatos()
+
+            } catch (e: Exception) {
+                lista.add("Error insert: ${e.message}")
+                Log.e("Error insert: ", "${e.message}")
+            }
+
+        }) {
+            Text("Insertar")
+        }
 
         LazyColumn {
             items(lista) { item ->
@@ -83,5 +117,6 @@ fun CardexClientScreen() {
                 )
             }
         }
+        Log.d("Cantidad:",  "${lista.size}")
     }
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="com.example.appsice.READ_PROVIDER"/>
+    <uses-permission android:name="com.example.appsice.WRITE_PROVIDER"/>
 
     <queries >
         <provider android:authorities="com.example.appsice.provider" />
