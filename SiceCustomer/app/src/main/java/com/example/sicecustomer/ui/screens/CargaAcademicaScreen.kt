@@ -1,7 +1,6 @@
-package com.example.sicecustomer
+package com.example.sicecustomer.ui.screens
 
 import android.content.ContentValues
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.sicecustomer.providers.AppSiceContract
 
 @Composable
-fun CardexClientScreen() {
+fun CargaAcademicaClientScreen() {
 
     val context = LocalContext.current
     val lista = remember { mutableStateListOf<String>() }
@@ -32,8 +31,9 @@ fun CardexClientScreen() {
         lista.clear()
 
         try {
+            //Resultado de la consulta
             val cursor = context.contentResolver.query(
-                AppSiceContract.CardexContract.CONTENT_URI_CARDEX,
+                AppSiceContract.CargaAcademicaContract.CONTENT_URI_CARGA_ACADEMICA,
                 null,
                 null,
                 null,
@@ -42,13 +42,25 @@ fun CardexClientScreen() {
 
             cursor?.use {
                 while (it.moveToNext()) {
+
                     val materia = it.getString(
                         it.getColumnIndexOrThrow("materia")
                     )
-                    lista.add(materia)
+
+                    val docente = it.getString(
+                        it.getColumnIndexOrThrow("docente")
+                    )
+
+                    val grupo = it.getString(
+                        it.getColumnIndexOrThrow("grupo")
+                    )
+
+                    // 👇 más completo que cardex
+                    lista.add("$materia - $docente (Grupo: $grupo)")
                 }
             }
-            Log.d("CURSOR", "$cursor")
+
+            Log.d("CURSOR_CARGA", "$cursor")
 
         } catch (e: Exception) {
             lista.add("Error: ${e.message}")
@@ -67,7 +79,7 @@ fun CardexClientScreen() {
     ) {
 
         Text(
-            text = "Cardex",
+            text = "Carga Académica",
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -77,23 +89,21 @@ fun CardexClientScreen() {
             Text("Recargar")
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
 
             val values = ContentValues().apply {
-                put("claveMateria", "MAT999")
-                put("materia", "Nueva materia")
-                put("creditos", 5)
-                put("calificacion", 100)
+                put("claveOficial", "CA999")
+                put("materia", "Nueva Materia")
+                put("docente", "Profe Demo")
+                put("grupo", "A1")
+                put("creditosMateria", 5)
             }
-
-            Log.d("INSERT", "$values")
 
             try {
                 context.contentResolver.insert(
-                    AppSiceContract.CardexContract.CONTENT_URI_CARDEX,
+                    AppSiceContract.CargaAcademicaContract.CONTENT_URI_CARGA_ACADEMICA,
                     values
                 )
 
@@ -102,12 +112,14 @@ fun CardexClientScreen() {
 
             } catch (e: Exception) {
                 lista.add("Error insert: ${e.message}")
-                Log.e("Error insert: ", "${e.message}")
+                Log.e("ERROR_INSERT_CARGA", "${e.message}")
             }
 
         }) {
             Text("Insertar")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn {
             items(lista) { item ->
@@ -117,6 +129,7 @@ fun CardexClientScreen() {
                 )
             }
         }
-        Log.d("Cantidad:",  "${lista.size}")
+
+        Text("Cantidad: ${lista.size}")
     }
 }
