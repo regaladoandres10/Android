@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,7 @@ fun FutbolitoScreen() {
         //z -> Profundidad
         val (x, y, z) = sensorValue.value
         Demo(
-            demo = Demo.ACCELEROMETER,
+            demo = Demo.FUTBOLITOPOCKET,
             value = "X: $x m/s^2\nY: $y m/s^2\nZ: $z m/s^2",
         ) {
             val width = constraints.maxWidth.toFloat()
@@ -57,6 +58,13 @@ fun FutbolitoScreen() {
                 )
             }
             Canvas(modifier = Modifier.fillMaxSize()) {
+
+                //Pantalla verde
+                drawRect(
+                    color = Color.Green,
+                    size = size
+                )
+
                 //Dibujamos la pelota
                 drawCircle(
                     color = contentColor,
@@ -66,6 +74,6 @@ fun FutbolitoScreen() {
             }
         }
     } else {
-        NotAvailableDemo(demo = Demo.ACCELEROMETER)
+        NotAvailableDemo(demo = Demo.FUTBOLITOPOCKET)
     }
 }

@@ -6,5 +6,5 @@ enum class Demo(
     val title: String
 ) {
     NONE(""),
-    ACCELEROMETER("Accelerometer")
+    FUTBOLITOPOCKET("Futbolito Pocket")
 }
