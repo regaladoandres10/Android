@@ -38,11 +38,51 @@ fun FutbolitoScreen() {
             val width = constraints.maxWidth.toFloat()
             val height = constraints.maxHeight.toFloat()
             var center by remember { mutableStateOf(Offset(width / 2, height / 2)) }
+            var velocity by remember { mutableStateOf(Offset(0f, 0f)) }
             val orientation = LocalConfiguration.current.orientation
             //Color de la pelota
             val contentColor = LocalContentColor.current
             //Tamaño de la pelota
             val radius = with(LocalDensity.current) { 15.dp.toPx() }
+
+            //Velocidad de la pelota con acelerometro
+            velocity = Offset(
+                x = velocity.x + x * 0.2f,
+                y = velocity.y + y * 0.2f,
+            )
+
+            //Movimiento de la pelota
+            center = Offset(
+                x = center.x + velocity.x,
+                y = center.y + velocity.y
+            )
+
+            //Rebotes
+            // Izquierda
+            if (center.x < radius) {
+                velocity = Offset(-velocity.x, velocity.y)
+                center = Offset(radius, center.y)
+            }
+
+            // Derecha
+            if (center.x > width - radius) {
+                velocity = Offset(-velocity.x, velocity.y)
+                center = Offset(width - radius, center.y)
+            }
+
+            // Arriba
+            if (center.y < radius) {
+                velocity = Offset(velocity.x, -velocity.y)
+                center = Offset(center.x, radius)
+            }
+
+            // Abajo
+            if (center.y > height - radius) {
+                velocity = Offset(velocity.x, -velocity.y)
+                center = Offset(center.x, height - radius)
+            }
+
+            /*
             //Movimientos de la pelota
             center = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 Offset(
@@ -58,6 +98,9 @@ fun FutbolitoScreen() {
                     y = (center.y + x).coerceIn(radius, height - radius),
                 )
             }
+             */
+
+            //Campo de futbol con componentes
             Canvas(modifier = Modifier.fillMaxSize()) {
 
                 //Pantalla verde
