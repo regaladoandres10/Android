@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -63,6 +64,31 @@ fun FutbolitoScreen() {
                 drawRect(
                     color = Color.Green,
                     size = size
+                )
+
+                //Dibujar porteria de arriba
+                val goalWidth = width * 0.4f //40% ancho
+                val goalHeight = 40f //alto de la porteria
+
+                drawRect(
+                    color = Color.White,
+                    topLeft = Offset(
+                        //Poner la porteria centrada
+                        x = (width - goalWidth) / 2,
+                        //Pegar arriba
+                        y = 0f
+                    ),
+                    size = Size(goalWidth, goalHeight)
+                )
+
+                //Dibujar porteria de abajo
+                drawRect(
+                    color = Color.White,
+                    topLeft = Offset(
+                        x = (width - goalWidth) / 2,
+                        y = height - goalHeight
+                    ),
+                    size = Size(goalWidth, goalHeight)
                 )
 
                 //Dibujamos la pelota
