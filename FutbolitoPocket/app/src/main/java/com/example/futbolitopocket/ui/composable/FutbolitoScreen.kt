@@ -47,8 +47,8 @@ fun FutbolitoScreen() {
 
             //Velocidad de la pelota con acelerometro
             velocity = Offset(
-                x = velocity.x + x * 0.2f,
-                y = velocity.y + y * 0.2f,
+                x = velocity.x + x * 0.1f,
+                y = velocity.y + y * 0.1f,
             )
 
             //Movimiento de la pelota
