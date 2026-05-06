@@ -11,6 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -30,17 +32,57 @@ fun FutbolitoScreen() {
         //z -> Profundidad
         val (x, y, z) = sensorValue.value
         Demo(
-            demo = Demo.ACCELEROMETER,
+            demo = Demo.FUTBOLITOPOCKET,
             value = "X: $x m/s^2\nY: $y m/s^2\nZ: $z m/s^2",
         ) {
             val width = constraints.maxWidth.toFloat()
             val height = constraints.maxHeight.toFloat()
             var center by remember { mutableStateOf(Offset(width / 2, height / 2)) }
+            var velocity by remember { mutableStateOf(Offset(0f, 0f)) }
             val orientation = LocalConfiguration.current.orientation
             //Color de la pelota
             val contentColor = LocalContentColor.current
             //Tamaño de la pelota
             val radius = with(LocalDensity.current) { 15.dp.toPx() }
+
+            //Velocidad de la pelota con acelerometro
+            velocity = Offset(
+                x = velocity.x + x * 0.1f,
+                y = velocity.y + y * 0.1f,
+            )
+
+            //Movimiento de la pelota
+            center = Offset(
+                x = center.x + velocity.x,
+                y = center.y + velocity.y
+            )
+
+            //Rebotes
+            // Izquierda
+            if (center.x < radius) {
+                velocity = Offset(-velocity.x, velocity.y)
+                center = Offset(radius, center.y)
+            }
+
+            // Derecha
+            if (center.x > width - radius) {
+                velocity = Offset(-velocity.x, velocity.y)
+                center = Offset(width - radius, center.y)
+            }
+
+            // Arriba
+            if (center.y < radius) {
+                velocity = Offset(velocity.x, -velocity.y)
+                center = Offset(center.x, radius)
+            }
+
+            // Abajo
+            if (center.y > height - radius) {
+                velocity = Offset(velocity.x, -velocity.y)
+                center = Offset(center.x, height - radius)
+            }
+
+            /*
             //Movimientos de la pelota
             center = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 Offset(
@@ -56,7 +98,42 @@ fun FutbolitoScreen() {
                     y = (center.y + x).coerceIn(radius, height - radius),
                 )
             }
+             */
+
+            //Campo de futbol con componentes
             Canvas(modifier = Modifier.fillMaxSize()) {
+
+                //Pantalla verde
+                drawRect(
+                    color = Color.Green,
+                    size = size
+                )
+
+                //Dibujar porteria de arriba
+                val goalWidth = width * 0.4f //40% ancho
+                val goalHeight = 40f //alto de la porteria
+
+                drawRect(
+                    color = Color.White,
+                    topLeft = Offset(
+                        //Poner la porteria centrada
+                        x = (width - goalWidth) / 2,
+                        //Pegar arriba
+                        y = 0f
+                    ),
+                    size = Size(goalWidth, goalHeight)
+                )
+
+                //Dibujar porteria de abajo
+                drawRect(
+                    color = Color.White,
+                    topLeft = Offset(
+                        x = (width - goalWidth) / 2,
+                        y = height - goalHeight
+                    ),
+                    size = Size(goalWidth, goalHeight)
+                )
+
                 //Dibujamos la pelota
                 drawCircle(
                     color = contentColor,
@@ -66,6 +143,6 @@ fun FutbolitoScreen() {
             }
         }
     } else {
-        NotAvailableDemo(demo = Demo.ACCELEROMETER)
+        NotAvailableDemo(demo = Demo.FUTBOLITOPOCKET)
     }
 }
