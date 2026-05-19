@@ -91,11 +91,9 @@ kotlin {
 }
 
 configure<RoomExtension> {
-
     schemaDirectory(
         "$projectDir/schemas"
     )
-
 }
 
 dependencies {
