@@ -1,0 +1,46 @@
+package data.local.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import data.local.Entity.CardexEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface CardexDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(cadex: CardexEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(cargas: List<CardexEntity>)
+
+    @Update
+    suspend fun update(cardex: CardexEntity)
+
+    @Delete
+    suspend fun delete(cardex: CardexEntity)
+
+    //Get one cardex
+    @Query("SELECT * FROM cardex WHERE claveMateria = :clv")
+    fun getCardex(clv: String): Flow<CardexEntity>
+
+    //Get all
+    @Query("SELECT * FROM cardex ORDER BY materia ASC")
+    fun getAllCardex(): Flow<List<CardexEntity>>
+
+    /**
+     * Obtener el cardex
+     * return cursor
+     */
+    /*
+    @Query("SELECT * FROM cardex WHERE claveMateria = :clv")
+    fun getCardexCursor(clv: String): Cursor
+
+    //Get all
+    @Query("SELECT * FROM cardex ORDER BY materia ASC")
+    fun getAllCardexCursor(): Cursor
+     */
+}
