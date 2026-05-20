@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import data.local.Entity.CalificacionUnidadEntity
+import data.local.entity.CalificacionUnidadEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,8 +24,8 @@ interface CalificacionUnidadDao {
     suspend fun delete(calificacionU: CalificacionUnidadEntity)
 
     @Query("SELECT * FROM calificacionUnidad WHERE id= :id")
-    fun getCalificacionUnidad(id: Int): Flow<CalificacionUnidadEntity>
+    fun getCalificacionUnidad(id: Int): Flow<CalificacionUnidadEntity?>
 
     @Query("SELECT * FROM calificacionUnidad ORDER BY materia ASC")
-    fun getAllCalificacionUnidad(): Flow<List<CalificacionUnidadEntity>>
+    fun getAllCalificacionUnidad(): Flow<List<CalificacionUnidadEntity?>>
 }

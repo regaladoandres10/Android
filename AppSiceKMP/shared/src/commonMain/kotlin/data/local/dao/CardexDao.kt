@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import data.local.Entity.CardexEntity
+import data.local.entity.CardexEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,11 +25,11 @@ interface CardexDao {
 
     //Get one cardex
     @Query("SELECT * FROM cardex WHERE claveMateria = :clv")
-    fun getCardex(clv: String): Flow<CardexEntity>
+    fun getCardex(clv: String): Flow<CardexEntity?>
 
     //Get all
     @Query("SELECT * FROM cardex ORDER BY materia ASC")
-    fun getAllCardex(): Flow<List<CardexEntity>>
+    fun getAllCardex(): Flow<List<CardexEntity?>>
 
     /**
      * Obtener el cardex

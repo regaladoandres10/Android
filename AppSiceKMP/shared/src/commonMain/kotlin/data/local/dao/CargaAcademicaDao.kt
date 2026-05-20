@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import data.local.Entity.CargaAcademicaEntity
+import data.local.entity.CargaAcademicaEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,10 +24,10 @@ interface CargaAcademicaDao {
     suspend fun delete(carga: CargaAcademicaEntity)
 
     @Query("SELECT * FROM carga_academica WHERE claveOficial = :clv")
-    fun getCarga(clv: String): Flow<CargaAcademicaEntity>
+    fun getCarga(clv: String): Flow<CargaAcademicaEntity?>
 
     @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
-    fun getAllCarga(): Flow<List<CargaAcademicaEntity>>
+    fun getAllCarga(): Flow<List<CargaAcademicaEntity?>>
 
     /*
     @Query("SELECT * FROM carga_academica WHERE claveOficial = :clv")
