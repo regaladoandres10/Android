@@ -29,7 +29,7 @@ interface CardexDao {
 
     //Get all
     @Query("SELECT * FROM cardex ORDER BY materia ASC")
-    fun getAllCardex(): Flow<List<CardexEntity?>>
+    fun getAllCardex(): Flow<List<CardexEntity>>
 
     /**
      * Obtener el cardex

@@ -27,7 +27,7 @@ interface CargaAcademicaDao {
     fun getCarga(clv: String): Flow<CargaAcademicaEntity?>
 
     @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
-    fun getAllCarga(): Flow<List<CargaAcademicaEntity?>>
+    fun getAllCarga(): Flow<List<CargaAcademicaEntity>>
 
     /*
     @Query("SELECT * FROM carga_academica WHERE claveOficial = :clv")

@@ -24,5 +24,5 @@ interface UsuarioDao {
     fun getUsuario(id: Int): Flow<UsuarioEntity?>
 
     @Query("SELECT * FROM usuario ORDER BY nombre ASC")
-    fun getAllUsuario(): Flow<List<UsuarioEntity?>>
+    fun getAllUsuario(): Flow<List<UsuarioEntity>>
 }

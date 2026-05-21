@@ -27,5 +27,5 @@ interface CalificacionUnidadDao {
     fun getCalificacionUnidad(id: Int): Flow<CalificacionUnidadEntity?>
 
     @Query("SELECT * FROM calificacionUnidad ORDER BY materia ASC")
-    fun getAllCalificacionUnidad(): Flow<List<CalificacionUnidadEntity?>>
+    fun getAllCalificacionUnidad(): Flow<List<CalificacionUnidadEntity>>
 }
