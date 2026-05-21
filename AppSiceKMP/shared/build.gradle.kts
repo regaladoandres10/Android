@@ -1,6 +1,6 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import androidx.room.gradle.RoomExtension
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
@@ -20,48 +20,36 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm()
-    
-    js {
-        browser()
-    }
-    
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
-    }
-    
+
     androidLibrary {
-       namespace = "com.example.appsicekmp.shared"
-       compileSdk = libs.versions.android.compileSdk.get().toInt()
-       minSdk = libs.versions.android.minSdk.get().toInt()
-    
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
-       }
-       androidResources {
-           enable = true
-       }
-       withHostTest {
-           isIncludeAndroidResources = true
-       }
-    }
+        namespace = "com.example.appsicekmp.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
-    compilerOptions {
-        sourceSets.all {
-
-            languageSettings.optIn(
-                "androidx.room.RoomDatabaseConstructor"
-            )
-
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+        androidResources {
+            enable = true
+        }
+        withHostTest {
+            isIncludeAndroidResources = true
         }
     }
 
-    /*
     sourceSets.all {
-        languageSettings.optIn("androidx.room.RoomDatabaseConstructor")
+        languageSettings.optIn(
+            "androidx.room.RoomDatabaseConstructor"
+        )
     }
+
+    /*
+    compilerOptions {
+
+    }
+
      */
 
     sourceSets {
@@ -78,14 +66,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
             implementation(libs.androidx.room.common)
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.room.ktx)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-        }
-        jsMain.dependencies {
-            implementation(libs.wrappers.browser)
         }
     }
 }
@@ -97,11 +83,9 @@ configure<RoomExtension> {
 }
 
 dependencies {
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
 }
-
-/*
-dependencies {
-    androidRuntimeClasspath(libs.compose.uiTooling)
-}
- */
