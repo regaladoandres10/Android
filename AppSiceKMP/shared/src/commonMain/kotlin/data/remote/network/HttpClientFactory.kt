@@ -1,7 +1,12 @@
 package data.remote.network
 
+//Cliente principal de Ktor
 import io.ktor.client.HttpClient
+
+//Plugin para manejo automatico de cookies
 import io.ktor.client.plugins.cookies.HttpCookies
+
+//Interfaz para guardar las cookies
 import session.SessionCookieStorage
 
 /**

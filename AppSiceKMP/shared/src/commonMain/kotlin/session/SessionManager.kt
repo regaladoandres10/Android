@@ -3,7 +3,7 @@ package session
 /**
  * Este archivo remplaza SharedPreferences
  *
- * Este archivo se va a usar para guardar la sesión del usuario
+ * Este archivo se va a usar para guardar la sesión del usuario y mantener sesión en memoria
  *
  * La sesión se va a guardar en memoria compartida KMP
  */

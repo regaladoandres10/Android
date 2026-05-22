@@ -4,6 +4,10 @@ import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
 
+/**
+ * Este archivo nos permite crear las llamadas HTTP o declarar las llamadas HTTP
+ */
+
 interface SICENETService {
     // Login
     @Headers(

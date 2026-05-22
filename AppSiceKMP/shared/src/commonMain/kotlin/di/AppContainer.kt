@@ -2,6 +2,10 @@ package di
 
 import data.local.repository.*
 
+/**
+ * Este archivo sirve para crear dependencias
+ */
+
 interface AppContainer {
 
     //val snRepository: SNRepository

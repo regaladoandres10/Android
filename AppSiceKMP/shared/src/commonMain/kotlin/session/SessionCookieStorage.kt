@@ -14,6 +14,10 @@ import io.ktor.http.Cookie
 //URL donde se obtuvo o enviara la cookie
 import io.ktor.http.Url
 
+/**
+ * Esta clase sirve para guardar las cookies y enviar cookies
+ */
+
 class SessionCookieStorage : CookiesStorage {
 
     //Lista interna de ktor para guardar las cookies
