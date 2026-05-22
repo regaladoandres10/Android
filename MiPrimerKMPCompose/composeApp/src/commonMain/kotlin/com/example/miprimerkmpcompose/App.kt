@@ -4,11 +4,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,39 +32,51 @@ import org.jetbrains.compose.resources.painterResource
 
 import miprimerkmpcompose.composeapp.generated.resources.Res
 import miprimerkmpcompose.composeapp.generated.resources.compose_multiplatform
+import miprimerkmpcompose.composeapp.generated.resources.eg
+import miprimerkmpcompose.composeapp.generated.resources.fr
+import miprimerkmpcompose.composeapp.generated.resources.id
+import miprimerkmpcompose.composeapp.generated.resources.jp
+import miprimerkmpcompose.composeapp.generated.resources.mx
+import org.jetbrains.compose.resources.DrawableResource
 import kotlin.time.Clock
 
-fun currentTimeAt(location: String) : String? {
+data class Country(val name: String, val zone: TimeZone, val image: DrawableResource)
+
+fun currentTimeAt(location: String, zone: TimeZone) : String {
     //Obtenemos la fecha
     fun LocalTime.formatted() = "$hour:$minute:$second"
 
-    return try {
-        //Tiempo de ahora
-        val time = Clock.System.now()
-        //Tiempo de zona
-        val zone = TimeZone.of(location)
-        //Convierte el tiempo a una fecha y hora local
-        val localTime = time.toLocalDateTime(zone).time
-        "The time in $location is ${localTime.formatted()}"
-    } catch (ex: IllegalTimeZoneException) {
-        null
-    }
+    //Tiempo de ahora
+    val time = Clock.System.now()
+
+    //Convierte el tiempo a una fecha y hora local
+    val localTime = time.toLocalDateTime(zone).time
+
+    return "The time in $location is ${localTime.formatted()}"
 }
+
+fun countries() = listOf(
+    Country("Japan", TimeZone.of("Asia/Tokyo"), Res.drawable.jp),
+    Country("France", TimeZone.of("Europe/Paris"), Res.drawable.fr),
+    Country("Mexico", TimeZone.of("America/Mexico_City"), Res.drawable.mx),
+    Country("Indonesia", TimeZone.of("Asia/Jakarta"), Res.drawable.id),
+    Country("Egypt", TimeZone.of("Africa/Cairo"), Res.drawable.eg),
+)
 
 @Composable
 @Preview
-fun App() {
+fun App( countries: List<Country> = countries() ) {
     MaterialTheme {
         //var showContent by remember { mutableStateOf(false) }
-        //Localizacion
-        var location by remember { mutableStateOf("Europe/Berlin") }
+        //Lista de paises
+        var showCountries by remember { mutableStateOf(false) }
 
         //Tiempo de localización
         var timeAtLocation by remember { mutableStateOf("No location selected") }
 
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .padding(20.dp)
                 .safeContentPadding()
                 .fillMaxSize(),
             //horizontalAlignment = Alignment.CenterHorizontally,
@@ -71,17 +87,34 @@ fun App() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
             )
-            //Modificar la localizacion
-            TextField(
-                value = location,
-                onValueChange = { location = it },
-                modifier = Modifier.padding(top = 10.dp)
-            )
-            Button(
-                onClick = { timeAtLocation = currentTimeAt(location) ?: "Invalid Location" },
-                modifier = Modifier.padding(top = 10.dp)
-            ) {
-                Text("Show time At Location")
+            Row(modifier = Modifier.padding(start = 20.dp, top = 10.dp)) {
+                DropdownMenu(
+                    expanded = showCountries,
+                    onDismissRequest = { showCountries = false }
+                ) {
+                    countries().forEach { (name, zone, image) ->
+                        //Menu desplegable
+                        DropdownMenuItem(
+                            text = { Row(verticalAlignment = Alignment.CenterVertically) {
+                                Image(
+                                    painterResource(image),
+                                    modifier = Modifier.size(50.dp).padding(end = 10.dp),
+                                    contentDescription = "$name flag"
+                                )
+                                Text(name)
+                            } },
+                            onClick = {
+                                timeAtLocation = currentTimeAt(name, zone)
+                                showCountries = false
+                            }
+                        )
+                    }
+                }
+            }
+
+            Button(modifier = Modifier.padding(start = 20.dp, top = 10.dp),
+                onClick = { showCountries = !showCountries }) {
+                Text("Select Location")
             }
         }
     }
