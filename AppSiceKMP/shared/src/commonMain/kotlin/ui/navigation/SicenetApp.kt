@@ -122,9 +122,7 @@ fun SicenetApp(
             }
 
             //Carga academica
-            composable(
-                SICEScreen.Carga.name
-            ) {
+            composable(SICEScreen.Carga.name) {
                 var cargas = remember { emptyList<CargaAcademica>() }
                 LaunchedEffect(Unit) {
                     cargas = viewModel.cargaAcademica()
@@ -151,9 +149,7 @@ fun SicenetApp(
             }
 
             //Calificacion Final
-            composable(
-                SICEScreen.CalificacionFinal.name
-            ) {
+            composable(SICEScreen.CalificacionFinal.name) {
                 var calificacionesFinal = remember { emptyList<CalificacionFinal>() }
                 LaunchedEffect(Unit) {
                     calificacionesFinal = viewModel.calificacionFinal(1)
