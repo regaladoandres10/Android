@@ -1,4 +1,4 @@
-package presentation
+package ui.viewmodel
 
 sealed interface SNUiState {
 
