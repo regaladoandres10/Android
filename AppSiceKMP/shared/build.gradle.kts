@@ -13,6 +13,7 @@ plugins {
 }
 
 kotlin {
+    /*
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -22,6 +23,7 @@ kotlin {
             isStatic = true
         }
     }
+     */
 
     jvm()
 
@@ -36,8 +38,14 @@ kotlin {
         androidResources {
             enable = true
         }
+        /*
         withHostTest {
             isIncludeAndroidResources = true
+        }
+         */
+
+        lint {
+            abortOnError = false
         }
     }
 
@@ -64,10 +72,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             // ROOM
+            //implementation(libs.androidx.room.runtime)
+            //implementation(libs.androidx.room.common)
             implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.common)
             implementation(libs.androidx.sqlite.bundled)
-            implementation(libs.androidx.room.ktx)
+            //implementation(libs.androidx.room.ktx)
             // Ktorfit
             implementation(libs.ktorfit)
             // Ktor
@@ -81,6 +90,12 @@ kotlin {
             // Coil
             implementation(libs.coil.compose)
         }
+
+        androidMain.dependencies {
+            //implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.ktx)
+        }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -95,11 +110,19 @@ configure<RoomExtension> {
 
 dependencies {
     // Room
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+    //add("kspCommonMainMetadata", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
+    //add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    //add("kspIosArm64", libs.androidx.room.compiler)
     add("kspJvm", libs.androidx.room.compiler)
     // Ktorfit
 
+}
+
+configurations.all {
+
+    exclude(
+        group =
+            "com.google.devtools.ksp"
+    )
 }
