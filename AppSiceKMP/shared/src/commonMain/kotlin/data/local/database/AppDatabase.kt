@@ -1,3 +1,5 @@
+package data.local.database.data.local.database
+
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -30,9 +32,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun cargaDao(): CargaAcademicaDao
     abstract fun cardexDao(): CardexDao
     abstract fun calificacionUnidadDao() : CalificacionUnidadDao
-    abstract fun caificacionFinalDao(): CalificacionFinalDao
+    abstract fun calificacionFinalDao(): CalificacionFinalDao
 }
-@Suppress("KotlinNoActualForExpect")
-expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
-    override fun initialize(): AppDatabase
-}
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase>

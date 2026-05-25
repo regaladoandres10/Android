@@ -1,0 +1,475 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "38726dff820ab093689d76a39618866b",
+    "entities": [
+      {
+        "tableName": "usuario",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fechaReins` TEXT NOT NULL, `modEducativo` INTEGER NOT NULL, `adeudo` INTEGER NOT NULL, `urlFoto` TEXT NOT NULL, `adeudoDescripcion` TEXT NOT NULL, `inscrito` INTEGER NOT NULL, `estatus` TEXT NOT NULL, `semActual` INTEGER NOT NULL, `cdtosAcumulados` INTEGER NOT NULL, `cdtosActuales` INTEGER NOT NULL, `especialidad` TEXT NOT NULL, `carrera` TEXT NOT NULL, `lineamiento` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `matricula` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fechaReins",
+            "columnName": "fechaReins",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modEducativo",
+            "columnName": "modEducativo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "adeudo",
+            "columnName": "adeudo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "urlFoto",
+            "columnName": "urlFoto",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "adeudoDescripcion",
+            "columnName": "adeudoDescripcion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inscrito",
+            "columnName": "inscrito",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estatus",
+            "columnName": "estatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "semActual",
+            "columnName": "semActual",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cdtosAcumulados",
+            "columnName": "cdtosAcumulados",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cdtosActuales",
+            "columnName": "cdtosActuales",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "especialidad",
+            "columnName": "especialidad",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "carrera",
+            "columnName": "carrera",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineamiento",
+            "columnName": "lineamiento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matricula",
+            "columnName": "matricula",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "carga_academica",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`semipresencial` TEXT NOT NULL, `observaciones` TEXT NOT NULL, `docente` TEXT NOT NULL, `claveOficial` TEXT NOT NULL, `sabado` TEXT NOT NULL, `viernes` TEXT NOT NULL, `jueves` TEXT NOT NULL, `miercoles` TEXT NOT NULL, `martes` TEXT NOT NULL, `lunes` TEXT NOT NULL, `estadoMateria` TEXT NOT NULL, `creditosMateria` INTEGER NOT NULL, `materia` TEXT NOT NULL, `grupo` TEXT NOT NULL, PRIMARY KEY(`claveOficial`))",
+        "fields": [
+          {
+            "fieldPath": "semipresencial",
+            "columnName": "semipresencial",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observaciones",
+            "columnName": "observaciones",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "docente",
+            "columnName": "docente",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clvOficial",
+            "columnName": "claveOficial",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sabado",
+            "columnName": "sabado",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viernes",
+            "columnName": "viernes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "jueves",
+            "columnName": "jueves",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "miercoles",
+            "columnName": "miercoles",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "martes",
+            "columnName": "martes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lunes",
+            "columnName": "lunes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estadoMateria",
+            "columnName": "estadoMateria",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creditosMateria",
+            "columnName": "creditosMateria",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "materia",
+            "columnName": "materia",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "grupo",
+            "columnName": "grupo",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "claveOficial"
+          ]
+        }
+      },
+      {
+        "tableName": "cardex",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fecha_esperada` TEXT NOT NULL, `claveMateria` TEXT NOT NULL, `clvOfiMat` TEXT NOT NULL, `materia` TEXT NOT NULL, `creditos` INTEGER NOT NULL, `calificacion` INTEGER NOT NULL, `acred` TEXT NOT NULL, `semestre1` TEXT NOT NULL, `periodo1` TEXT NOT NULL, `a1` TEXT NOT NULL, `semestre2` TEXT NOT NULL, `periodo2` TEXT NOT NULL, `a2` TEXT NOT NULL, PRIMARY KEY(`claveMateria`))",
+        "fields": [
+          {
+            "fieldPath": "fecEsp",
+            "columnName": "fecha_esperada",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clvMat",
+            "columnName": "claveMateria",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clvOfiMat",
+            "columnName": "clvOfiMat",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "materia",
+            "columnName": "materia",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cdts",
+            "columnName": "creditos",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "calif",
+            "columnName": "calificacion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "acred",
+            "columnName": "acred",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "s1",
+            "columnName": "semestre1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "p1",
+            "columnName": "periodo1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "a1",
+            "columnName": "a1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "s2",
+            "columnName": "semestre2",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "p2",
+            "columnName": "periodo2",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "a2",
+            "columnName": "a2",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "claveMateria"
+          ]
+        }
+      },
+      {
+        "tableName": "calificacionUnidad",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `observaciones` TEXT NOT NULL, `Calificacion 13` TEXT NOT NULL, `Calificacion 12` TEXT NOT NULL, `Calificacion 11` TEXT NOT NULL, `Calificacion 10` TEXT NOT NULL, `Calificacion 9` TEXT NOT NULL, `Calificacion 8` TEXT NOT NULL, `Calificacion 7` TEXT NOT NULL, `Calificacion 6` TEXT NOT NULL, `Calificacion 5` TEXT NOT NULL, `Calificacion 4` TEXT NOT NULL, `Calificacion 3` TEXT NOT NULL, `Calificacion 2` TEXT NOT NULL, `Calificacion 1` TEXT NOT NULL, `unidadesActivas` TEXT NOT NULL, `materia` TEXT NOT NULL, `grupo` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observaciones",
+            "columnName": "observaciones",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c13",
+            "columnName": "Calificacion 13",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c12",
+            "columnName": "Calificacion 12",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c11",
+            "columnName": "Calificacion 11",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c10",
+            "columnName": "Calificacion 10",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c9",
+            "columnName": "Calificacion 9",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c8",
+            "columnName": "Calificacion 8",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c7",
+            "columnName": "Calificacion 7",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c6",
+            "columnName": "Calificacion 6",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c5",
+            "columnName": "Calificacion 5",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c4",
+            "columnName": "Calificacion 4",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c3",
+            "columnName": "Calificacion 3",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c2",
+            "columnName": "Calificacion 2",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "c1",
+            "columnName": "Calificacion 1",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unidadesActivas",
+            "columnName": "unidadesActivas",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "materia",
+            "columnName": "materia",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "grupo",
+            "columnName": "grupo",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "calificacion_final",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `calificacion` INTEGER NOT NULL, `acreditado` TEXT NOT NULL, `grupo` TEXT NOT NULL, `materia` TEXT NOT NULL, `observaciones` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "calif",
+            "columnName": "calificacion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "acred",
+            "columnName": "acreditado",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "grupo",
+            "columnName": "grupo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "materia",
+            "columnName": "materia",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observaciones",
+            "columnName": "observaciones",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '38726dff820ab093689d76a39618866b')"
+    ]
+  }
+}
