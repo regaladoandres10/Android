@@ -7,6 +7,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import java.util.*
 
@@ -24,6 +27,7 @@ fun HomeDestinationSection(
     ) -> Unit
 ) {
 
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     var address by remember { mutableStateOf("") }
@@ -53,40 +57,50 @@ fun HomeDestinationSection(
             modifier = Modifier.fillMaxWidth()
                 .padding(bottom = 80.dp),
             onClick = {
-                try {
-                    val geocoder =
-                        Geocoder(
-                            context,
-                            Locale.getDefault()
-                        )
+                scope.launch(Dispatchers.IO) {
 
-                    val result =
-                        geocoder
-                            .getFromLocationName(
-                                address,
-                                1
+                    try {
+                        val geocoder =
+                            Geocoder(
+                                context,
+                                Locale.getDefault()
                             )
 
-                    //Verificar si se encuentran las coordenadas
-                    val addressResult = result?.firstOrNull()
+                        val result =
+                            geocoder
+                                .getFromLocationName(
+                                    address,
+                                    1
+                                )
 
-                    if (addressResult != null) {
+                        //Verificar si se encuentran las coordenadas
+                        val addressResult = result?.firstOrNull()
 
-                        println("CASA -> ${addressResult.latitude}, ${addressResult.longitude}")
+                        if (addressResult != null) {
 
-                        onDestinationSelected(
-                            GeoPoint(
-                                addressResult.latitude,
-                                addressResult.longitude
-                            )
-                        )
-                    } else {
-                        println("NO ENCONTRO DIRECCION")
+                            withContext(Dispatchers.IO){
+                                println("CASA -> ${addressResult.latitude}, ${addressResult.longitude}")
+
+                                onDestinationSelected(
+                                    GeoPoint(
+                                        addressResult.latitude,
+                                        addressResult.longitude
+                                    )
+                                )
+                            }
+
+
+                        } else {
+                            println("NO ENCONTRO DIRECCION")
+                        }
+
+                    } catch (_: Exception) {
+
                     }
 
-                } catch (_: Exception) {
-
                 }
+
+
 
             }
 
