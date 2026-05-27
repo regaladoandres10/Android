@@ -3,11 +3,13 @@ package com.example.regresoacasa.ui.screen
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.compose.ui.platform.LocalContext
+import com.example.regresoacasa.ui.component.HomeDestinationSection
 import com.example.regresoacasa.ui.component.PermissionBox
 import com.google.android.gms.location.LocationServices
 import org.osmdroid.util.GeoPoint
@@ -56,6 +58,10 @@ fun MapContent() {
         )
     }
 
+    var homeLocation by remember {
+        mutableStateOf<GeoPoint?>(null)
+    }
+
     val client =
         remember {
             LocationServices
@@ -66,12 +72,9 @@ fun MapContent() {
 
     LaunchedEffect(Unit) {
 
-        val result =
-            client
-                .lastLocation
+        val result = client.lastLocation
 
         result.addOnSuccessListener {
-
             if (it != null) {
 
                 location =
@@ -91,13 +94,36 @@ fun MapContent() {
             zoom = 16.0
         }
 
-    OpenStreetMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraState = cameraState
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Marker(
-            state = rememberMarkerState( geoPoint = location ),
-            title = "Mi ubicación"
-        )
+
+        HomeDestinationSection {
+            homeLocation = it
+            //Mover automaticamente el mapa
+            cameraState.geoPoint = it
+            cameraState.zoom = 17.0
+        }
+
+        OpenStreetMap(
+            modifier = Modifier
+                .weight(0.2f),
+            cameraState = cameraState
+        ) {
+
+            Marker(
+                state = rememberMarkerState(geoPoint = location),
+                title = "Estoy aquí"
+            )
+
+            homeLocation?.let { home ->
+                Marker(
+                    state = rememberMarkerState(geoPoint = home),
+                    title = "Mi casa"
+                )
+
+            }
+        }
+
     }
 }
