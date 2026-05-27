@@ -21,6 +21,13 @@ import com.utsman.osmandcompose.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/*
+   ubicacion uriangato
+            GeoPoint(
+                20.1371,
+                -101.1779
+ */
+
 @Composable
 fun MapScreen() {
 
@@ -47,12 +54,8 @@ fun MapContent() {
 
     //Localizacion actual o por defecto
     var location by remember {
-        mutableStateOf(
-            //ubicacion uriangato
-            GeoPoint(
-                20.1371,
-                -101.1779
-            )
+        mutableStateOf<GeoPoint?>(
+            null
         )
     }
 
@@ -80,7 +83,10 @@ fun MapContent() {
 
     val cameraState =
         rememberCameraState {
-            geoPoint = location
+            geoPoint = GeoPoint(
+                20.5888,
+                -100.3899
+            )
             zoom = 16.0
         }
 
@@ -102,7 +108,10 @@ fun MapContent() {
                         it.longitude
                     )
 
-                cameraState.geoPoint = location
+                cameraState.geoPoint = GeoPoint(
+                    it.latitude,
+                    it.longitude
+                )
                 cameraState.zoom = 16.0
 
                 println("CURRENT LOCATION -> ${it.latitude}, ${it.longitude}")
@@ -111,8 +120,6 @@ fun MapContent() {
 
         }
     }
-
-
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -132,7 +139,7 @@ fun MapContent() {
                             .api
                             .getDirections(
                                 profile = "driving-car",
-                                start = "${location.longitude}," + "${location.latitude}",
+                                start = "${location?.longitude}," + "${location?.latitude}",
 
                                 end = "${it.longitude}," + "${it.latitude}"
                             )
@@ -174,10 +181,18 @@ fun MapContent() {
             cameraState = cameraState
         ) {
 
-            Marker(
-                state = rememberMarkerState(geoPoint = location),
-                title = "Estoy aquí"
-            )
+            //Ubicacion actual en el marker
+            location?.let { currentLocation ->
+                Marker(
+                    state =
+                        rememberMarkerState(
+                            geoPoint =
+                                currentLocation
+                        ),
+                    title = "Ubicación actual"
+                )
+
+            }
 
             homeLocation?.let { home ->
                 Marker(
