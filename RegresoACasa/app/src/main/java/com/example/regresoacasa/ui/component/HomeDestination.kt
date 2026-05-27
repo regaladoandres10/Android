@@ -16,7 +16,14 @@ import java.util.*
 /*
  Localizaciones de prueba:
  Av Tecnológico, Querétaro, México
+
  Av Tecnológico 123, Santiago de Querétaro, Querétaro, México
+
+ [Calle] [Número], [Colonia], [Ciudad], [Estado], México
+ Leovino Zavala 15, Uriangato, Guanajuato, México
+ 5 de Mayo 120, Centro, Uriangato, Guanajuato, México
+ Insurgentes 45, Uriangato, GTO, México
+ Centro, Uriangato, Guanajuato
 
  */
 

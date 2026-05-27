@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.compose.ui.platform.LocalContext
 import com.example.regresoacasa.data.network.RouteService
+import com.google.android.gms.location.Priority
 import com.example.regresoacasa.ui.component.HomeDestinationSection
 import com.example.regresoacasa.ui.component.PermissionBox
 import com.google.android.gms.location.LocationServices
@@ -24,27 +25,17 @@ import kotlinx.coroutines.withContext
 fun MapScreen() {
 
     PermissionBox(
-
         permissions = listOf(
-
             Manifest.permission.ACCESS_COARSE_LOCATION,
-
             Manifest.permission.ACCESS_FINE_LOCATION
-
         ),
 
         requiredPermissions = listOf(
-
             Manifest.permission.ACCESS_COARSE_LOCATION
-
         )
-
     ) {
-
         MapContent()
-
     }
-
 }
 
 
@@ -57,9 +48,10 @@ fun MapContent() {
     //Localizacion actual o por defecto
     var location by remember {
         mutableStateOf(
+            //ubicacion uriangato
             GeoPoint(
-                20.5888,
-                -100.3899
+                20.1371,
+                -101.1779
             )
         )
     }
@@ -86,29 +78,41 @@ fun MapContent() {
                 )
         }
 
+    val cameraState =
+        rememberCameraState {
+            geoPoint = location
+            zoom = 16.0
+        }
+
     LaunchedEffect(Unit) {
 
-        val result = client.lastLocation
+        //Ubicación real
+        val result =
+
+            client.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                null
+            )
 
         result.addOnSuccessListener {
             if (it != null) {
-
                 location =
                     GeoPoint(
                         it.latitude,
                         it.longitude
                     )
 
+                cameraState.geoPoint = location
+                cameraState.zoom = 16.0
+
+                println("CURRENT LOCATION -> ${it.latitude}, ${it.longitude}")
+
             }
 
         }
     }
 
-    val cameraState =
-        rememberCameraState {
-            geoPoint = location
-            zoom = 16.0
-        }
+
 
     Column(
         modifier = Modifier.fillMaxSize()
