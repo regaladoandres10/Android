@@ -2,9 +2,10 @@ package ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.local.database.data.repository.SNRepository
 import data.remote.model.ProfileStudent
 
-import data.repository.SNRepository
+//import data.repository.SNRepository
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,29 +34,45 @@ class SNViewModel(
     /*
      Guarda el perfil obtenido.
      Empieza en null porque aún no se obtiene.
-    */
+
     private val _profile = MutableStateFlow<ProfileStudent?>(null)
 
     /*
      Exponer perfil solo lectura.
     */
     val profile = _profile.asStateFlow()
+     */
+    private val _loginResult =
+        MutableStateFlow<String?>(null)
 
-    fun accesoSN(matricula: String, password: String) {
+    val loginResult: StateFlow<String?> =
+        _loginResult
+
+    fun login(matricula: String, password: String) {
 
         viewModelScope.launch {
             try {
                 _uiState.value = SNUiState.Loading
-                /*
-                 Ejecuta login.
 
-                 La sesión se guarda automáticamente mediante SessionCookieStorage.
-                */
-                repository.acceso(matricula, password)
+                val response =
+                    repository.acceso(
+                        matricula,
+                        password
+                    )
+
+                if (response.contains("true")) {
+
+                    _uiState.value = SNUiState.Success
+
+                } else {
+
+                    _uiState.value =
+                        SNUiState.Error("Credenciales incorrectas")
+                }
 
                 /*
                  Obtener perfil usando la sesión.
-                */
+
                 val student = repository.profile()
 
                 //Guardar perfil.
@@ -63,16 +80,24 @@ class SNViewModel(
 
                 //Actualizar estado y UI
                 _uiState.value = SNUiState.Success
+                 */
 
             } catch (e: Exception) {
+
+                _loginResult.value =
+                    e.message ?: "Error"
+
+                /*
                 _uiState.value =
                     SNUiState.Error(
                         e.message ?: "Error desconocido"
                     )
+                 */
             }
         }
     }
 
+    /*
     //Recargar perfil sin iniciar sesión.
     fun loadProfile() {
         viewModelScope.launch {
@@ -98,4 +123,5 @@ class SNViewModel(
 
     //Obtener calificación final.
     suspend fun calificacionFinal(mod: Int) = repository.getCaliFinal(mod)
+     */
 }

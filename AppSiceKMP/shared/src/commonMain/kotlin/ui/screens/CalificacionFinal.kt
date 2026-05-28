@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.remote.model.CalificacionFinal
+//import data.remote.model.CalificacionFinal
 import kotlinx.serialization.InternalSerializationApi
 
 @Composable

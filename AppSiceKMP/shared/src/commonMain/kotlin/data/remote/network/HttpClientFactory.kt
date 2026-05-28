@@ -1,38 +1,53 @@
-package data.remote.network
+package data.local.database.data.remote.network
 
-//Cliente principal de Ktor
+import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
-
-//Plugin para manejo automatico de cookies
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
-//Interfaz para guardar las cookies
-import session.SessionCookieStorage
-
-/**
- *
- * ¿Qué hace el archivo?
- * Cada petición POST /ws/wsalumnos.asmx
- * Ktor hace:
- * 1. Buscar la cookie
- * 2. Agregar la cookie
- * 3. Enviar la peticion
- * 4. Guardar nuevas cookies
- *
- */
-
-//Fabrica para crear el cliente HTTPCliente
 object HttpClientFactory {
-
     fun create(): HttpClient {
+
         return HttpClient {
-            install(HttpCookies) {
-                storage =
-                    SessionCookieStorage()
+
+            install(Logging) {
+                level = LogLevel.ALL
             }
 
-        }
+            install(HttpCookies) {
+                storage = AcceptAllCookiesStorage()
+            }
 
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+
+            defaultRequest {
+                contentType(ContentType.Text.Xml)
+                headers.append(
+                    "Accept",
+                    "text/xml"
+                )
+            }
+        }
     }
 
+    fun createKtorfit( client: HttpClient): Ktorfit {
+        return Ktorfit.Builder()
+            .baseUrl("https://sicenet.surguanajuato.tecnm.mx/")
+            .httpClient(client)
+            .build()
+    }
 }

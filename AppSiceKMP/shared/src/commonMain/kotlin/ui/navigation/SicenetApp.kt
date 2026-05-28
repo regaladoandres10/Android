@@ -8,12 +8,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
-import data.remote.model.CalificacionFinal
-import data.remote.model.CalificacionUnidad
-import data.remote.model.Cardex
-import data.remote.model.CargaAcademica
+import data.local.database.data.repository.SNRepository
 
-import data.repository.SNRepository
 import kotlinx.serialization.InternalSerializationApi
 import ui.screens.MenuScreen
 import ui.screens.ScreenCalificacionFinal
@@ -42,9 +38,12 @@ fun SicenetApp(
         .uiState
         .collectAsState()
 
+    /*
     val profile by viewModel
         .profile
         .collectAsState()
+
+     */
 
     val scope = rememberCoroutineScope()
 
@@ -92,7 +91,7 @@ fun SicenetApp(
 
                 MenuScreen(
                     onPerfilClick = {
-                        viewModel.loadProfile()
+                        //viewModel.loadProfile()
                         navController.navigate(SICEScreen.Profile.name)
                     },
 
@@ -115,12 +114,16 @@ fun SicenetApp(
             }
 
             //PERFIL
+            /*
             composable(route = SICEScreen.Profile.name) {
                 profile?.let {
                     ScreenProfile(it)
                 }
             }
 
+             */
+
+            /*
             //Carga academica
             composable(SICEScreen.Carga.name) {
                 var cargas = remember { emptyList<CargaAcademica>() }
@@ -156,6 +159,8 @@ fun SicenetApp(
                 }
                 ScreenCalificacionFinal(calificacionesFinal)
             }
+
+             */
         }
     }
 }

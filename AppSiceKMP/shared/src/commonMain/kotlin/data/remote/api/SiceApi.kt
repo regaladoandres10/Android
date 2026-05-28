@@ -1,0 +1,16 @@
+package data.local.database.data.remote.api
+
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.Headers
+import de.jensklingenberg.ktorfit.http.POST
+
+interface SiceApi {
+    /*
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/accesoLogin"
+    )
+     */
+    @POST("ws/wsalumnos.asmx")
+    suspend fun accesoLogin( @Body body: String ): String
+}

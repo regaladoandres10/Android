@@ -20,40 +20,32 @@ import io.ktor.http.Url
 
 class SessionCookieStorage : CookiesStorage {
 
-    //Lista interna de ktor para guardar las cookies
     private val storage = mutableListOf<Cookie>()
 
-    //Se ejecuta cuando el servidor respondo con Set-Cookie
-    override suspend fun addCookie(
-        requestUrl: Url,
-        cookie: Cookie
-    ) {
-
-        //Elimina todas las cookies con el mismo nombre
-        storage.removeAll {
-            it.name ==
-                    cookie.name
+    init {
+        // Restaurar las cookies desde la memoria al iniciar
+        SessionManager.getCookies().forEach { cookieString ->
+            val parts = cookieString.split("=", limit = 2)
+            if (parts.size == 2) {
+                storage.add(Cookie(name = parts[0], value = parts[1]))
+            }
         }
+    }
 
-        //Agrega la nueva cookie
+    override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
+        storage.removeAll { it.name == cookie.name }
         storage.add(cookie)
 
-        //Guarda las cookies en el archivo de sesión
         SessionManager.saveCookies(
-            storage.map {
-                "${it.name}=${it.value}"
-            }
+            storage.map { "${it.name}=${it.value}" }
         )
     }
 
-    //Se ejecuta cuando el cliente hace una petición
-    override suspend fun get(
-        requestUrl: Url
-    ): List<Cookie> { return storage }
+    override suspend fun get(requestUrl: Url): List<Cookie> {
+        return storage
+    }
 
-    //Limpiar la memoria
     override fun close() {
         storage.clear()
     }
-
 }

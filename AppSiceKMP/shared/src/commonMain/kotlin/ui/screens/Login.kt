@@ -33,8 +33,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
-import ui.viewmodel.SNViewModel
+//import ui.viewmodel.SNViewModel
 import ui.viewmodel.SNUiState
+import ui.viewmodel.SNViewModel
 
 @Composable
 fun ScreenLogin(
@@ -45,10 +46,10 @@ fun ScreenLogin(
 ) {
 
     // Matrícula
-    var matricula by rememberSaveable { mutableStateOf("") }
+    var matricula by rememberSaveable { mutableStateOf("S21120230") }
 
     // Contraseña
-    var password by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("Tc4_b2=") }
 
     // Mostrar contraseña
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -125,7 +126,7 @@ fun ScreenLogin(
         //Botón login
         Button(
             onClick = {
-                viewModel.accesoSN(
+                viewModel.login(
                     matricula,
                     password
                 )
@@ -144,10 +145,12 @@ fun ScreenLogin(
                 CircularProgressIndicator()
             }
             is SNUiState.Error -> {
-                Text(uiState.message)
+                Text(
+                    (uiState as SNUiState.Error).message
+                )
             }
             SNUiState.Success -> {
-                Text("Sesión iniciada")
+                Text("Login correcto")
             }
         }
     }

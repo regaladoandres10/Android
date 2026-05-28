@@ -6,9 +6,9 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ktorfit)
 }
 
@@ -24,8 +24,6 @@ kotlin {
         }
     }
      */
-
-    jvm()
 
     androidLibrary {
         namespace = "com.example.appsicekmp.shared"
@@ -49,16 +47,28 @@ kotlin {
         }
     }
 
+    //Destktop
+
+
     sourceSets.all {
         languageSettings.optIn(
             "androidx.room.RoomDatabaseConstructor"
         )
     }
 
+    jvm("desktop") {
+        compilations.all {
+            compilerOptions.configure {
+                jvmTarget.set(JvmTarget.JVM_11)
+            }
+        }
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.androidx.room.ktx)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -80,25 +90,35 @@ kotlin {
             // Ktorfit
             implementation(libs.ktorfit)
             // Ktor
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.serialization.xml)
+            //implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.serialization.kotlinx.json)
             // Serializaation
             implementation(libs.kotlinx.serialization.json)
             // Navigation
             implementation(libs.androidx.navigation.compose)
             // Coil
             implementation(libs.coil.compose)
+
         }
 
-        androidMain.dependencies {
-            //implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.ktx)
+        val desktopMain by getting {
+            dependencies {
+                //Aquí irán tus dependencias de escritorio
+                implementation(libs.ktor.client.cio)
+            }
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
+
     }
 }
 
@@ -114,15 +134,14 @@ dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     //add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     //add("kspIosArm64", libs.androidx.room.compiler)
-    add("kspJvm", libs.androidx.room.compiler)
+    add("kspDesktop", libs.androidx.room.compiler)
+    add("kspCommonMainMetadata", libs.ktorfit.ksp)
     // Ktorfit
 
 }
 
 configurations.all {
-
     exclude(
-        group =
-            "com.google.devtools.ksp"
+        group = "com.google.devtools.ksp"
     )
 }
