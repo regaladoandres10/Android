@@ -37,6 +37,7 @@ fun HomeDestinationSection(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    //Variable de estado para la direccion
     var address by remember { mutableStateOf("") }
 
     Column(
@@ -67,12 +68,14 @@ fun HomeDestinationSection(
                 scope.launch(Dispatchers.IO) {
 
                     try {
+                        //Creamos instancia de geocoder
                         val geocoder =
                             Geocoder(
                                 context,
                                 Locale.getDefault()
                             )
 
+                        //Convierte la direccion en coordenadas
                         val result =
                             geocoder
                                 .getFromLocationName(
@@ -80,7 +83,7 @@ fun HomeDestinationSection(
                                     1
                                 )
 
-                        //Verificar si se encuentran las coordenadas
+                        //Obtenemos el primer resultado encontrado
                         val addressResult = result?.firstOrNull()
 
                         if (addressResult != null) {
@@ -88,6 +91,12 @@ fun HomeDestinationSection(
                             withContext(Dispatchers.IO){
                                 println("CASA -> ${addressResult.latitude}, ${addressResult.longitude}")
 
+                                //Enviamos las coordenadas encontradas
+                                /*
+                                    GeoPoint:
+                                    latitude
+                                    longitude
+                                 */
                                 onDestinationSelected(
                                     GeoPoint(
                                         addressResult.latitude,
