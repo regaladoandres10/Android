@@ -195,8 +195,17 @@ fun MapContent() {
             }
 
             homeLocation?.let { home ->
+                val homeMarkerState =
+                    rememberMarkerState()
+
+                LaunchedEffect(home) {
+                    //Actualizar el marker cada recomponsición
+                    homeMarkerState.geoPoint =
+                        home
+                }
+
                 Marker(
-                    state = rememberMarkerState(geoPoint = home),
+                    state = homeMarkerState,
                     title = "Mi casa"
                 )
 
