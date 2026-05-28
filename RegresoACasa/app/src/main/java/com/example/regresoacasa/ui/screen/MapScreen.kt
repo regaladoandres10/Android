@@ -45,14 +45,14 @@ fun MapScreen() {
     }
 }
 
-
+//Verificar que detecete el GPS sin verificar permisos
 @SuppressLint("MissingPermission")
 @Composable
 fun MapContent() {
 
     val context = LocalContext.current
 
-    //Localizacion actual o por defecto
+    //Ubicacion actual o por defecto
     var location by remember {
         mutableStateOf<GeoPoint?>(
             null
@@ -64,7 +64,7 @@ fun MapContent() {
         mutableStateOf<GeoPoint?>(null)
     }
 
-    //Estada para la ruta
+    //Lista de puntos de la ruta
     var points by remember {
 
         mutableStateOf(
@@ -73,6 +73,7 @@ fun MapContent() {
 
     }
 
+    //Cliente de GPS de google
     val client =
         remember {
             LocationServices
@@ -81,6 +82,7 @@ fun MapContent() {
                 )
         }
 
+    //Estado de la camara del mapa
     val cameraState =
         rememberCameraState {
             geoPoint = GeoPoint(
@@ -92,22 +94,25 @@ fun MapContent() {
 
     LaunchedEffect(Unit) {
 
-        //Ubicación real
+        //Obtener la ubicacion actual
         val result =
-
             client.getCurrentLocation(
+                //Alta precision de ubicacion
                 Priority.PRIORITY_HIGH_ACCURACY,
                 null
             )
 
         result.addOnSuccessListener {
             if (it != null) {
+                //Guardar la localizacion
                 location =
+                    //Convierte en coordenadas a GeoPoint
                     GeoPoint(
                         it.latitude,
                         it.longitude
                     )
 
+                //Mover la camara
                 cameraState.geoPoint = GeoPoint(
                     it.latitude,
                     it.longitude
@@ -126,32 +131,43 @@ fun MapContent() {
     ) {
         val scope = rememberCoroutineScope()
 
+        //Buscador de la direccion
         HomeDestinationSection {
+            //Guardar la ubicacio de la casa
             homeLocation = it
+            //Mover mapa a la direccion
             cameraState.geoPoint = it
+            //Aleja el zoom
             cameraState.zoom = 15.0
 
             scope.launch(Dispatchers.IO) {
 
                 try {
+                    //Peticion a OpenRouterService
                     val result =
                         RouteService
                             .api
                             .getDirections(
+                                //Rutas para autos
                                 profile = "driving-car",
+                                //Ubicacion actual
                                 start = "${location?.longitude}," + "${location?.latitude}",
-
+                                //Destino (direccion destino)
                                 end = "${it.longitude}," + "${it.latitude}"
                             )
 
                     println("Result: ${result}")
                     println( "Result size:  ${result.features.size}")
                     points =
+                        //Respuesta de GeoJSON
                         result
                             .features
+                            //Ruta encontrada
                             .first()
+                            //Lista de coordenadas
                             .geometry
                             .coordinates
+                            //Transformamos en coordenadas
                             .map {
                                 GeoPoint(
                                     it[1],
@@ -175,16 +191,18 @@ fun MapContent() {
 
         }
 
+        //Mapa
         OpenStreetMap(
             modifier = Modifier
                 .weight(0.2f),
             cameraState = cameraState
         ) {
 
-            //Ubicacion del dispositivo
+            //Ubicacion del dispositivo con el marker
             location?.let { currentLocation ->
                 val currentMarkerState =
                     rememberMarkerState()
+                //Actualizamos el marker con la ubicacion actual
                 LaunchedEffect(currentLocation) {
                     currentMarkerState.geoPoint = currentLocation
                 }
@@ -194,15 +212,14 @@ fun MapContent() {
                 )
             }
 
-            //Ubicacion de la direccion de la casa
+            //Ubicacion de la direccion de la casa con el marker
             homeLocation?.let { home ->
                 val homeMarkerState =
                     rememberMarkerState()
 
+                //Actualizar el marker cada recomponsición
                 LaunchedEffect(home) {
-                    //Actualizar el marker cada recomponsición
-                    homeMarkerState.geoPoint =
-                        home
+                    homeMarkerState.geoPoint = home
                 }
 
                 Marker(
