@@ -54,7 +54,7 @@ fun HomeDestinationSection(
             value = address,
             onValueChange = { address = it },
 
-            label = { Text("Dirección de tu casa") },
+            label = { Text("Calle, Ciudad, Estado, Pais") },
             modifier = Modifier.fillMaxWidth()
         )
 

@@ -181,19 +181,20 @@ fun MapContent() {
             cameraState = cameraState
         ) {
 
-            //Ubicacion actual en el marker
+            //Ubicacion del dispositivo
             location?.let { currentLocation ->
+                val currentMarkerState =
+                    rememberMarkerState()
+                LaunchedEffect(currentLocation) {
+                    currentMarkerState.geoPoint = currentLocation
+                }
                 Marker(
-                    state =
-                        rememberMarkerState(
-                            geoPoint =
-                                currentLocation
-                        ),
+                    state = currentMarkerState,
                     title = "Ubicación actual"
                 )
-
             }
 
+            //Ubicacion de la direccion de la casa
             homeLocation?.let { home ->
                 val homeMarkerState =
                     rememberMarkerState()
