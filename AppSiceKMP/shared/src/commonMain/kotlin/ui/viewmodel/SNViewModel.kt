@@ -34,14 +34,12 @@ class SNViewModel(
     /*
      Guarda el perfil obtenido.
      Empieza en null porque aún no se obtiene.
+     */
 
     private val _profile = MutableStateFlow<ProfileStudent?>(null)
-
-    /*
-     Exponer perfil solo lectura.
-    */
+    //Exponer perfil solo lectura.
     val profile = _profile.asStateFlow()
-     */
+
     private val _loginResult =
         MutableStateFlow<String?>(null)
 
@@ -61,11 +59,8 @@ class SNViewModel(
                     )
 
                 if (response.contains("true")) {
-
                     _uiState.value = SNUiState.Success
-
                 } else {
-
                     _uiState.value =
                         SNUiState.Error("Credenciales incorrectas")
                 }
@@ -97,18 +92,30 @@ class SNViewModel(
         }
     }
 
-    /*
+
     //Recargar perfil sin iniciar sesión.
     fun loadProfile() {
         viewModelScope.launch {
             try {
-                _profile.value = repository.profile()
-            } catch (_: Exception) {
 
+                val student =
+                repository.profile()
+
+                _profile.value = student
+
+                println("NOMBRE:")
+                println(student.nombre)
+
+                println("MATRICULA:")
+                println(student.matricula)
+
+            } catch (e: Exception) {
+                println(e.message)
             }
         }
     }
 
+    /*
     //Obtener carga académica.
     suspend fun cargaAcademica() = repository.getCargaAcademica()
 

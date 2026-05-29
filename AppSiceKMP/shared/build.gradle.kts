@@ -74,6 +74,7 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
+            implementation(libs.material.icons.extended)
             // Extension de iconos
             //implementation(libs.compose.material.icons.extended)
             implementation(libs.compose.ui)
@@ -105,6 +106,7 @@ kotlin {
             // Coil
             implementation(libs.coil.compose)
 
+
         }
 
         val desktopMain by getting {
@@ -117,7 +119,6 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-
 
     }
 }

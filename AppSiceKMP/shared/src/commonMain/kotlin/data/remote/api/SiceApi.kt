@@ -13,4 +13,13 @@ interface SiceApi {
      */
     @POST("ws/wsalumnos.asmx")
     suspend fun accesoLogin( @Body body: String ): String
+
+    /*
+    @Headers(
+        "Content-Type: text/xml; charset=utf-8",
+        "SOAPAction: http://tempuri.org/getAlumnoAcademicoWithLineamiento"
+    )
+     */
+    @POST("ws/wsalumnos.asmx")
+    suspend fun profile( @Body body: String ): String
 }

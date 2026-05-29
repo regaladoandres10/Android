@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 //import androidx.compose.material.icons.Icons
 //import androidx.compose.material.icons.filled.Visibility
@@ -46,10 +49,10 @@ fun ScreenLogin(
 ) {
 
     // Matrícula
-    var matricula by rememberSaveable { mutableStateOf("S21120230") }
+    var matricula by rememberSaveable { mutableStateOf("") }
 
     // Contraseña
-    var password by rememberSaveable { mutableStateOf("Tc4_b2=") }
+    var password by rememberSaveable { mutableStateOf("") }
 
     // Mostrar contraseña
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -96,14 +99,12 @@ fun ScreenLogin(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
             ),
-
             trailingIcon = {
                 IconButton(
                     onClick = {
                         passwordVisible = !passwordVisible
                     }
                 ) {
-                    /*
                     Icon(
                         imageVector =
                             if (passwordVisible) {
@@ -113,8 +114,6 @@ fun ScreenLogin(
                             },
                         contentDescription = null
                     )
-
-                     */
                 }
             },
 

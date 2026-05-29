@@ -4,29 +4,30 @@ package ui.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import data.local.database.data.repository.SNRepository
-
 import kotlinx.serialization.InternalSerializationApi
-import ui.screens.MenuScreen
-import ui.screens.ScreenCalificacionFinal
-import ui.screens.ScreenCalificacionUnidad
-import ui.screens.ScreenCardex
-import ui.screens.ScreenCargaAcademica
-import ui.screens.ScreenLogin
-import ui.screens.ScreenProfile
-
-//import ui.screens.*
+import org.jetbrains.compose.resources.stringResource
+import ui.screens.*
 import ui.viewmodel.*
 
 @Composable
 fun SicenetApp(
     repository: SNRepository
 ) {
-
     // Controlador de navegación
     val navController = rememberNavController()
 
@@ -38,45 +39,46 @@ fun SicenetApp(
         .uiState
         .collectAsState()
 
-    /*
     val profile by viewModel
         .profile
         .collectAsState()
 
-     */
-
     val scope = rememberCoroutineScope()
 
     // Ruta actual
-    val backStack by navController
-        .currentBackStackEntryAsState()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = SICEScreen.valueOf(
+        backStackEntry?.destination?.route ?: SICEScreen.Profile.name
+    )
 
-    val currentScreen = backStack
-            ?.destination
-            ?.route
-            ?: SICEScreen.Login.name
-
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        topBar ={
+            TopAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) { padding ->
 
         NavHost(
             navController = navController,
-            startDestination = SICEScreen.Login.name,
+            startDestination = SICEScreen.LogIn.name,
             modifier = Modifier.padding(padding)
         ) {
 
             //LOGIN
-            composable(
-                route = SICEScreen.Login.name
-            ) {
+            composable(route = SICEScreen.LogIn.name) {
 
                 ScreenLogin(
                     viewModel = viewModel,
                     uiState = uiState,
                     onLoginSuccess = {
                         navController.navigate(SICEScreen.Menu.name) {
-                            popUpTo(SICEScreen.Login.name) {
+                            popUpTo(SICEScreen.LogIn.name) {
                                 inclusive = true
                             }
                         }
@@ -85,13 +87,10 @@ fun SicenetApp(
             }
 
             //MENÚ
-            composable(
-                route = SICEScreen.Menu.name
-            ) {
-
+            composable(route = SICEScreen.Menu.name) {
                 MenuScreen(
                     onPerfilClick = {
-                        //viewModel.loadProfile()
+                        viewModel.loadProfile()
                         navController.navigate(SICEScreen.Profile.name)
                     },
 
@@ -114,14 +113,14 @@ fun SicenetApp(
             }
 
             //PERFIL
-            /*
+
             composable(route = SICEScreen.Profile.name) {
-                profile?.let {
-                    ScreenProfile(it)
+                if (profile == null) {
+                    CircularProgressIndicator()
+                } else {
+                    ScreenProfile(profile!!)
                 }
             }
-
-             */
 
             /*
             //Carga academica
@@ -163,4 +162,34 @@ fun SicenetApp(
              */
         }
     }
+}
+
+@Composable
+fun TopAppBar(
+    currentScreen: SICEScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier
+) {
+    CenterAlignedTopAppBar(
+        scrollBehavior = scrollBehavior,
+        title = {
+            Text(
+                text = stringResource(currentScreen.title),
+                style = MaterialTheme.typography.headlineSmall,
+            )
+        },
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back Screen"
+                    )
+                }
+            }
+        }
+    )
 }

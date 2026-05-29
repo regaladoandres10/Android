@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.compose.uiToolingPreview)
     implementation(libs.ktor.ktor.client.core)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.material.icons.extended)
     debugImplementation(libs.compose.uiTooling)
 }
 
