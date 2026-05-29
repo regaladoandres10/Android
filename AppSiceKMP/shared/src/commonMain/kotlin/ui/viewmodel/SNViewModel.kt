@@ -3,6 +3,8 @@ package ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.local.database.data.repository.SNRepository
+import data.remote.model.CalificacionUnidad
+import data.remote.model.Cardex
 import data.remote.model.CargaAcademica
 import data.remote.model.ProfileStudent
 
@@ -52,6 +54,19 @@ class SNViewModel(
 
     val cargaAcademica =
         _cargaAcademica.asStateFlow()
+
+
+    private val _cardex =
+        MutableStateFlow<List<Cardex>>(emptyList())
+
+    val cardex =
+        _cardex.asStateFlow()
+
+    private val _caliUnidad =
+        MutableStateFlow<List<CalificacionUnidad>>(emptyList())
+
+    val caliUnidad =
+        _caliUnidad.asStateFlow()
 
     fun login(matricula: String, password: String) {
 
@@ -138,17 +153,38 @@ class SNViewModel(
         }
     }
 
-    /*
-
     //Obtener cardex.
-    suspend fun cardex(lineamiento: Int) =
-        repository.getCargaCardex(
-            lineamiento
-        )
+    fun loadCardex() {
+        viewModelScope.launch {
+            try {
+                val cardex =
+                    repository.getCardex(3)
+                _cardex.value = cardex
+                println("CARDEX:")
+                println(cardex.size)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+    }
+
 
     //Obtener calificaciones por unidad.
-    suspend fun calificacionUnidad() = repository.getCaliPorUnidad()
+    fun loadCaliUnidad() {
+        viewModelScope.launch {
+            try {
+                val caliUnidad =
+                    repository.getCaliPorUnidad()
+                _caliUnidad.value = caliUnidad
+                println("CaliUnidad:")
+                println(caliUnidad.size)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+    }
 
+    /*
     //Obtener calificación final.
     suspend fun calificacionFinal(mod: Int) = repository.getCaliFinal(mod)
      */

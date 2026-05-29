@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import data.local.database.data.repository.SNRepository
+import data.remote.model.Cardex
 import data.remote.model.CargaAcademica
 import kotlinx.serialization.InternalSerializationApi
 import org.jetbrains.compose.resources.stringResource
@@ -46,6 +47,14 @@ fun SicenetApp(
 
     val cargas by viewModel
         .cargaAcademica
+        .collectAsState()
+
+    val cardex by viewModel
+        .cardex
+        .collectAsState()
+
+    val caliUnidad by viewModel
+        .caliUnidad
         .collectAsState()
 
     val scope = rememberCoroutineScope()
@@ -135,24 +144,25 @@ fun SicenetApp(
                 }
                 ScreenCargaAcademica(cargas)
             }
-            /*
-                        //Cardex
-                        composable(SICEScreen.Cardex.name) {
-                            var cardex = remember { emptyList<Cardex>() }
-                            LaunchedEffect(Unit) {
-                                cardex = viewModel.cardex(1)
-                            }
-                            ScreenCardex(cardex)
-                        }
+            //Cardex
+            composable(SICEScreen.Cardex.name) {
+                LaunchedEffect(Unit) {
+                    viewModel.loadCardex()
+                }
+                ScreenCardex(cardex)
+            }
+            //Calificacion Unidad
+            composable(SICEScreen.CalificacionUnidad.name) {
+                LaunchedEffect(Unit) {
+                    viewModel.loadCaliUnidad()
+                }
+                ScreenCalificacionUnidad(caliUnidad)
+            }
 
-                        //Calificacion Unidad
-                        composable(SICEScreen.CalificacionUnidad.name) {
-                            var calificaciones = remember { emptyList<CalificacionUnidad>() }
-                            LaunchedEffect(Unit) {
-                                calificaciones = viewModel.calificacionUnidad()
-                            }
-                            ScreenCalificacionUnidad(calificaciones)
-                        }
+            /*
+
+
+
 
                         //Calificacion Final
                         composable(SICEScreen.CalificacionFinal.name) {
