@@ -22,4 +22,7 @@ interface SiceApi {
      */
     @POST("ws/wsalumnos.asmx")
     suspend fun profile( @Body body: String ): String
+
+    @POST("ws/wsalumnos.asmx")
+    suspend fun cargaAcademica( @Body body: String ): String
 }

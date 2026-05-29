@@ -3,6 +3,7 @@ package ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.local.database.data.repository.SNRepository
+import data.remote.model.CargaAcademica
 import data.remote.model.ProfileStudent
 
 //import data.repository.SNRepository
@@ -45,6 +46,12 @@ class SNViewModel(
 
     val loginResult: StateFlow<String?> =
         _loginResult
+
+    private val _cargaAcademica =
+        MutableStateFlow<List<CargaAcademica>>(emptyList())
+
+    val cargaAcademica =
+        _cargaAcademica.asStateFlow()
 
     fun login(matricula: String, password: String) {
 
@@ -115,9 +122,23 @@ class SNViewModel(
         }
     }
 
-    /*
+
     //Obtener carga académica.
-    suspend fun cargaAcademica() = repository.getCargaAcademica()
+    fun loadCargaAcademica() {
+        viewModelScope.launch {
+            try {
+                val carga =
+                    repository.getCargaAcademica()
+                _cargaAcademica.value = carga
+                println("MATERIAS:")
+                println(carga.size)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+    }
+
+    /*
 
     //Obtener cardex.
     suspend fun cardex(lineamiento: Int) =

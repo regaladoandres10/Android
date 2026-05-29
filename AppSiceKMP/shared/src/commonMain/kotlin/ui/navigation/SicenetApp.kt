@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import data.local.database.data.repository.SNRepository
+import data.remote.model.CargaAcademica
 import kotlinx.serialization.InternalSerializationApi
 import org.jetbrains.compose.resources.stringResource
 import ui.screens.*
@@ -41,6 +42,10 @@ fun SicenetApp(
 
     val profile by viewModel
         .profile
+        .collectAsState()
+
+    val cargas by viewModel
+        .cargaAcademica
         .collectAsState()
 
     val scope = rememberCoroutineScope()
@@ -122,44 +127,43 @@ fun SicenetApp(
                 }
             }
 
-            /*
+
             //Carga academica
             composable(SICEScreen.Carga.name) {
-                var cargas = remember { emptyList<CargaAcademica>() }
                 LaunchedEffect(Unit) {
-                    cargas = viewModel.cargaAcademica()
+                    viewModel.loadCargaAcademica()
                 }
                 ScreenCargaAcademica(cargas)
             }
+            /*
+                        //Cardex
+                        composable(SICEScreen.Cardex.name) {
+                            var cardex = remember { emptyList<Cardex>() }
+                            LaunchedEffect(Unit) {
+                                cardex = viewModel.cardex(1)
+                            }
+                            ScreenCardex(cardex)
+                        }
 
-            //Cardex
-            composable(SICEScreen.Cardex.name) {
-                var cardex = remember { emptyList<Cardex>() }
-                LaunchedEffect(Unit) {
-                    cardex = viewModel.cardex(1)
-                }
-                ScreenCardex(cardex)
-            }
+                        //Calificacion Unidad
+                        composable(SICEScreen.CalificacionUnidad.name) {
+                            var calificaciones = remember { emptyList<CalificacionUnidad>() }
+                            LaunchedEffect(Unit) {
+                                calificaciones = viewModel.calificacionUnidad()
+                            }
+                            ScreenCalificacionUnidad(calificaciones)
+                        }
 
-            //Calificacion Unidad
-            composable(SICEScreen.CalificacionUnidad.name) {
-                var calificaciones = remember { emptyList<CalificacionUnidad>() }
-                LaunchedEffect(Unit) {
-                    calificaciones = viewModel.calificacionUnidad()
-                }
-                ScreenCalificacionUnidad(calificaciones)
-            }
+                        //Calificacion Final
+                        composable(SICEScreen.CalificacionFinal.name) {
+                            var calificacionesFinal = remember { emptyList<CalificacionFinal>() }
+                            LaunchedEffect(Unit) {
+                                calificacionesFinal = viewModel.calificacionFinal(1)
+                            }
+                            ScreenCalificacionFinal(calificacionesFinal)
+                        }
 
-            //Calificacion Final
-            composable(SICEScreen.CalificacionFinal.name) {
-                var calificacionesFinal = remember { emptyList<CalificacionFinal>() }
-                LaunchedEffect(Unit) {
-                    calificacionesFinal = viewModel.calificacionFinal(1)
-                }
-                ScreenCalificacionFinal(calificacionesFinal)
-            }
-
-             */
+                         */
         }
     }
 }

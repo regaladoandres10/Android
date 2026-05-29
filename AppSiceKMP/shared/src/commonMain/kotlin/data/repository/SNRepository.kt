@@ -2,6 +2,7 @@ package data.local.database.data.repository
 
 import data.local.database.data.remote.api.SiceApi
 import data.remote.model.ProfileStudent
+import data.remote.model.CargaAcademica
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 
@@ -10,6 +11,7 @@ import kotlinx.serialization.json.Json
 interface SNRepository {
     suspend fun acceso(m: String, p: String): String
     suspend fun profile(): ProfileStudent
+    suspend fun getCargaAcademica(): List<CargaAcademica>
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -77,6 +79,34 @@ class NetworkSNRepository(
         return Json {
             ignoreUnknownKeys = true
         }.decodeFromString<ProfileStudent>(json)
+    }
+
+    override suspend fun getCargaAcademica(): List<CargaAcademica> {
+        val soapBody = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <getCargaAcademicaByAlumno xmlns="http://tempuri.org/" />
+          </soap:Body>
+        </soap:Envelope>
+    """.trimIndent()
+
+        val response = api.cargaAcademica(soapBody)
+
+        println("CARGA RESPONSE:")
+        println(response)
+
+        val json = response
+            .substringAfter("<getCargaAcademicaByAlumnoResult>")
+            .substringBefore("</getCargaAcademicaByAlumnoResult>")
+            .trim()
+
+        println("CARGA JSON:")
+        println(json)
+
+        return Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<List<CargaAcademica>>(json)
     }
 }
 
