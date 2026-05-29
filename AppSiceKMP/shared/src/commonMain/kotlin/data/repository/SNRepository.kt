@@ -177,7 +177,33 @@ class NetworkSNRepository(
     }
 
     override suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal> {
-        TODO("Not yet implemented")
+        val soapBody = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <getAllCalifFinalByAlumnos xmlns="http://tempuri.org/">
+              <bytModEducativo>$modEducativo</bytModEducativo>
+            </getAllCalifFinalByAlumnos>
+          </soap:Body>
+        </soap:Envelope>
+    """.trimIndent()
+
+        val response = api.getCaliFinal(soapBody)
+
+        println("CALIFINAL RESPONSE:")
+        println(response)
+
+        val json = response
+            .substringAfter("<getAllCalifFinalByAlumnosResult>")
+            .substringBefore("</getAllCalifFinalByAlumnosResult>")
+            .trim()
+
+        println("CALIFINAL JSON:")
+        println(json)
+
+        return Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<List<CalificacionFinal>>(json)
     }
 }
 

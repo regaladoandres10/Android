@@ -57,6 +57,10 @@ fun SicenetApp(
         .caliUnidad
         .collectAsState()
 
+    val caliFinal by viewModel
+        .caliFinal
+        .collectAsState()
+
     val scope = rememberCoroutineScope()
 
     // Ruta actual
@@ -158,22 +162,13 @@ fun SicenetApp(
                 }
                 ScreenCalificacionUnidad(caliUnidad)
             }
-
-            /*
-
-
-
-
-                        //Calificacion Final
-                        composable(SICEScreen.CalificacionFinal.name) {
-                            var calificacionesFinal = remember { emptyList<CalificacionFinal>() }
-                            LaunchedEffect(Unit) {
-                                calificacionesFinal = viewModel.calificacionFinal(1)
-                            }
-                            ScreenCalificacionFinal(calificacionesFinal)
-                        }
-
-                         */
+            //Calificacion Final
+            composable(SICEScreen.CalificacionFinal.name) {
+                LaunchedEffect(Unit) {
+                    viewModel.loadCaliFinal()
+                }
+                ScreenCalificacionFinal(caliFinal)
+            }
         }
     }
 }

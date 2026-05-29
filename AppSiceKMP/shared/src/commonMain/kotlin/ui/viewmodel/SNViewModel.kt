@@ -3,6 +3,7 @@ package ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.local.database.data.repository.SNRepository
+import data.remote.model.CalificacionFinal
 import data.remote.model.CalificacionUnidad
 import data.remote.model.Cardex
 import data.remote.model.CargaAcademica
@@ -67,6 +68,12 @@ class SNViewModel(
 
     val caliUnidad =
         _caliUnidad.asStateFlow()
+
+    private val _caliFinal =
+        MutableStateFlow<List<CalificacionFinal>>(emptyList())
+
+    val caliFinal =
+        _caliFinal.asStateFlow()
 
     fun login(matricula: String, password: String) {
 
@@ -184,8 +191,19 @@ class SNViewModel(
         }
     }
 
-    /*
     //Obtener calificación final.
-    suspend fun calificacionFinal(mod: Int) = repository.getCaliFinal(mod)
-     */
+    fun loadCaliFinal() {
+        viewModelScope.launch {
+            try {
+                val caliFinal =
+                    repository.getCaliFinal(2)
+                _caliFinal.value = caliFinal
+                println("CaliFinal:")
+                println(caliFinal.size)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+    }
+
 }
