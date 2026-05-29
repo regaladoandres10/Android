@@ -31,6 +31,9 @@ interface CardexDao {
     @Query("SELECT * FROM cardex ORDER BY materia ASC")
     fun getAllCardex(): Flow<List<CardexEntity>>
 
+    @Query("DELETE FROM cardex")
+    suspend fun deleteAll()
+
     /**
      * Obtener el cardex
      * return cursor

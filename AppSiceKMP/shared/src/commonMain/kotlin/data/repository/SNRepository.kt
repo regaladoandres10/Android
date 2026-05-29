@@ -1,6 +1,12 @@
 package data.local.database.data.repository
 
 import data.local.database.data.remote.api.SiceApi
+import data.local.entity.toEntity
+import data.local.repository.CalificacionFinalRepository
+import data.local.repository.CalificacionUnidadRepository
+import data.local.repository.CardexRepository
+import data.local.repository.CargaAcademicaRepository
+import data.local.repository.UsuarioRepository
 import data.remote.model.CalificacionFinal
 import data.remote.model.CalificacionUnidad
 import data.remote.model.Cardex
@@ -23,7 +29,12 @@ interface SNRepository {
 
 @OptIn(InternalSerializationApi::class)
 class NetworkSNRepository(
-    private val api: SiceApi
+    private val api: SiceApi,
+    private val usuarioRepository: UsuarioRepository,
+    private val cargaRepository: CargaAcademicaRepository,
+    private val cardexRepository: CardexRepository,
+    private val caliUnidadRepository: CalificacionUnidadRepository,
+    private val caliFinalRepository: CalificacionFinalRepository
 ) : SNRepository {
 
     override suspend fun acceso(m: String, p: String): String {
@@ -83,9 +94,17 @@ class NetworkSNRepository(
         println("PROFILE JSON:")
         println(json)
 
-        return Json {
+        val profile = Json {
             ignoreUnknownKeys = true
         }.decodeFromString<ProfileStudent>(json)
+
+        usuarioRepository.deleteAll()
+
+        usuarioRepository.insertUsuario(
+            profile.toEntity()
+        )
+
+        return profile
     }
 
     override suspend fun getCargaAcademica(): List<CargaAcademica> {
@@ -111,9 +130,19 @@ class NetworkSNRepository(
         println("CARGA JSON:")
         println(json)
 
-        return Json {
+        val cargas = Json {
             ignoreUnknownKeys = true
         }.decodeFromString<List<CargaAcademica>>(json)
+
+        cargaRepository.deleteAll()
+
+        cargas.forEach {
+            cargaRepository.insertCarga(
+                it.toEntity()
+            )
+        }
+
+        return cargas
     }
 
     override suspend fun getCardex(lineamiento: Int?): List<Cardex> {
@@ -145,7 +174,16 @@ class NetworkSNRepository(
             ignoreUnknownKeys = true
         }.decodeFromString<CardexResponse>(json)
 
-        return cardex.listCardex
+        val cardexs = cardex.listCardex
+
+        cardexRepository.deleteAll()
+
+        cardexs.forEach {
+            cardexRepository.insertCardex(
+                it.toEntity()
+            )
+        }
+        return cardexs
     }
 
     override suspend fun getCaliPorUnidad(): List<CalificacionUnidad> {
@@ -171,9 +209,19 @@ class NetworkSNRepository(
         println("CALIUNIDAD JSON:")
         println(json)
 
-        return Json {
+        val calisUnidad = Json {
             ignoreUnknownKeys = true
         }.decodeFromString<List<CalificacionUnidad>>(json)
+
+        caliUnidadRepository.deleteAll()
+
+        calisUnidad.forEach {
+            caliUnidadRepository.insertCalificacionU(
+                it.toEntity()
+            )
+        }
+
+        return calisUnidad
     }
 
     override suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal> {
@@ -201,9 +249,19 @@ class NetworkSNRepository(
         println("CALIFINAL JSON:")
         println(json)
 
-        return Json {
+        val calisFinal = Json {
             ignoreUnknownKeys = true
         }.decodeFromString<List<CalificacionFinal>>(json)
+
+        caliFinalRepository.deleteAll()
+
+        calisFinal.forEach {
+            caliFinalRepository.insertCalisFinal(
+                it.toEntity()
+            )
+        }
+
+        return calisFinal
     }
 }
 

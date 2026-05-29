@@ -29,4 +29,5 @@ interface CalificacionFinalRepository {
      * Update usuario in the data source
      */
     suspend fun updateCalisFinal(calificacionFinal: CalificacionFinalEntity)
+    suspend fun deleteAll()
 }

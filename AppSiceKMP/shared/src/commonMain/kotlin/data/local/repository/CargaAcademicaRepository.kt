@@ -28,4 +28,5 @@ interface CargaAcademicaRepository {
      * Update usuario in the data source
      */
     suspend fun updateCarga(carga: CargaAcademicaEntity)
+    suspend fun deleteAll()
 }

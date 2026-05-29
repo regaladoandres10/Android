@@ -27,4 +27,7 @@ interface CalificacionFinalDao {
 
     @Query("SELECT * FROM calificacion_final ORDER BY materia ASC")
     fun getAllCalisFinal(): Flow<List<CalificacionFinalEntity>>
+
+    @Query("DELETE FROM calificacion_final")
+    suspend fun deleteAll()
 }

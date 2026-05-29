@@ -19,8 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import data.local.database.data.repository.SNRepository
-import data.remote.model.Cardex
-import data.remote.model.CargaAcademica
 import kotlinx.serialization.InternalSerializationApi
 import org.jetbrains.compose.resources.stringResource
 import ui.screens.*

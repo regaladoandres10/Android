@@ -28,4 +28,7 @@ interface CalificacionUnidadDao {
 
     @Query("SELECT * FROM calificacionUnidad ORDER BY materia ASC")
     fun getAllCalificacionUnidad(): Flow<List<CalificacionUnidadEntity>>
+
+    @Query("DELETE FROM calificacionUnidad")
+    suspend fun deleteAll()
 }

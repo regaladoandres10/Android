@@ -16,4 +16,5 @@ class OfflineCargaAcademicaRepository(private val cargaDao: CargaAcademicaDao) :
     override suspend fun deleteCarga(carga: CargaAcademicaEntity) = cargaDao.delete(carga)
 
     override suspend fun updateCarga(carga: CargaAcademicaEntity) = cargaDao.update(carga)
+    override suspend fun deleteAll() { cargaDao.deleteAll() }
 }

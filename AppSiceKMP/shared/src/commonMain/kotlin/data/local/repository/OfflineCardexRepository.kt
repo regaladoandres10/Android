@@ -17,4 +17,5 @@ class OfflineCardexRepository(private val cardexDao: CardexDao) : CardexReposito
     override suspend fun deleteCardex(cardex: CardexEntity) = cardexDao.delete(cardex)
 
     override suspend fun updateCardex(cardex: CardexEntity) = cardexDao.update(cardex)
+    override suspend fun deleteAll() { cardexDao.deleteAll() }
 }

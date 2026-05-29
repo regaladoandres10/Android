@@ -15,5 +15,8 @@ class OfflineCalificacionURepository(private val calificacionUDao: CalificacionU
     override suspend fun deleteCalificacionU(calificacionU: CalificacionUnidadEntity) = calificacionUDao.delete(calificacionU)
 
     override suspend fun updateCalficacionU(calificacionU: CalificacionUnidadEntity) = calificacionUDao.update(calificacionU)
+    override suspend fun deleteAll() {
+        calificacionUDao.deleteAll()
+    }
 
 }

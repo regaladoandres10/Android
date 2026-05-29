@@ -14,4 +14,5 @@ class OfflineUsuarioRepository(private val usuarioDao: UsuarioDao) : UsuarioRepo
     override suspend fun deleteUsuario(usuario: UsuarioEntity) = usuarioDao.delete(usuario)
 
     override suspend fun updateUsuario(usuario: UsuarioEntity) = usuarioDao.update(usuario)
+    override suspend fun deleteAll() { usuarioDao.deleteAll() }
 }

@@ -29,4 +29,5 @@ interface CalificacionUnidadRepository {
      * Update usuario in the data source
      */
     suspend fun updateCalficacionU(calificacionU: CalificacionUnidadEntity)
+    suspend fun deleteAll()
 }

@@ -11,4 +11,7 @@ class OfflineCalificacionFinalRepository(private val calisFinalDao: Calificacion
     override suspend fun insertAll(calisFinal: List<CalificacionFinalEntity>) = calisFinalDao.insertAll(calisFinal)
     override suspend fun deleteCalisFinal(calificacionFinal: CalificacionFinalEntity) = calisFinalDao.delete(calificacionFinal)
     override suspend fun updateCalisFinal(calificacionFinal: CalificacionFinalEntity) = calisFinalDao.update(calificacionFinal)
+    override suspend fun deleteAll() {
+        calisFinalDao.deleteAll()
+    }
 }

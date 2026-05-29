@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "38726dff820ab093689d76a39618866b",
+    "identityHash": "82e92c5869510d738beb834f069249cf",
     "entities": [
       {
         "tableName": "usuario",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fechaReins` TEXT NOT NULL, `modEducativo` INTEGER NOT NULL, `adeudo` INTEGER NOT NULL, `urlFoto` TEXT NOT NULL, `adeudoDescripcion` TEXT NOT NULL, `inscrito` INTEGER NOT NULL, `estatus` TEXT NOT NULL, `semActual` INTEGER NOT NULL, `cdtosAcumulados` INTEGER NOT NULL, `cdtosActuales` INTEGER NOT NULL, `especialidad` TEXT NOT NULL, `carrera` TEXT NOT NULL, `lineamiento` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `matricula` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `fechaReins` TEXT NOT NULL, `modEducativo` INTEGER NOT NULL, `adeudo` INTEGER NOT NULL, `urlFoto` TEXT NOT NULL, `adeudoDescripcion` TEXT NOT NULL, `inscrito` INTEGER NOT NULL, `estatus` TEXT NOT NULL, `semActual` INTEGER NOT NULL, `cdtosAcumulados` INTEGER NOT NULL, `cdtosActuales` INTEGER NOT NULL, `especialidad` TEXT NOT NULL, `carrera` TEXT NOT NULL, `lineamiento` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `matricula` TEXT NOT NULL, PRIMARY KEY(`matricula`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -106,9 +106,9 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "matricula"
           ]
         }
       },
@@ -469,7 +469,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '38726dff820ab093689d76a39618866b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '82e92c5869510d738beb834f069249cf')"
     ]
   }
 }

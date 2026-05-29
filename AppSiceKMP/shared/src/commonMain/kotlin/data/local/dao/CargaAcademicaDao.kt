@@ -29,6 +29,9 @@ interface CargaAcademicaDao {
     @Query("SELECT * FROM carga_academica ORDER BY materia ASC")
     fun getAllCarga(): Flow<List<CargaAcademicaEntity>>
 
+    @Query("DELETE FROM carga_academica")
+    suspend fun deleteAll()
+
     /*
     @Query("SELECT * FROM carga_academica WHERE claveOficial = :clv")
     fun getCargaCursor(clv: String): Cursor

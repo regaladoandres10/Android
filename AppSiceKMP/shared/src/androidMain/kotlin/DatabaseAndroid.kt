@@ -12,7 +12,6 @@ fun getDatabaseBuilder(
     return Room.databaseBuilder<AppDatabase>(
         context =
             context,
-
         name =
             "appsice.db"
     )

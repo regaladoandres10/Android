@@ -30,4 +30,5 @@ interface CardexRepository {
      * Update usuario in the data source
      */
     suspend fun updateCardex(cardex: CardexEntity)
+    suspend fun deleteAll()
 }
