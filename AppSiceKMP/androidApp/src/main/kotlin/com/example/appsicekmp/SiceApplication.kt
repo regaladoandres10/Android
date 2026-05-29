@@ -1,8 +1,8 @@
 package com.example.appsicekmp
 
 import android.app.Application
-import di.AppContainer
-import di.DefaultAppContainer
+import data.local.database.di.AppContainer
+import data.local.database.di.DefaultAppContainer
 
 class SiceApplication : Application() {
 

@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 //import androidx.compose.material.icons.Icons
 //import androidx.compose.material.icons.filled.Visibility
@@ -33,8 +36,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
-import ui.viewmodel.SNViewModel
+//import ui.viewmodel.SNViewModel
 import ui.viewmodel.SNUiState
+import ui.viewmodel.SNViewModel
 
 @Composable
 fun ScreenLogin(
@@ -95,14 +99,12 @@ fun ScreenLogin(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
             ),
-
             trailingIcon = {
                 IconButton(
                     onClick = {
                         passwordVisible = !passwordVisible
                     }
                 ) {
-                    /*
                     Icon(
                         imageVector =
                             if (passwordVisible) {
@@ -112,8 +114,6 @@ fun ScreenLogin(
                             },
                         contentDescription = null
                     )
-
-                     */
                 }
             },
 
@@ -125,7 +125,7 @@ fun ScreenLogin(
         //Botón login
         Button(
             onClick = {
-                viewModel.accesoSN(
+                viewModel.login(
                     matricula,
                     password
                 )
@@ -144,10 +144,12 @@ fun ScreenLogin(
                 CircularProgressIndicator()
             }
             is SNUiState.Error -> {
-                Text(uiState.message)
+                Text(
+                    (uiState as SNUiState.Error).message
+                )
             }
             SNUiState.Success -> {
-                Text("Sesión iniciada")
+                Text("Login correcto")
             }
         }
     }
