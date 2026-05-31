@@ -34,4 +34,6 @@ interface UsuarioRepository {
 
     suspend fun deleteAll()
 
+    suspend fun getUsuarioByMatricula(matricula: String): UsuarioEntity?
+
 }

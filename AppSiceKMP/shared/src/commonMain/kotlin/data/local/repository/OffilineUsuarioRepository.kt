@@ -7,12 +7,19 @@ import kotlinx.coroutines.flow.Flow
 class OfflineUsuarioRepository(private val usuarioDao: UsuarioDao) : UsuarioRepository {
     override fun getAllUsuarioStream(): Flow<List<UsuarioEntity>> = usuarioDao.getAllUsuario()
 
-    override fun getUsuarioStream(id: Int): Flow<UsuarioEntity?> =  usuarioDao.getUsuario(id)
+    override fun getUsuarioStream(id: Int): Flow<UsuarioEntity?> = usuarioDao.getUsuario(id)
 
     override suspend fun insertUsuario(usuario: UsuarioEntity) = usuarioDao.insert(usuario)
 
     override suspend fun deleteUsuario(usuario: UsuarioEntity) = usuarioDao.delete(usuario)
 
     override suspend fun updateUsuario(usuario: UsuarioEntity) = usuarioDao.update(usuario)
-    override suspend fun deleteAll() { usuarioDao.deleteAll() }
+    override suspend fun deleteAll() {
+        usuarioDao.deleteAll()
+    }
+
+    override suspend fun getUsuarioByMatricula(
+        matricula: String
+    ): UsuarioEntity? =
+        usuarioDao.getUsuarioByMatricula(matricula)
 }

@@ -81,6 +81,7 @@ class SNViewModel(
 
         viewModelScope.launch {
             try {
+                //Login online
                 _uiState.value = SNUiState.Loading
                 repository.initSession()
 
@@ -134,14 +135,28 @@ class SNViewModel(
 
             } catch (e: Exception) {
 
-                e.printStackTrace()
-
                 println("ERROR LOGIN:")
                 println(e.message)
 
+                //e.printStackTrace()
 
+                val existeLocal = repository.loginOffline(matricula)
+
+                if (existeLocal) {
+                    println("LOGIN OFFLINE")
+                    _uiState.value = SNUiState.Success
+                } else {
+                    _uiState.value =
+                        SNUiState.Error(
+                            e.message ?: "No existe información local para esta matrícula"
+                        )
+                }
+
+                /*
                 _loginResult.value =
                     e.message ?: "Error"
+
+                 */
 
                 /*
                 _uiState.value =

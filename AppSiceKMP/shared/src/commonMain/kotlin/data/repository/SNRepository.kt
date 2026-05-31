@@ -26,6 +26,7 @@ interface SNRepository {
     suspend fun getCaliPorUnidad(): List<CalificacionUnidad>
     suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal>
     suspend fun initSession()
+    suspend fun loginOffline(matricula: String): Boolean
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -279,6 +280,10 @@ class NetworkSNRepository(
             e.printStackTrace()
 
         }
+    }
+
+    override suspend fun loginOffline(matricula: String): Boolean {
+        return usuarioRepository.getUsuarioByMatricula(matricula) != null
     }
 }
 
