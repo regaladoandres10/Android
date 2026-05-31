@@ -1,6 +1,8 @@
 package data.local.database.data.repository
 
 import data.local.database.data.remote.api.SiceApi
+import data.local.entity.toCalificacionFinal
+import data.local.entity.toCalificacionUnidad
 import data.local.entity.toCardex
 import data.local.entity.toCargaAcademica
 import data.local.entity.toEntity
@@ -33,6 +35,9 @@ interface SNRepository {
     suspend fun profileOffline(matricula: String): ProfileStudent?
     suspend fun cargaAcademicaOffline(): List<CargaAcademica>
     suspend fun cardexOffline(): List<Cardex>
+    suspend fun calificacionUnidadOffline(): List<CalificacionUnidad>
+
+    suspend fun calificacionFinalOffline(): List<CalificacionFinal>
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -328,6 +333,28 @@ class NetworkSNRepository(
         println(entities.size)
 
         return entities.map { it.toCardex() }
+    }
+
+    override suspend fun calificacionUnidadOffline(): List<CalificacionUnidad> {
+        val entities =
+            caliUnidadRepository.getAllCalificacionUnidadList()
+
+        println("CALIFICACION UNIDAD ROOM:")
+        println(entities.size)
+
+        return entities.map { it.toCalificacionUnidad() }
+    }
+
+    override suspend fun calificacionFinalOffline(): List<CalificacionFinal> {
+        val entities =
+            caliFinalRepository.getAllCalisFinalList()
+
+        println("CALIFICACION FINAL ROOM:")
+        println(entities.size)
+
+        return entities.map {
+            it.toCalificacionFinal()
+        }
     }
 }
 

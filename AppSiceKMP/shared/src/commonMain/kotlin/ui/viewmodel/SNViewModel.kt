@@ -268,6 +268,15 @@ class SNViewModel(
                 println("CaliUnidad:")
                 println(caliUnidad.size)
             } catch (e: Exception) {
+                println("CALIFICACION UNIDAD OFFLINE")
+
+                val calificaciones =
+                    repository.calificacionUnidadOffline()
+
+                _caliUnidad.value =
+                    calificaciones
+
+                println(calificaciones.size)
                 println(e.message)
             }
         }
@@ -283,6 +292,15 @@ class SNViewModel(
                 println("CaliFinal:")
                 println(caliFinal.size)
             } catch (e: Exception) {
+                println("CALIFICACION FINAL OFFLINE")
+
+                val calificaciones =
+                    repository.calificacionFinalOffline()
+
+                _caliFinal.value =
+                    calificaciones
+
+                println(calificaciones.size)
                 println(e.message)
             }
         }

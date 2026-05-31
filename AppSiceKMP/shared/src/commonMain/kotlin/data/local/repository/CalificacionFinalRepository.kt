@@ -20,6 +20,7 @@ interface CalificacionFinalRepository {
     suspend fun insertCalisFinal(calificacionFinal: CalificacionFinalEntity)
     suspend fun insertAll(calisFinal: List<CalificacionFinalEntity>)
 
+    suspend fun getAllCalisFinalList(): List<CalificacionFinalEntity>
     /**
      * Delete usuario from the data source
      */

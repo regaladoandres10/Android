@@ -162,3 +162,37 @@ fun CardexEntity.toCardex(): Cardex {
         a2 = a2
     )
 }
+
+@OptIn(InternalSerializationApi::class)
+fun CalificacionUnidadEntity.toCalificacionUnidad(): CalificacionUnidad {
+    return CalificacionUnidad(
+        observaciones = observaciones,
+        c13 = c13,
+        c12 = c12,
+        c11 = c11,
+        c10 = c10,
+        c9 = c9,
+        c8 = c8,
+        c7 = c7,
+        c6 = c6,
+        c5 = c5,
+        c4 = c4,
+        c3 = c3,
+        c2 = c2,
+        c1 = c1,
+        unidadesActivas = unidadesActivas,
+        materia = materia,
+        grupo = grupo
+    )
+}
+
+@OptIn(InternalSerializationApi::class)
+fun CalificacionFinalEntity.toCalificacionFinal(): CalificacionFinal {
+    return CalificacionFinal(
+        calif = calif,
+        acred = acred,
+        grupo = grupo,
+        materia = materia,
+        observaciones = observaciones
+    )
+}

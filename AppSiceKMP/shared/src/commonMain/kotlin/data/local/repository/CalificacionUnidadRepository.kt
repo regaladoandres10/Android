@@ -20,6 +20,8 @@ interface CalificacionUnidadRepository {
     suspend fun insertCalificacionU(calificacionU: CalificacionUnidadEntity)
     suspend fun insertAll(calisFinal: List<CalificacionUnidadEntity>)
 
+    suspend fun getAllCalificacionUnidadList(): List<CalificacionUnidadEntity>
+
     /**
      * Delete usuario from the data source
      */
