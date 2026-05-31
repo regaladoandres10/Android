@@ -243,6 +243,15 @@ class SNViewModel(
                 println("CARDEX:")
                 println(cardex.size)
             } catch (e: Exception) {
+                println("CARDEX OFFLINE")
+
+                val cardex =
+                    repository.cardexOffline()
+
+                _cardex.value = cardex
+
+                println("CARDEX RECUPERADO:")
+                println(cardex.size)
                 println(e.message)
             }
         }

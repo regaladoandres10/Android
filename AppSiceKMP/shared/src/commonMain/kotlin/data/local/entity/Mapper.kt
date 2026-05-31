@@ -143,3 +143,22 @@ fun CargaAcademicaEntity.toCargaAcademica(): CargaAcademica {
         grupo = grupo
     )
 }
+
+@OptIn(InternalSerializationApi::class)
+fun CardexEntity.toCardex(): Cardex {
+    return Cardex(
+        fecEsp = fecEsp,
+        clvMat = clvMat,
+        clvOfiMat = clvOfiMat,
+        materia = materia,
+        cdts = cdts,
+        calif = calif,
+        acred = acred,
+        s1 = s1,
+        p1 = p1,
+        a1 = a1,
+        s2 = s2,
+        p2 = p2,
+        a2 = a2
+    )
+}

@@ -1,6 +1,7 @@
 package data.local.database.data.repository
 
 import data.local.database.data.remote.api.SiceApi
+import data.local.entity.toCardex
 import data.local.entity.toCargaAcademica
 import data.local.entity.toEntity
 import data.local.entity.toProfileStudent
@@ -31,6 +32,7 @@ interface SNRepository {
     suspend fun loginOffline(matricula: String): Boolean
     suspend fun profileOffline(matricula: String): ProfileStudent?
     suspend fun cargaAcademicaOffline(): List<CargaAcademica>
+    suspend fun cardexOffline(): List<Cardex>
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -316,6 +318,16 @@ class NetworkSNRepository(
         println(carga.size)
 
         return carga
+    }
+
+    override suspend fun cardexOffline(): List<Cardex> {
+        val entities =
+            cardexRepository.getAllCardexList()
+
+        println("CARDEX ROOM:")
+        println(entities.size)
+
+        return entities.map { it.toCardex() }
     }
 }
 
