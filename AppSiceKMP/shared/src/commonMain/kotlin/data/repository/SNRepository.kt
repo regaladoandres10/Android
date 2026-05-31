@@ -2,6 +2,7 @@ package data.local.database.data.repository
 
 import data.local.database.data.remote.api.SiceApi
 import data.local.entity.toEntity
+import data.local.entity.toProfileStudent
 import data.local.repository.CalificacionFinalRepository
 import data.local.repository.CalificacionUnidadRepository
 import data.local.repository.CardexRepository
@@ -27,6 +28,7 @@ interface SNRepository {
     suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal>
     suspend fun initSession()
     suspend fun loginOffline(matricula: String): Boolean
+    suspend fun profileOffline(matricula: String): ProfileStudent?
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -284,6 +286,12 @@ class NetworkSNRepository(
 
     override suspend fun loginOffline(matricula: String): Boolean {
         return usuarioRepository.getUsuarioByMatricula(matricula) != null
+    }
+
+    override suspend fun profileOffline(matricula: String): ProfileStudent? {
+        return usuarioRepository
+            .getUsuarioByMatricula(matricula)
+            ?.toProfileStudent()
     }
 }
 

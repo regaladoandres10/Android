@@ -77,6 +77,8 @@ class SNViewModel(
     val caliFinal =
         _caliFinal.asStateFlow()
 
+    private var currentMatricula: String? = null
+
     fun login(matricula: String, password: String) {
 
         viewModelScope.launch {
@@ -111,6 +113,7 @@ class SNViewModel(
 
                 if (login.acceso == true) {
 
+                    currentMatricula = matricula
                     println("LOGIN CORRECTO")
 
                     _uiState.value = SNUiState.Success
@@ -144,6 +147,7 @@ class SNViewModel(
 
                 if (existeLocal) {
                     println("LOGIN OFFLINE")
+                    currentMatricula = matricula
                     _uiState.value = SNUiState.Success
                 } else {
                     _uiState.value =
@@ -174,6 +178,7 @@ class SNViewModel(
         viewModelScope.launch {
             try {
 
+                //Internet
                 val student =
                 repository.profile()
 
@@ -186,6 +191,22 @@ class SNViewModel(
                 println(student.matricula)
 
             } catch (e: Exception) {
+                val matricula = currentMatricula
+
+                println("MATRICULA ACTUAL:")
+                println(currentMatricula)
+                if (matricula != null) {
+
+                    val student =
+                        repository.profileOffline(
+                            matricula
+                        )
+
+                    if (student != null) {
+                        _profile.value = student
+                    }
+
+                }
                 println(e.message)
             }
         }

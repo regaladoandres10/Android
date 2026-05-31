@@ -100,3 +100,26 @@ fun CalificacionFinal.toEntity(): CalificacionFinalEntity {
         observaciones = this.observaciones ?: ""
     )
 }
+
+/* Offline */
+
+@OptIn(InternalSerializationApi::class)
+fun UsuarioEntity.toProfileStudent(): ProfileStudent {
+    return ProfileStudent(
+        fechaReins = fechaReins,
+        modEducativo = modEducativo,
+        adeudo = adeudo,
+        urlFoto = urlFoto,
+        adeudoDescripcion = adeudoDescripcion,
+        inscrito = inscrito,
+        estatus = estatus,
+        semActual = semActual,
+        cdtosAcumulados = cdtosAcumulados,
+        cdtosActuales = cdtosActuales,
+        especialidad = especialidad,
+        carrera = carrera,
+        lineamiento = lineamiento,
+        nombre = nombre,
+        matricula = matricula
+    )
+}
