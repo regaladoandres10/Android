@@ -12,6 +12,7 @@ class OfflineCargaAcademicaRepository(private val cargaDao: CargaAcademicaDao) :
     override suspend fun insertCarga(carga: CargaAcademicaEntity) = cargaDao.insert(carga)
 
     override suspend fun insertAll(cargas: List<CargaAcademicaEntity>) = cargaDao.insertAll(cargas)
+    override suspend fun getAllCargaList(): List<CargaAcademicaEntity> = cargaDao.getAllCargaList()
 
     override suspend fun deleteCarga(carga: CargaAcademicaEntity) = cargaDao.delete(carga)
 

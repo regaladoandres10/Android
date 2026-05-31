@@ -19,6 +19,7 @@ interface CargaAcademicaRepository {
      */
     suspend fun insertCarga(carga: CargaAcademicaEntity)
     suspend fun insertAll(cargas: List<CargaAcademicaEntity>)
+    suspend fun getAllCargaList(): List<CargaAcademicaEntity>
     /**
      * Delete usuario from the data source
      */

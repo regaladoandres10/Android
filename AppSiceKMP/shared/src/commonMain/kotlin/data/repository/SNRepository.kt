@@ -1,6 +1,7 @@
 package data.local.database.data.repository
 
 import data.local.database.data.remote.api.SiceApi
+import data.local.entity.toCargaAcademica
 import data.local.entity.toEntity
 import data.local.entity.toProfileStudent
 import data.local.repository.CalificacionFinalRepository
@@ -29,6 +30,7 @@ interface SNRepository {
     suspend fun initSession()
     suspend fun loginOffline(matricula: String): Boolean
     suspend fun profileOffline(matricula: String): ProfileStudent?
+    suspend fun cargaAcademicaOffline(): List<CargaAcademica>
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -292,6 +294,28 @@ class NetworkSNRepository(
         return usuarioRepository
             .getUsuarioByMatricula(matricula)
             ?.toProfileStudent()
+    }
+
+    override suspend fun cargaAcademicaOffline(): List<CargaAcademica> {
+        val entities =
+            cargaRepository.getAllCargaList()
+
+        println("ENTIDADES ROOM:")
+        println(entities.size)
+
+        entities.forEach {
+            println(it.materia)
+        }
+
+        val carga =
+            entities.map {
+                it.toCargaAcademica()
+            }
+
+        println("MODELOS:")
+        println(carga.size)
+
+        return carga
     }
 }
 

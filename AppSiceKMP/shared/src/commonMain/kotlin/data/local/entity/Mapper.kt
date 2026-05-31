@@ -123,3 +123,23 @@ fun UsuarioEntity.toProfileStudent(): ProfileStudent {
         matricula = matricula
     )
 }
+
+@OptIn(InternalSerializationApi::class)
+fun CargaAcademicaEntity.toCargaAcademica(): CargaAcademica {
+    return CargaAcademica(
+        semipresencial = semipresencial,
+        observaciones = observaciones,
+        docente = docente,
+        clv = clvOficial,
+        sabado = sabado,
+        viernes = viernes,
+        jueves = jueves,
+        miercoles = miercoles,
+        martes = martes,
+        lunes = lunes,
+        estadoMateria = estadoMateria,
+        creditosMateria = creditosMateria,
+        materia = materia,
+        grupo = grupo
+    )
+}

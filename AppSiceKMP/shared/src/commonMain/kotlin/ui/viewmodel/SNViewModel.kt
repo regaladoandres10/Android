@@ -223,6 +223,11 @@ class SNViewModel(
                 println("MATERIAS:")
                 println(carga.size)
             } catch (e: Exception) {
+                println("CARGA OFFLINE")
+                val carga = repository.cargaAcademicaOffline()
+                _cargaAcademica.value = carga
+                println("CARGA RECUPERADA:")
+                println(carga.size)
                 println(e.message)
             }
         }
