@@ -1,6 +1,7 @@
 package data.local.database.data.remote.api
 
 import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
 import okhttp3.RequestBody
@@ -36,5 +37,8 @@ interface SiceApi {
 
     @POST("/ws/wsalumnos.asmx")
     suspend fun getCaliFinal(@Body soap: String): String
+
+    @GET("ws/wsalumnos.asmx")
+    suspend fun initSession(): String
 
 }

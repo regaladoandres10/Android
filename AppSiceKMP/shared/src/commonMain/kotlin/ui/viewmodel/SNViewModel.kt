@@ -2,6 +2,7 @@ package ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.local.database.data.remote.model.LoginResponse
 import data.local.database.data.repository.SNRepository
 import data.remote.model.CalificacionFinal
 import data.remote.model.CalificacionUnidad
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
 
 
 @OptIn(InternalSerializationApi::class)
@@ -80,6 +82,7 @@ class SNViewModel(
         viewModelScope.launch {
             try {
                 _uiState.value = SNUiState.Loading
+                repository.initSession()
 
                 val response =
                     repository.acceso(
@@ -87,8 +90,31 @@ class SNViewModel(
                         password
                     )
 
-                if (response.contains("true")) {
+                println("LOGIN RESPONSE:")
+                println(response)
+
+                println("ANTES DE DESERIALIZAR")
+
+                val login =
+                    Json {
+                        ignoreUnknownKeys = true
+                    }.decodeFromString<LoginResponse>(
+                        response
+                    )
+
+                println("DESPUES DE DESERIALIZAR")
+                println(login)
+
+                println("ACCESO:")
+                println(login.acceso)
+
+                if (login.acceso == true) {
+
+                    println("LOGIN CORRECTO")
+
                     _uiState.value = SNUiState.Success
+
+                    println("UI STATE SUCCESS")
                 } else {
                     _uiState.value =
                         SNUiState.Error("Credenciales incorrectas")
@@ -107,6 +133,12 @@ class SNViewModel(
                  */
 
             } catch (e: Exception) {
+
+                e.printStackTrace()
+
+                println("ERROR LOGIN:")
+                println(e.message)
+
 
                 _loginResult.value =
                     e.message ?: "Error"

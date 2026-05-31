@@ -52,7 +52,7 @@ fun ScreenLogin(
     var matricula by rememberSaveable { mutableStateOf("") }
 
     // Contraseña
-    var password by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("Tc4_b2=") }
 
     // Mostrar contraseña
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -126,7 +126,7 @@ fun ScreenLogin(
         Button(
             onClick = {
                 viewModel.login(
-                    matricula,
+                    matricula.trim().uppercase(),
                     password
                 )
 

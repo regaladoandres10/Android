@@ -25,6 +25,7 @@ interface SNRepository {
     suspend fun getCardex(lineamiento: Int?): List<Cardex>
     suspend fun getCaliPorUnidad(): List<CalificacionUnidad>
     suspend fun getCaliFinal(modEducativo: Int): List<CalificacionFinal>
+    suspend fun initSession()
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -262,6 +263,22 @@ class NetworkSNRepository(
         }
 
         return calisFinal
+    }
+
+    override suspend fun initSession() {
+        try {
+
+            val response =
+                api.initSession()
+
+            println("INIT SESSION:")
+            println(response)
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+        }
     }
 }
 
