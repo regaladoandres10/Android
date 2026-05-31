@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "918922303156",
+    "project_id": "fir-cloudmessening",
+    "storage_bucket": "fir-cloudmessening.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918922303156:android:8c5c8932ca49c4aaa5a9e1",
+        "android_client_info": {
+          "package_name": "com.example.pushnotificationdemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLzRWr_87KS84NuBNz9NZ02N-Rip78YY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
