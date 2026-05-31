@@ -15,7 +15,7 @@ dependencies {
     implementation(projects.shared)
 
     implementation(libs.androidx.activity.compose)
-
+    implementation(libs.androidx.room.runtime)
     implementation(libs.compose.uiToolingPreview)
     implementation(libs.ktor.ktor.client.core)
     implementation(libs.ktor.serialization.kotlinx.json)

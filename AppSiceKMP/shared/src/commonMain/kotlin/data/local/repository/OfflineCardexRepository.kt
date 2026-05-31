@@ -13,8 +13,11 @@ class OfflineCardexRepository(private val cardexDao: CardexDao) : CardexReposito
     override suspend fun insertAll(cardexs: List<CardexEntity>) = cardexDao.insertAll(cardexs)
 
     override suspend fun insertCardex(cardex: CardexEntity) = cardexDao.insert(cardex)
+    override suspend fun getAllCardexList(): List<CardexEntity>  =
+        cardexDao.getAllCardexList()
 
     override suspend fun deleteCardex(cardex: CardexEntity) = cardexDao.delete(cardex)
 
     override suspend fun updateCardex(cardex: CardexEntity) = cardexDao.update(cardex)
+    override suspend fun deleteAll() { cardexDao.deleteAll() }
 }

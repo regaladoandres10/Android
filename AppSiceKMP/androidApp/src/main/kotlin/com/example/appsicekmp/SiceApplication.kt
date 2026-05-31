@@ -3,6 +3,9 @@ package com.example.appsicekmp
 import android.app.Application
 import data.local.database.di.AppContainer
 import data.local.database.di.DefaultAppContainer
+import data.local.database.getDatabaseBuilder
+import data.local.database.getRoomDatabase
+
 
 class SiceApplication : Application() {
 
@@ -10,7 +13,13 @@ class SiceApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        container = DefaultAppContainer()
+        val database =
+            getRoomDatabase(
+                getDatabaseBuilder(this)
+            )
+
+        container =
+            DefaultAppContainer(database)
     }
 
 }

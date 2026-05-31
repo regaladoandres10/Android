@@ -18,6 +18,8 @@ object HttpClientFactory {
 
         return HttpClient {
 
+            followRedirects = true
+
             install(Logging) {
                 level = LogLevel.ALL
             }

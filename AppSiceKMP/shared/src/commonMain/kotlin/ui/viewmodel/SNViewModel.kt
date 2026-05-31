@@ -2,6 +2,7 @@ package ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.local.database.data.remote.model.LoginResponse
 import data.local.database.data.repository.SNRepository
 import data.remote.model.CalificacionFinal
 import data.remote.model.CalificacionUnidad
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
 
 
 @OptIn(InternalSerializationApi::class)
@@ -30,7 +32,7 @@ class SNViewModel(
      Success -> operación correcta
      Error -> ocurrió un error
     */
-    private val _uiState = MutableStateFlow<SNUiState>(SNUiState.Loading)
+    private val _uiState = MutableStateFlow<SNUiState>(SNUiState.Idle)
 
     //Estado expuesto para que Compose lo observe.
     val uiState: StateFlow<SNUiState> = _uiState.asStateFlow()
@@ -75,11 +77,15 @@ class SNViewModel(
     val caliFinal =
         _caliFinal.asStateFlow()
 
+    private var currentMatricula: String? = null
+
     fun login(matricula: String, password: String) {
 
         viewModelScope.launch {
             try {
+                //Login online
                 _uiState.value = SNUiState.Loading
+                repository.initSession()
 
                 val response =
                     repository.acceso(
@@ -87,8 +93,32 @@ class SNViewModel(
                         password
                     )
 
-                if (response.contains("true")) {
+                println("LOGIN RESPONSE:")
+                println(response)
+
+                println("ANTES DE DESERIALIZAR")
+
+                val login =
+                    Json {
+                        ignoreUnknownKeys = true
+                    }.decodeFromString<LoginResponse>(
+                        response
+                    )
+
+                println("DESPUES DE DESERIALIZAR")
+                println(login)
+
+                println("ACCESO:")
+                println(login.acceso)
+
+                if (login.acceso == true) {
+
+                    currentMatricula = matricula
+                    println("LOGIN CORRECTO")
+
                     _uiState.value = SNUiState.Success
+
+                    println("UI STATE SUCCESS")
                 } else {
                     _uiState.value =
                         SNUiState.Error("Credenciales incorrectas")
@@ -108,8 +138,29 @@ class SNViewModel(
 
             } catch (e: Exception) {
 
+                println("ERROR LOGIN:")
+                println(e.message)
+
+                //e.printStackTrace()
+
+                val existeLocal = repository.loginOffline(matricula)
+
+                if (existeLocal) {
+                    println("LOGIN OFFLINE")
+                    currentMatricula = matricula
+                    _uiState.value = SNUiState.Success
+                } else {
+                    _uiState.value =
+                        SNUiState.Error(
+                            e.message ?: "No existe información local para esta matrícula"
+                        )
+                }
+
+                /*
                 _loginResult.value =
                     e.message ?: "Error"
+
+                 */
 
                 /*
                 _uiState.value =
@@ -127,6 +178,7 @@ class SNViewModel(
         viewModelScope.launch {
             try {
 
+                //Internet
                 val student =
                 repository.profile()
 
@@ -139,6 +191,22 @@ class SNViewModel(
                 println(student.matricula)
 
             } catch (e: Exception) {
+                val matricula = currentMatricula
+
+                println("MATRICULA ACTUAL:")
+                println(currentMatricula)
+                if (matricula != null) {
+
+                    val student =
+                        repository.profileOffline(
+                            matricula
+                        )
+
+                    if (student != null) {
+                        _profile.value = student
+                    }
+
+                }
                 println(e.message)
             }
         }
@@ -155,6 +223,11 @@ class SNViewModel(
                 println("MATERIAS:")
                 println(carga.size)
             } catch (e: Exception) {
+                println("CARGA OFFLINE")
+                val carga = repository.cargaAcademicaOffline()
+                _cargaAcademica.value = carga
+                println("CARGA RECUPERADA:")
+                println(carga.size)
                 println(e.message)
             }
         }
@@ -170,6 +243,15 @@ class SNViewModel(
                 println("CARDEX:")
                 println(cardex.size)
             } catch (e: Exception) {
+                println("CARDEX OFFLINE")
+
+                val cardex =
+                    repository.cardexOffline()
+
+                _cardex.value = cardex
+
+                println("CARDEX RECUPERADO:")
+                println(cardex.size)
                 println(e.message)
             }
         }
@@ -186,6 +268,15 @@ class SNViewModel(
                 println("CaliUnidad:")
                 println(caliUnidad.size)
             } catch (e: Exception) {
+                println("CALIFICACION UNIDAD OFFLINE")
+
+                val calificaciones =
+                    repository.calificacionUnidadOffline()
+
+                _caliUnidad.value =
+                    calificaciones
+
+                println(calificaciones.size)
                 println(e.message)
             }
         }
@@ -201,6 +292,15 @@ class SNViewModel(
                 println("CaliFinal:")
                 println(caliFinal.size)
             } catch (e: Exception) {
+                println("CALIFICACION FINAL OFFLINE")
+
+                val calificaciones =
+                    repository.calificacionFinalOffline()
+
+                _caliFinal.value =
+                    calificaciones
+
+                println(calificaciones.size)
                 println(e.message)
             }
         }

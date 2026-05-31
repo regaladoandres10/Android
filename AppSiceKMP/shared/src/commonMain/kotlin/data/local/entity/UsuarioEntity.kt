@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity("usuario")
 data class UsuarioEntity(
-    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val fechaReins: String,
     val modEducativo: Int,
@@ -21,5 +20,6 @@ data class UsuarioEntity(
     val carrera: String,
     val lineamiento: Int,
     val nombre: String,
+    @PrimaryKey
     val matricula: String
 )

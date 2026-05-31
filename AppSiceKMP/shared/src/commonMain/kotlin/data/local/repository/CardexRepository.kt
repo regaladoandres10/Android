@@ -20,6 +20,7 @@ interface CardexRepository {
      * Insert usuario in the data source
      */
     suspend fun insertCardex(cardex: CardexEntity)
+    suspend fun getAllCardexList(): List<CardexEntity>
 
     /**
      * Delete usuario from the data source
@@ -30,4 +31,5 @@ interface CardexRepository {
      * Update usuario in the data source
      */
     suspend fun updateCardex(cardex: CardexEntity)
+    suspend fun deleteAll()
 }

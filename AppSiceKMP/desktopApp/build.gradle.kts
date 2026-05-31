@@ -11,6 +11,7 @@ dependencies {
 
     implementation(compose.desktop.currentOs)
     implementation(libs.kotlinx.coroutinesSwing)
+    implementation(libs.androidx.room.runtime)
 
     implementation(libs.compose.uiToolingPreview)
 }

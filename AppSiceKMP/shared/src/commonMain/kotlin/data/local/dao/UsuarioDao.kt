@@ -25,4 +25,10 @@ interface UsuarioDao {
 
     @Query("SELECT * FROM usuario ORDER BY nombre ASC")
     fun getAllUsuario(): Flow<List<UsuarioEntity>>
+
+    @Query("DELETE FROM usuario")
+    suspend fun deleteAll()
+
+    @Query("SELECT * FROM usuario WHERE matricula = :matricula LIMIT 1")
+    suspend fun getUsuarioByMatricula(matricula: String): UsuarioEntity?
 }
