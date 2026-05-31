@@ -140,6 +140,9 @@ fun ScreenLogin(
 
         //Estado visual
         when (uiState) {
+            SNUiState.Idle -> {
+
+            }
             SNUiState.Loading -> {
                 CircularProgressIndicator()
             }

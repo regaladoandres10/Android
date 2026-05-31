@@ -32,7 +32,7 @@ class SNViewModel(
      Success -> operación correcta
      Error -> ocurrió un error
     */
-    private val _uiState = MutableStateFlow<SNUiState>(SNUiState.Loading)
+    private val _uiState = MutableStateFlow<SNUiState>(SNUiState.Idle)
 
     //Estado expuesto para que Compose lo observe.
     val uiState: StateFlow<SNUiState> = _uiState.asStateFlow()
