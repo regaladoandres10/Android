@@ -29,6 +29,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
+        Log.d("FCM_RECEIVED", "Mensaje recibido")
+        Log.d(
+            "FCM_RECEIVED",
+            "Title: ${message.notification?.title}"
+        )
+
+        Log.d(
+            "FCM_RECEIVED",
+            "Body: ${message.notification?.body}"
+        )
         //Extraemos el titulo y el cuerpo del mensaje
         val titulo = message.notification?.title ?: ""
         val cuerpo = message.notification?.body ?: ""
@@ -70,6 +80,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 //Definimos un icono
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .build()
+
+        Log.d(
+            "FCM_NOTIFY",
+            "Mostrando notificacion"
+        )
 
         //Mostrar la notificación en el sistema para que el usuario lo vea
         notificationManager.notify(
