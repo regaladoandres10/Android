@@ -1,47 +1,69 @@
 package com.example.pushnotificationdemo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.pushnotificationdemo.ui.theme.PushNotificationDemoTheme
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : ComponentActivity() {
+
+    //Obtener token del dispositivo
+    override fun onStart() {
+        super.onStart()
+        //Solicita a Firebase el token del dispositivo
+        FirebaseMessaging.getInstance().token
+            //Escucha cuando la solicitud termina
+            .addOnCompleteListener {
+
+                //Verificamos si hay un error al momento de obtener el token
+                if (!it.isSuccessful) {
+                    Log.e(
+                        "FCM",
+                        "Error obteniendo token",
+                        it.exception
+                    )
+                    return@addOnCompleteListener
+                }
+
+                //Guardamos el token
+                val token = it.result
+
+                Log.d("FCM", token)
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Revisamos si ya el usuario dio permiso para mostrar notificaciones
+        if (
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            //Mostramos el cuadro de dialogo para solicitar permiso
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.POST_NOTIFICATIONS
+                ),
+                100
+            )
+        }
+
         enableEdgeToEdge()
         setContent {
-            PushNotificationDemoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            Text("Firebase notification")
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PushNotificationDemoTheme {
-        Greeting("Android")
-    }
-}
